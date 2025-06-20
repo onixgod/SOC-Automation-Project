@@ -42,3 +42,25 @@ This project was inspired and guided by Steven from @MyDFIR on YouTube. His comp
 -   **Multi-Platform Security Operations**: Coordinated security activities across integrated SIEM, SOAR, and case management platforms
 -   **Threat Detection and Response**: Implemented detection rules and automated response mechanisms for common security threats
 -   **Documentation and Standard Operating Procedures**: Created detailed technical documentation and operational procedures
+
+## Tools Used
+
+### **Primary Security Platforms:**
+
+-   **Wazuh**: Open-source SIEM platform for log analysis, intrusion detection, and compliance monitoring
+-   **Shuffle**: Open source security orchestration, automation and response (SOAR) platform for workflow automation
+-   **TheHive**: Scalable, open-source security incident response platform for case management and collaborative investigations
+
+### **Infrastructure and Supporting Technologies:**
+
+-   **DigitalOcean**: Cloud service provider for virtual machine hosting and network infrastructure
+-   **Ubuntu Linux**: Operating system for all virtual machines (20.04/22.04 LTS)
+-   **DigitalOcean Network Firewall**: Cloud-based firewall for network security and access control
+-   **APIs**: RESTful APIs for platform integration and data exchange
+-   **Virtual Machines**: Isolated computing environments for secure testing and deployment
+
+### **System Specifications:**
+
+-   **Wazuh Server**: Ubuntu, 2 CPUs, 8 GB RAM, 160 GB disk space
+-   **TheHive Server**: Ubuntu, 2 CPUs, 8 GB RAM, 160 GB disk space
+-   **Client Machine**: Ubuntu, 1 CPU, 4 GB RAM, 80 GB disk space
