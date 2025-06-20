@@ -71,34 +71,49 @@ This project was inspired and guided by Steven from @MyDFIR on YouTube. His comp
 
 -   **Client 1**: Windows 10, 2 CPUs, 4 GB RAM, 40 GB disk
 
-## **Automation Workflow Overview**
+### Workflow Description
 
-To streamline SOC operations, I implemented an automated workflow in **Shuffle** to respond to alerts received from **Wazuh**. The automation integrates **VirusTotal**, **TheHive**, and Wazuh’s response APIs to detect, enrich, and respond to malicious events in real-time.
+The following diagram illustrates the complete automation workflow implemented in this project:
 
-### **Workflow Description**
+**![SOC Automation drawio (4)](https://github.com/user-attachments/assets/3b02cd01-7ac2-429c-811e-ca00e65ab7c2)<br>
+ _Network diagram showing the integration of Wazuh SIEM, Shuffle SOAR, and TheHive case management platforms with a hybrid client infrastructure_
 
-1.  **Trigger: Wazuh Alert Webhook**
-    -   The workflow is initiated by an incoming alert from Wazuh via a webhook to Shuffle.
-2.  **Initial Processing**
-    -   The alert is parsed and key indicators (e.g., IP address, user, rule ID) are extracted.
-3.  **IP Reputation Check**
-    -   The IP address involved in the alert is sent to **VirusTotal** for enrichment.
-    -   If the IP is marked as malicious:
-        -   The IP is added to a block list.
-        -   An alert is generated in **TheHive** under the _Brute Force_ or _Out-of-Office Logon_ templates.
-        -   A **Wazuh active response** is triggered to block the IP.
-4.  **Rule-Based Branching**
-    -   If the alert corresponds to a _Brute Force Attempt_, _Suspicious Logon_, or _Mimikatz Detection_:
-        -   Specific case templates are triggered in **TheHive**.
-        -   Supporting evidence is enriched via VirusTotal, where applicable.
-        -   The malicious IP is blocked if it is not already.
-5.  **TheHive Integration**
-    -   For each matched condition, a case is created in **TheHive** with detailed observables, tags (e.g., TTPs), and linked artifacts.
-    -   Helps track incidents and assist SOC analysts with structured investigation workflows.
-6.  **Wazuh Active Responses**
-    -   Automated blocking of suspicious IPs or accounts is handled through **custom Wazuh response scripts** triggered by Shuffle, based on enrichment results and rule logic.
-  
+The automated SOC workflow operates through the following sequence:
 
+**1\. Event Generation and Collection**
+
+-   Multiple client systems generate security events:
+    -   Windows 10 client with Wazuh agent (local home lab)
+    -   Ubuntu client with Wazuh agent (DigitalOcean cloud)
+-   Events are transmitted through the network router to the internet gateway
+**2\. SIEM Processing (Wazuh Manager)**
+
+-   Wazuh Manager receives and processes security events
+-   Events are analyzed for potential threats and security incidents
+-   Alerts are generated based on predefined rules and threat intelligence
+**3\. SOAR Orchestration (Shuffle)**
+
+-   Wazuh sends alerts to Shuffle for automated response orchestration
+-   Shuffle processes the alerts and initiates appropriate response workflows
+-   Automated actions are triggered based on alert severity and type
+**4\. Case Management Integration (TheHive)**
+
+-   Shuffle enriches the Indicators of Compromise (IOCs) with additional threat intelligence
+-   Enriched alerts are forwarded to TheHive for case creation and management
+-   Security incidents are tracked and managed through collaborative case workflows
+**5\. Notification and Response**
+
+-   Email notifications are sent to SOC analysts for critical alerts
+-   Response actions are automatically performed on affected systems
+-   Analysts receive comprehensive incident information for further investigation
+**6\. Closed-Loop Automation**
+
+-   Response actions are executed on both client systems through automated workflows
+-   Windows 10 and Ubuntu clients receive automated response actions
+-   Incident status updates are communicated back through the integrated platforms
+-   Complete audit trail is maintained across all platforms for both environments
+
+This integrated approach ensures rapid threat detection across hybrid cloud and on-premises environments, automated initial response, and comprehensive incident management while maintaining detailed documentation for compliance and analysis.
 
 
 
