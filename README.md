@@ -85,35 +85,89 @@ The automated SOC workflow operates through the following sequence:
 -   Multiple client systems generate security events:
     -   Windows 10 client with Wazuh agent (local home lab)
     -   Ubuntu client with Wazuh agent (DigitalOcean cloud)
--   Events are transmitted through the network router to the internet gateway
+-   Events are transmitted through the network router to the Internet gateway
+
 **2\. SIEM Processing (Wazuh Manager)**
 
 -   Wazuh Manager receives and processes security events
--   Events are analyzed for potential threats and security incidents
+-   Events are analysed for potential threats and security incidents
 -   Alerts are generated based on predefined rules and threat intelligence
+
 **3\. SOAR Orchestration (Shuffle)**
 
 -   Wazuh sends alerts to Shuffle for automated response orchestration
 -   Shuffle processes the alerts and initiates appropriate response workflows
 -   Automated actions are triggered based on alert severity and type
+
 **4\. Case Management Integration (TheHive)**
 
 -   Shuffle enriches the Indicators of Compromise (IOCs) with additional threat intelligence
 -   Enriched alerts are forwarded to TheHive for case creation and management
 -   Security incidents are tracked and managed through collaborative case workflows
+
 **5\. Notification and Response**
 
 -   Email notifications are sent to SOC analysts for critical alerts
 -   Response actions are automatically performed on affected systems
 -   Analysts receive comprehensive incident information for further investigation
+
 **6\. Closed-Loop Automation**
 
 -   Response actions are executed on both client systems through automated workflows
 -   Windows 10 and Ubuntu clients receive automated response actions
 -   Incident status updates are communicated back through the integrated platforms
--   Complete audit trail is maintained across all platforms for both environments
+-   A complete audit trail is maintained across all platforms for both environments
 
-This integrated approach ensures rapid threat detection across hybrid cloud and on-premises environments, automated initial response, and comprehensive incident management while maintaining detailed documentation for compliance and analysis.
+This integrated approach ensures rapid threat detection across hybrid cloud and on-premises environments, automates initial response, and provides comprehensive incident management, while maintaining detailed documentation for compliance and analysis.
+
+## Implementation Steps
+
+### Step 1: Architecture Planning and Diagram Creation
+
+**Objective**: Create a comprehensive visual representation of the SOC automation lab to understand data flow and identify required components.
+
+**Overview**: Before building any infrastructure, it's crucial to map out the logical architecture of our Security Operations Centre (SOC) environment. This planning phase helps us visualise how different security tools will interact, understand the data flow between components, and ensure we have all the necessary pieces to create a functional automated SOC.
+
+**Tools Used**:
+
+-   **Draw.io** (now diagrams.net) - Free, web-based diagramming tool
+-   Access: [https://app.diagrams.net/](https://app.diagrams.net/)
+
+**Process**:
+
+1.  **Access Draw.io**
+    -   Navigate to the Draw.io website (free to use, no registration required)
+    -   Choose to create a new diagram or work with existing templates
+2.  **Design Considerations**
+    -   Map out the logical flow of security data from endpoints to analysis
+    -   Identify all required components for the SOC automation workflow
+    -   Plan the integration points between different security tools
+    -   Consider network topology and security boundaries
+3.  **Key Components to Include**:
+    -   **Client Endpoints**: Windows 10 (local) and Ubuntu (cloud) with Wazuh agents
+    -   **Network Infrastructure**: Router and internet connectivity
+    -   **SIEM Platform**: Wazuh Manager for log collection and analysis
+    -   **SOAR Platform**: Shuffle for automation and orchestration
+    -   **Case Management**: TheHive for incident tracking
+    -   **SOC Analyst Workstation**: For manual investigation and response
+    -   **Communication Flows**: Data paths between all components
+4.  **Data Flow Mapping**:
+    -   Event generation from endpoints
+    -   Log forwarding to SIEM
+    -   Alert generation and forwarding to SOAR
+    -   IOC enrichment and case creation
+    -   Notification and response workflows
+    -   Closed-loop automation back to endpoints
+
+**Benefits of This Approach**:
+
+-   **Visual Clarity**: Provides a clear understanding of system architecture
+-   **Planning Tool**: Helps identify potential integration challenges early
+-   **Documentation**: Serves as a reference for implementation and troubleshooting
+-   **Communication**: Enables adequate explanation of the project to stakeholders
+-   **Scalability Planning**: Shows how the environment can be expanded in the future
+
+**Outcome**: A comprehensive network diagram that serves as the blueprint for the entire SOC automation project, ensuring all components work together cohesively.
 
 
 
