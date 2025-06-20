@@ -59,8 +59,72 @@ This project was inspired and guided by Steven from @MyDFIR on YouTube. His comp
 -   **APIs**: RESTful APIs for platform integration and data exchange
 -   **Virtual Machines**: Isolated computing environments for secure testing and deployment
 
-### **System Specifications:**
+## **System Specifications:**
 
--   **Wazuh Server**: Ubuntu, 2 CPUs, 8 GB RAM, 160 GB disk space
--   **TheHive Server**: Ubuntu, 2 CPUs, 8 GB RAM, 160 GB disk space
--   **Client Machine**: Ubuntu, 1 CPU, 4 GB RAM, 80 GB disk space
+### Cloud-Based VMs (DigitalOcean)
+
+-   **Wazuh Server**: Ubuntu, 2 CPUs, 8 GB RAM, 160 GB disk
+-   **TheHive Server**: Ubuntu, 2 CPUs, 8 GB RAM, 160 GB disk
+-   **Client 2**: Ubuntu, 1 CPU, 4 GB RAM, 80 GB disk
+
+### Local Infrastructure (Home Lab)
+
+-   **Client 1**: Windows 10, 2 CPUs, 4 GB RAM, 40 GB disk
+
+## **Automation Workflow Overview**
+
+To streamline SOC operations, I implemented an automated workflow in **Shuffle** to respond to alerts received from **Wazuh**. The automation integrates **VirusTotal**, **TheHive**, and Wazuh’s response APIs to detect, enrich, and respond to malicious events in real-time.
+
+### **Workflow Description**
+
+1.  **Trigger: Wazuh Alert Webhook**
+    -   The workflow is initiated by an incoming alert from Wazuh via a webhook to Shuffle.
+2.  **Initial Processing**
+    -   The alert is parsed and key indicators (e.g., IP address, user, rule ID) are extracted.
+3.  **IP Reputation Check**
+    -   The IP address involved in the alert is sent to **VirusTotal** for enrichment.
+    -   If the IP is marked as malicious:
+        -   The IP is added to a block list.
+        -   An alert is generated in **TheHive** under the _Brute Force_ or _Out-of-Office Logon_ templates.
+        -   A **Wazuh active response** is triggered to block the IP.
+4.  **Rule-Based Branching**
+    -   If the alert corresponds to a _Brute Force Attempt_, _Suspicious Logon_, or _Mimikatz Detection_:
+        -   Specific case templates are triggered in **TheHive**.
+        -   Supporting evidence is enriched via VirusTotal, where applicable.
+        -   The malicious IP is blocked if it is not already.
+5.  **TheHive Integration**
+    -   For each matched condition, a case is created in **TheHive** with detailed observables, tags (e.g., TTPs), and linked artifacts.
+    -   Helps track incidents and assist SOC analysts with structured investigation workflows.
+6.  **Wazuh Active Responses**
+    -   Automated blocking of suspicious IPs or accounts is handled through **custom Wazuh response scripts** triggered by Shuffle, based on enrichment results and rule logic.
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
