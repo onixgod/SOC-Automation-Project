@@ -1,11 +1,11 @@
 # SOC Automation Project (Wazuh, TheHive and Shuffle)
 ## **Project Overview**
 
-This project explores the design, deployment, and automation of a Security Operations Centre (SOC) using open-source tools, **Wazuh** for SIEM, **TheHive** for case management, and **Shuffle** for orchestration and automation (SOAR). The goal is to simulate and streamline Tier 1 SOC analyst workflows in a cloud-based lab environment.
+This project focuses on the design, deployment, and automation of a cloud-based Security Operations Centre (SOC) using open-source tools: **Wazuh** for Security Information and Event Management (SIEM), **TheHive** for case management, and **Shuffle** for orchestration and automation (SOAR). The primary objective is to simulate and streamline Tier 1 SOC analyst workflows in a lab environment.
 
-The project is modular, with each section dedicated to a specific component. Just so you know, future updates will be noted at the beginning of the relevant module to maintain accuracy and clarity.
+The project is structured in modular sections, each dedicated to a specific component or function. Please note that I have implemented several modifications and added extra features beyond the original setup by @MyDFIR. Any future changes or enhancements will be clearly documented at the beginning of the relevant module for accuracy and transparency.
 
-The project was inspired and guided by _Steven (@MyDFIR on YouTube)_, whose free educational content has been instrumental in developing practical cybersecurity skills.
+This project was inspired and guided by the work of **Steven (@MyDFIR on YouTube)**, whose free educational content has been invaluable in building real-world cybersecurity skills.
 
 ## Objectives
 
@@ -25,6 +25,8 @@ The project was inspired and guided by _Steven (@MyDFIR on YouTube)_, whose free
 ## Acknowledgments
 
 This project was inspired and guided by Steven from @MyDFIR on YouTube. His comprehensive tutorials and free educational content provided the foundational knowledge necessary to complete this implementation. Special thanks to the cybersecurity community for their continuous knowledge sharing and support in building practical security skills.
+
+## Skills Learned
 
 ### **Technical Skills:**
 
@@ -53,11 +55,13 @@ This project was inspired and guided by Steven from @MyDFIR on YouTube. His comp
 
 ### **Infrastructure and Supporting Technologies:**
 
--   **DigitalOcean**: Cloud service provider for virtual machine hosting and network infrastructure
--   **Ubuntu Linux**: Operating system for all virtual machines (20.04/22.04 LTS)
--   **DigitalOcean Network Firewall**: Cloud-based firewall for network security and access control
--   **APIs**: RESTful APIs for platform integration and data exchange
--   **Virtual Machines**: Isolated computing environments for secure testing and deployment
+-   **DigitalOcean**: Cloud service provider used to host virtual machines and manage the lab’s network infrastructure.
+-   **Ubuntu Linux (20.04/22.04 LTS)**: Operating system for the Wazuh server, TheHive instance, and Client 2 VM, providing stability and compatibility with open-source SOC tools.
+-   **Windows 10**: Operating system for Client 1 VM to simulate a typical end-user workstation in a SOC environment.
+-   **DigitalOcean Network Firewall**: Cloud-based firewall used to control and restrict traffic to and from the virtual machines, enhancing network security.
+-   **RESTful APIs**: Utilised for integration between Wazuh, TheHive, and Shuffle, enabling automated data exchange and workflow execution.
+-   **Virtual Machines (VMs)**: Isolated environments used to simulate endpoints, threat activity, and SOC operations in a controlled setting.
+-   **Draw.io**: Used to design network architecture diagrams, workflows, and automation logic for better visualisation and planning.
 
 ## **System Specifications:**
 
@@ -71,54 +75,90 @@ This project was inspired and guided by Steven from @MyDFIR on YouTube. His comp
 
 -   **Client 1**: Windows 10, 2 CPUs, 4 GB RAM, 40 GB disk
 
-### Workflow Description
+## Network Architecture and Data Flow
 
-The following diagram illustrates the complete automation workflow implemented in this project:
+This diagram shows how the different components communicate in your cloud-based SOC lab.
 
 **![SOC Automation drawio (4)](https://github.com/user-attachments/assets/3b02cd01-7ac2-429c-811e-ca00e65ab7c2)<br>
  _Network diagram showing the integration of Wazuh SIEM, Shuffle SOAR, and TheHive case management platforms with a hybrid client infrastructure_
+ 
+### Network Components:
 
-The automated SOC workflow operates through the following sequence:
+-   **VMs with Wazuh Agents**:
+    -   Windows 10 and Ubuntu clients send events to the **Wazuh Manager** via the **Router**.
+-   **Wazuh Manager**:
+    -   Receives logs/events → sends alerts to **Shuffle**.
+    -   Also sends alerts to the internet or internal components.
+-   **Shuffle (SOAR)**:
+    -   Receives alerts from Wazuh → performs playbook actions.
+    -   Interacts with **TheHive** for case creation and **Internet APIs** for enrichment (like VirusTotal).
+    -   Sends emails or response tasks as needed.
+-   **TheHive (Case Management)**:
+    -   Receives enriched IOC data from Shuffle.
+    -   Enables analyst investigation and tracking.
+-   **SOC Analyst**:
+    -   Monitors email alerts and cases.
+    -   Can manually trigger response actions if needed.
+-   **Internet**:
+    -   Used for enrichment (VirusTotal), email delivery, or external communication.
 
-**1\. Event Generation and Collection**
+## Automation Workflow (Playbook Logic)
 
--   Multiple client systems generate security events:
-    -   Windows 10 client with Wazuh agent (local home lab)
-    -   Ubuntu client with Wazuh agent (DigitalOcean cloud)
--   Events are transmitted through the network router to the Internet gateway
+This flowchart illustrates the logic behind your automated incident response process using **Wazuh (SIEM)**, **Shuffle (SOAR)**, and **TheHive (Case Management)**.
 
-**2\. SIEM Processing (Wazuh Manager)**
+![SOC drawio (2)](https://github.com/user-attachments/assets/083230f1-172f-43fc-a91a-6130894e3ecb)<br>
+ _Automated alert triage and response flow using Wazuh, Shuffle, and TheHive._
 
--   Wazuh Manager receives and processes security events
--   Events are analysed for potential threats and security incidents
--   Alerts are generated based on predefined rules and threat intelligence
+### Workflow Summary:
 
-**3\. SOAR Orchestration (Shuffle)**
+1.  **Clients Sending Events**:
+    -   Wazuh agents on client machines (Windows/Ubuntu) send logs and events to the **Wazuh Manager**.
+2.  **Wazuh Manager**:
+    -   Analyses events and generates alerts.
+    -   Alerts are checked for severity (e.g., `Level >= 5` is considered for automated response).
+3.  **Alert Routing via Shuffle**:
+    -   If the alert level is high enough, it's forwarded to **Shuffle**.
+    -   Shuffle checks the **Rule ID** associated with the alert and applies a specific action path.
+4.  **Conditional Automation Paths** (based on Rule IDs):
+    -   **Rule ID 100006**:
+        -   Trigger VirusTotal enrichment.
+        -   Create a case in **TheHive**.
+        -   Send notification email.
+    -   **Rule ID 100002**:
+        -   Similar enrichment, TheHive alert, and email.
+        -   Then asks: “Would you like to block the IP?”
+            -   If **Yes** → Block IP, Delete File, and send notification.
+            -   If **No** → Do nothing.
+    -   **Rule ID 100003 / 100004**:
+        -   Only virus enrichment + TheHive case.
+        -   Ask if IP blocking and user disabling are needed.
+            -   If **Yes** → Block IP, Disable User, Notify.
+            -   If **No** → Do nothing.
+5.  **Human Interaction Points**:
+    -   Decisions like blocking an IP or disabling a user are interactive and can be escalated to an analyst.
 
--   Wazuh sends alerts to Shuffle for automated response orchestration
--   Shuffle processes the alerts and initiates appropriate response workflows
--   Automated actions are triggered based on alert severity and type
+### SOC Automation Playbook Table
 
-**4\. Case Management Integration (TheHive)**
+| **Step** | **Trigger Condition** | **Rule ID** | **Enrichment** | **Action(s)** |
+| --- | --- | --- | --- | --- |
+| 1 | Alert received from Wazuh | Any | None | Check if alert level is ≥ 5 |
+| 2 | Alert level ≥ 5 | Any | None | Forward alert to Shuffle for processing |
+| 3 | Match on specific rule | `100003`, `100004`| VirusTotal | Create TheHive case, send email notification, ask: "Block IP?" → If Yes → Block IP, send email notification |
+| 4 | Match on specific rule | `100002` | VirusTotal | Create TheHive case, send email, ask: "Delete file?" → If Yes →, Delete File, send email notification |
+| 5 | Match on specific rule | `100006` | VirusTotal | Create TheHive case, send email, ask: "Block IP & Disable User?", If Yes → Block IP and Disable User, send email notification |
+| 6 | No rule match or alert level < 5 | Any | None | Do nothing |
 
--   Shuffle enriches the Indicators of Compromise (IOCs) with additional threat intelligence
--   Enriched alerts are forwarded to TheHive for case creation and management
--   Security incidents are tracked and managed through collaborative case workflows
+### Response Action Mapping
 
-**5\. Notification and Response**
+| **Decision Point** | **If Yes** | **If No** |
+| --- | --- | --- |
+| Delete File? (Rule `100002`) | Delete File → Notify via email | Do nothing |
+| Block IP? (Rules `100003/100004`) | Block IP → Notify via email | Do nothing |
+| Block IP & Disable User? (Rules `100006`) | Block IP → Disable User → Notify via email | Do nothing |
 
--   Email notifications are sent to SOC analysts for critical alerts
--   Response actions are automatically performed on affected systems
--   Analysts receive comprehensive incident information for further investigation
 
-**6\. Closed-Loop Automation**
 
--   Response actions are executed on both client systems through automated workflows
--   Windows 10 and Ubuntu clients receive automated response actions
--   Incident status updates are communicated back through the integrated platforms
--   A complete audit trail is maintained across all platforms for both environments
 
-This integrated approach ensures rapid threat detection across hybrid cloud and on-premises environments, automates initial response, and provides comprehensive incident management, while maintaining detailed documentation for compliance and analysis.
 
 ## Implementation Steps
 
