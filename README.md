@@ -156,13 +156,9 @@ This flowchart illustrates the logic behind your automated incident response pro
 | Block IP? (Rules `100003/100004`) | Block IP → Notify via email | Do nothing |
 | Block IP & Disable User? (Rules `100006`) | Block IP → Disable User → Notify via email | Do nothing |
 
-
-
-
-
 ## Implementation Steps
 
-### Step 1: Architecture Planning and Diagram Creation
+## Step 1: Architecture Planning and Diagram Creation
 
 **Objective**: Create a comprehensive visual representation of the SOC automation lab to understand data flow and identify required components.
 
@@ -209,9 +205,158 @@ This flowchart illustrates the logic behind your automated incident response pro
 
 **Outcome**: A comprehensive network diagram that serves as the blueprint for the entire SOC automation project, ensuring all components work together cohesively.
 
+## Step 2: Deploying the SOC Lab Infrastructure
 
+> **Goal:** Install and configure four core virtual machines:
 
+-   A **Windows 10 client** with Sysmon
+-   A **Linux Ubuntu cleint** for Linux enviroment testing  
+-   A **Wazuh server** for SIEM
+-   A **TheHive server** for case management
 
+> _This step has been adapted from @MyDFIR’s original project, with added enhancements and modified configuration steps._
+
+### **2.1 Set Up Windows 10 Virtual Machine with Sysmon**
+
+> **Note:**
+> In this project, I used a preconfigured **Windows 10 Pro template** hosted on **Proxmox** and cloned it to deploy the client machine quickly.
+> If you're using **Proxmox**, you can skip the VirtualBox setup steps below and refer to the \[Proxmox screenshots\] for guidance.
+> For general users, the following instructions detail how to deploy Windows 10 using **VirtualBox**.
+
+#### **Option A: Using VirtualBox (for general users)**
+
+1.  **Install VirtualBox**
+    -   Visit [virtualbox.org](https://www.virtualbox.org/) and download the installer for your OS.
+    -   (Optional) Verify SHA-256 checksum using PowerShell:
+
+        ```powershell
+        Get-FileHash .\VirtualBox-*.exe -Algorithm SHA256
+        ```
+    ![image](https://github.com/user-attachments/assets/d2f7013a-fbca-4d09-94ca-3f2ddea36f8e)<br>
+    _VirtualBox download_
+
+2.  **Download Windows ISO**
+    -   Use Microsoft’s [Media Creation Tool](https://www.microsoft.com/en-us/software-download/windows10)
+    -   Select “Create installation media” → Choose **ISO file** → Save locally
+    
+    ![image](https://github.com/user-attachments/assets/64437e1d-0643-45a9-bfed-fc55700a8f48)<br>
+    _Binary download_
+    ![image](https://github.com/user-attachments/assets/4d9c6c44-0bb2-4b06-9927-cf14facafaca)<br>
+    _ISO creation screen_
+    ![image](https://github.com/user-attachments/assets/f4bcbc24-3d60-4798-887d-48f9f4940e02)<br>
+    _ISO Creation_
+    ![image](https://github.com/user-attachments/assets/36d58126-da55-4403-83fb-62eb718c8ac0)<br>
+    _ISO Creation_
+    ![image](https://github.com/user-attachments/assets/cd5162ba-40e1-482b-a970-f109bb36e297)<br>
+    _ISO Creation_
+    ![image](https://github.com/user-attachments/assets/54fa1f0d-0e5a-4948-97ed-4dec093d38c8)<br>
+    _ISO dile location_
+    ![image](https://github.com/user-attachments/assets/36934d57-ec43-4b14-93eb-c21f9028456f)<br>
+    _ISO downloading_
+
+4.  **Create Windows 10 VM in VirtualBox**
+    -   VM Name: `Win10-Sysmon`
+    -   RAM: 4GB, Disk: 50GB
+    -   Load the Windows ISO during creation
+    -   Check "Skip unattended installation" to do a manual setup
+
+    ![image](https://github.com/user-attachments/assets/8d7be4d8-26f0-4679-9b14-ba2c8cb68c6f)<br>
+    _VirtualBox VM creation settings_
+
+5.  **Install Windows 10 OS**
+6.  **Download and Install Sysmon**
+    -   Download Sysmon from Microsoft Sysinternals
+    ![Screenshot 2025-06-14 123115](https://github.com/user-attachments/assets/93e6de2c-63e7-4ddc-aaa6-e7efe236f134)<br>
+    _Sysmon download_
+    ![Screenshot 2025-06-14 123238](https://github.com/user-attachments/assets/78689806-ce78-47c1-a966-85aca8fad6e3)<br>
+    _Sysmon download location_
+    ![Screenshot 2025-06-14 123256](https://github.com/user-attachments/assets/35013eb6-f707-4670-aa64-cc42da116f01)<br>
+    _Decompress Sysmon_   
+    -   Download the config from [SwiftOnSecurity](https://github.com/SwiftOnSecurity/sysmon-config)
+    ![Screenshot 2025-06-14 123608](https://github.com/user-attachments/assets/3491ff17-b83d-4578-82f2-c21c7d26a9fa)<br>
+    _Navigate to the Sysmon binary location_
+    ![Screenshot 2025-06-14 124020](https://github.com/user-attachments/assets/eac27bf6-71dc-4621-b09c-5ea5334a1d4e)<br>
+    ![Screenshot 2025-06-14 124308](https://github.com/user-attachments/assets/ac00b60e-44fc-4125-b484-dfc7de1f9bbb)<br>
+    ![Screenshot 2025-06-14 124342](https://github.com/user-attachments/assets/c2a65b1a-b433-41df-aa98-fb3c51d68e3a)<br>
+    _Download Sysmon configuration files_
+    ![Screenshot 2025-06-14 124416](https://github.com/user-attachments/assets/e8dae915-1516-4cd3-9422-2a0400fec3cc)<br>
+    _Move the configuration file to Sysmon folder_
+    -   Open PowerShell as Admin:
+    ![Screenshot 2025-06-14 123401](https://github.com/user-attachments/assets/27ed729b-50d3-4921-9e46-349a51a8b006)<br>
+    _Run PowerShell as Administrator_
+    ![Screenshot 2025-06-14 124836](https://github.com/user-attachments/assets/96c04dbb-3a17-479b-baf7-0abf4490f707)<br>
+    _PowerShell admin command execution_
+
+        ```powershell
+        .\Sysmon64.exe -i sysmonconfig.xml
+        ```
+    ![Screenshot 2025-06-14 124907](https://github.com/user-attachments/assets/7860d7b1-f8e2-42aa-8b87-1dc740d12d16)<br>
+    _Accept EULA_
+    ![Screenshot 2025-06-14 124931](https://github.com/user-attachments/assets/029fa419-ae00-4fe1-bad8-9c88878cba33)<br>
+    _Sysmon Installed_
+    ![Screenshot 2025-06-14 125022](https://github.com/user-attachments/assets/a1a3d8a4-1407-45b4-8f40-ca0a2daeef57)<br>
+    ![Screenshot 2025-06-14 125255](https://github.com/user-attachments/assets/0081d901-fb04-4b5f-b154-a6f5f4656e60)<br>
+    _Sysmon running in Event Viewer & Services_
+
+#### **Option B: Using Proxmox (Project-specific setup)**
+
+> 💡 If you're following my exact setup:
+
+-   I cloned a preconfigured Windows 10 Pro template from my **Proxmox** environment.
+![Screenshot 2025-06-14 111515 PNG](https://github.com/user-attachments/assets/267150d9-cb84-4c7b-bb2c-d5da1adc21f1)<br>
+_Proxmox Templates_
+![Screenshot 2025-06-14 111544](https://github.com/user-attachments/assets/6750d31e-e675-425c-a2bf-0a4e7dbd4628)<br>
+_Clone Windows 10 template_
+![Screenshot 2025-06-14 111756](https://github.com/user-attachments/assets/1da8cde7-376b-42fc-a753-9a01456ff9c3)<br>
+_Label the new Windows 10 VM_
+![Screenshot 2025-06-14 111829](https://github.com/user-attachments/assets/3ae4a0d8-ee6c-4c64-9469-2381d329a43b)<br>
+_Labelled Windows 10 VM_
+![Screenshot 2025-06-14 112344](https://github.com/user-attachments/assets/4063fb9d-9966-463d-9246-83b3871d406c)<br>
+_Start the Windows 10 VM_
+-   After cloning, I installed Sysmon and applied the configuration as described above.
+
+### **2.2 Deploy Wazuh Server (Cloud - DigitalOcean)**
+
+#### Step-by-Step:
+
+1.  **Create Droplet**
+    -   Image: Ubuntu 22.04 LTS
+    ![Screenshot 2025-06-14 132308](https://github.com/user-attachments/assets/ac690233-57c0-40a8-ac09-4243ffa2fa3a)
+    _Click on create → Droplets_
+    ![Screenshot 2025-06-14 132426](https://github.com/user-attachments/assets/3884dfe6-5608-4a8d-a1e4-e9e0f32ac9c0)
+    _Select location and OS_
+    -   Plan: 2 vCPU / 8GB RAM minimum (Premium)
+    ![Screenshot 2025-06-14 132609](https://github.com/user-attachments/assets/1fb8aa81-7ef7-442b-8148-7ab3eb3b74fe)
+    _Select Shared CPU, Premium Intel, 2 CPUs, 160 GB SSDs and 8 GB memory_   
+    -   Hostname: `wazuh` and Set root password
+    ![Screenshot 2025-06-14 132913](https://github.com/user-attachments/assets/4c6d6007-7da4-40d0-99da-b23febb76b9d)
+    _Pick a strong password and select a Hostname_
+    ![Screenshot 2025-06-14 132936](https://github.com/user-attachments/assets/70283a0d-9de8-4ab7-aedd-6f40073619bc)
+    _Click on Create Droplet_  
+
+2.  **Set Up Cloud Firewall**
+    -   Go to **Networking > Firewalls**
+    -   Allow only your IP for SSH (TCP/22)
+    -   Apply firewall to `wazuh-server` droplet
+
+    📸 _Insert Screenshot 6: Firewall rule with limited IP access_
+
+3.  **Install Wazuh**
+    -   SSH into the droplet and run:
+
+        bash
+
+        CopyEdit
+
+        `curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh bash wazuh-install.sh -a`
+
+    -   Note the default admin credentials
+
+    📸 _Insert Screenshot 7: Wazuh Dashboard login page_
+
+4.  **Login**
+    -   Access the dashboard via `https://<your-public-ip>`
+    -   Use `admin / <generated password>`
 
 
 
