@@ -321,25 +321,37 @@ _Start the Windows 10 VM_
 
 1.  **Create Droplet**
     -   Image: Ubuntu 22.04 LTS
-    ![Screenshot 2025-06-14 132308](https://github.com/user-attachments/assets/ac690233-57c0-40a8-ac09-4243ffa2fa3a)
+    ![Screenshot 2025-06-14 132308](https://github.com/user-attachments/assets/ac690233-57c0-40a8-ac09-4243ffa2fa3a)<br>
     _Click on create → Droplets_
-    ![Screenshot 2025-06-14 132426](https://github.com/user-attachments/assets/3884dfe6-5608-4a8d-a1e4-e9e0f32ac9c0)
+    ![Screenshot 2025-06-14 132426](https://github.com/user-attachments/assets/3884dfe6-5608-4a8d-a1e4-e9e0f32ac9c0)<br>
     _Select location and OS_
     -   Plan: 2 vCPU / 8GB RAM minimum (Premium)
-    ![Screenshot 2025-06-14 132609](https://github.com/user-attachments/assets/1fb8aa81-7ef7-442b-8148-7ab3eb3b74fe)
+    ![Screenshot 2025-06-14 132609](https://github.com/user-attachments/assets/1fb8aa81-7ef7-442b-8148-7ab3eb3b74fe)<br>
     _Select Shared CPU, Premium Intel, 2 CPUs, 160 GB SSDs and 8 GB memory_   
     -   Hostname: `wazuh` and Set root password
-    ![Screenshot 2025-06-14 132913](https://github.com/user-attachments/assets/4c6d6007-7da4-40d0-99da-b23febb76b9d)
+    ![Screenshot 2025-06-14 132913](https://github.com/user-attachments/assets/4c6d6007-7da4-40d0-99da-b23febb76b9d)<br>
     _Pick a strong password and select a Hostname_
-    ![Screenshot 2025-06-14 132936](https://github.com/user-attachments/assets/70283a0d-9de8-4ab7-aedd-6f40073619bc)
+    ![Screenshot 2025-06-14 132936](https://github.com/user-attachments/assets/70283a0d-9de8-4ab7-aedd-6f40073619bc)<br>
     _Click on Create Droplet_  
 
 2.  **Set Up Cloud Firewall**
     -   Go to **Networking > Firewalls**
+    ![Screenshot 2025-06-14 133413](https://github.com/user-attachments/assets/c11871bb-951d-4513-86fa-9fa503535c06)
+    _Take note of your Public and Private IPs, then click on edit_
+    ![Screenshot 2025-06-14 133428](https://github.com/user-attachments/assets/0fb68643-0186-4c56-bc8f-5615274de017)
+    _Click on Create Firewall_
     -   Allow only your IP for SSH (TCP/22)
-    -   Apply firewall to `wazuh-server` droplet
-
-    📸 _Insert Screenshot 6: Firewall rule with limited IP access_
+    ![Screenshot 2025-06-14 133858](https://github.com/user-attachments/assets/ff3b3635-1adb-4e49-88b6-78135dbacfe0)
+    _Allow All TCP connections to All Ports for your IP address_
+    ![Screenshot 2025-06-14 134204](https://github.com/user-attachments/assets/f0639036-be63-41f0-bbaa-b4a205d9a232)
+    _Click on Create Firewall_
+    ![Screenshot 2025-06-14 133706](https://github.com/user-attachments/assets/ea4440dc-25f7-4d60-a889-cf945189b282)
+    _To find out what your Public IP is, there are plenty of sites that can help you_   
+    -   Apply firewall to `wazuh` droplet
+    ![Screenshot 2025-06-14 134610](https://github.com/user-attachments/assets/c95c20c1-eff4-47b3-b370-cd4684d9b11e)
+    _Click on Networking → Droplets → Add Droplets_
+    ![Screenshot 2025-06-14 134635](https://github.com/user-attachments/assets/6db021c4-5877-4d3b-a982-3445136b55cb)
+    _Select Add Droplet → Wazuh droplet_
 
 3.  **Install Wazuh**
     -   SSH into the droplet and run:
