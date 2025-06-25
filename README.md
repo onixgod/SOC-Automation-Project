@@ -241,16 +241,22 @@ This flowchart illustrates the logic behind your automated incident response pro
     
     ![image](https://github.com/user-attachments/assets/64437e1d-0643-45a9-bfed-fc55700a8f48)<br>
     _Binary download_
+
     ![image](https://github.com/user-attachments/assets/4d9c6c44-0bb2-4b06-9927-cf14facafaca)<br>
     _ISO creation screen_
+
     ![image](https://github.com/user-attachments/assets/f4bcbc24-3d60-4798-887d-48f9f4940e02)<br>
     _ISO Creation_
+
     ![image](https://github.com/user-attachments/assets/36d58126-da55-4403-83fb-62eb718c8ac0)<br>
     _ISO Creation_
+
     ![image](https://github.com/user-attachments/assets/cd5162ba-40e1-482b-a970-f109bb36e297)<br>
     _ISO Creation_
+
     ![image](https://github.com/user-attachments/assets/54fa1f0d-0e5a-4948-97ed-4dec093d38c8)<br>
     _ISO dile location_
+
     ![image](https://github.com/user-attachments/assets/36934d57-ec43-4b14-93eb-c21f9028456f)<br>
     _ISO downloading_
 
@@ -268,34 +274,47 @@ This flowchart illustrates the logic behind your automated incident response pro
     -   Download Sysmon from Microsoft Sysinternals
     ![Screenshot 2025-06-14 123115](https://github.com/user-attachments/assets/93e6de2c-63e7-4ddc-aaa6-e7efe236f134)<br>
     _Sysmon download_
+    
     ![Screenshot 2025-06-14 123238](https://github.com/user-attachments/assets/78689806-ce78-47c1-a966-85aca8fad6e3)<br>
     _Sysmon download location_
+    
     ![Screenshot 2025-06-14 123256](https://github.com/user-attachments/assets/35013eb6-f707-4670-aa64-cc42da116f01)<br>
     _Decompress Sysmon_   
     -   Download the config from [SwiftOnSecurity](https://github.com/SwiftOnSecurity/sysmon-config)
+    
     ![Screenshot 2025-06-14 123608](https://github.com/user-attachments/assets/3491ff17-b83d-4578-82f2-c21c7d26a9fa)<br>
     _Navigate to the Sysmon binary location_
+    
     ![Screenshot 2025-06-14 124020](https://github.com/user-attachments/assets/eac27bf6-71dc-4621-b09c-5ea5334a1d4e)<br>
+    
     ![Screenshot 2025-06-14 124308](https://github.com/user-attachments/assets/ac00b60e-44fc-4125-b484-dfc7de1f9bbb)<br>
+    
     ![Screenshot 2025-06-14 124342](https://github.com/user-attachments/assets/c2a65b1a-b433-41df-aa98-fb3c51d68e3a)<br>
     _Download Sysmon configuration files_
+    
     ![Screenshot 2025-06-14 124416](https://github.com/user-attachments/assets/e8dae915-1516-4cd3-9422-2a0400fec3cc)<br>
     _Move the configuration file to Sysmon folder_
     -   Open PowerShell as Admin:
+    
     ![Screenshot 2025-06-14 123401](https://github.com/user-attachments/assets/27ed729b-50d3-4921-9e46-349a51a8b006)<br>
     _Run PowerShell as Administrator_
+    
     ![Screenshot 2025-06-14 124836](https://github.com/user-attachments/assets/96c04dbb-3a17-479b-baf7-0abf4490f707)<br>
     _PowerShell admin command execution_
 
-        ```powershell
-        .\Sysmon64.exe -i sysmonconfig.xml
-        ```
-    ![Screenshot 2025-06-14 124907](https://github.com/user-attachments/assets/7860d7b1-f8e2-42aa-8b87-1dc740d12d16)<br>
+   ```powershell
+   .\Sysmon64.exe -i sysmonconfig.xml
+   ```
+   
+   ![Screenshot 2025-06-14 124907](https://github.com/user-attachments/assets/7860d7b1-f8e2-42aa-8b87-1dc740d12d16)<br>
     _Accept EULA_
-    ![Screenshot 2025-06-14 124931](https://github.com/user-attachments/assets/029fa419-ae00-4fe1-bad8-9c88878cba33)<br>
+
+   ![Screenshot 2025-06-14 124931](https://github.com/user-attachments/assets/029fa419-ae00-4fe1-bad8-9c88878cba33)<br>
     _Sysmon Installed_
-    ![Screenshot 2025-06-14 125022](https://github.com/user-attachments/assets/a1a3d8a4-1407-45b4-8f40-ca0a2daeef57)<br>
-    ![Screenshot 2025-06-14 125255](https://github.com/user-attachments/assets/0081d901-fb04-4b5f-b154-a6f5f4656e60)<br>
+
+   ![Screenshot 2025-06-14 125022](https://github.com/user-attachments/assets/a1a3d8a4-1407-45b4-8f40-ca0a2daeef57)<br>
+
+   ![Screenshot 2025-06-14 125255](https://github.com/user-attachments/assets/0081d901-fb04-4b5f-b154-a6f5f4656e60)<br>
     _Sysmon running in Event Viewer & Services_
 
 #### **Option B: Using Proxmox (Project-specific setup)**
@@ -305,12 +324,16 @@ This flowchart illustrates the logic behind your automated incident response pro
 -   I cloned a preconfigured Windows 10 Pro template from my **Proxmox** environment.
 ![Screenshot 2025-06-14 111515 PNG](https://github.com/user-attachments/assets/267150d9-cb84-4c7b-bb2c-d5da1adc21f1)<br>
 _Proxmox Templates_
+
 ![Screenshot 2025-06-14 111544](https://github.com/user-attachments/assets/6750d31e-e675-425c-a2bf-0a4e7dbd4628)<br>
 _Clone Windows 10 template_
+
 ![Screenshot 2025-06-14 111756](https://github.com/user-attachments/assets/1da8cde7-376b-42fc-a753-9a01456ff9c3)<br>
 _Label the new Windows 10 VM_
+
 ![Screenshot 2025-06-14 111829](https://github.com/user-attachments/assets/3ae4a0d8-ee6c-4c64-9469-2381d329a43b)<br>
 _Labelled Windows 10 VM_
+
 ![Screenshot 2025-06-14 112344](https://github.com/user-attachments/assets/4063fb9d-9966-463d-9246-83b3871d406c)<br>
 _Start the Windows 10 VM_
 -   After cloning, I installed Sysmon and applied the configuration as described above.
@@ -323,68 +346,90 @@ _Start the Windows 10 VM_
     -   Image: Ubuntu 22.04 LTS
     ![Screenshot 2025-06-14 132308](https://github.com/user-attachments/assets/ac690233-57c0-40a8-ac09-4243ffa2fa3a)<br>
     _Click on create → Droplets_
+    
     ![Screenshot 2025-06-14 132426](https://github.com/user-attachments/assets/3884dfe6-5608-4a8d-a1e4-e9e0f32ac9c0)<br>
     _Select location and OS_
     -   Plan: 2 vCPU / 8GB RAM minimum (Premium)
+    
     ![Screenshot 2025-06-14 132609](https://github.com/user-attachments/assets/1fb8aa81-7ef7-442b-8148-7ab3eb3b74fe)<br>
     _Select Shared CPU, Premium Intel, 2 CPUs, 160 GB SSDs and 8 GB memory_   
     -   Hostname: `wazuh` and Set root password
+    
     ![Screenshot 2025-06-14 132913](https://github.com/user-attachments/assets/4c6d6007-7da4-40d0-99da-b23febb76b9d)<br>
     _Pick a strong password and select a Hostname_
+
     ![Screenshot 2025-06-14 132936](https://github.com/user-attachments/assets/70283a0d-9de8-4ab7-aedd-6f40073619bc)<br>
     _Click on Create Droplet_  
 
-2.  **Set Up Cloud Firewall**
+3.  **Set Up Cloud Firewall**
     -   Go to **Networking > Firewalls**
     ![Screenshot 2025-06-14 133413](https://github.com/user-attachments/assets/c11871bb-951d-4513-86fa-9fa503535c06)<br>
     _Take note of your Public and Private IPs, then click on edit_
+    
     ![Screenshot 2025-06-14 133428](https://github.com/user-attachments/assets/0fb68643-0186-4c56-bc8f-5615274de017)<br>
     _Click on Create Firewall_
     -   Allow only your IP for SSH (TCP/22)
+    
     ![Screenshot 2025-06-14 133858](https://github.com/user-attachments/assets/ff3b3635-1adb-4e49-88b6-78135dbacfe0)<br>
     _Allow All TCP connections to All Ports for your IP address_
+
     ![Screenshot 2025-06-14 134204](https://github.com/user-attachments/assets/f0639036-be63-41f0-bbaa-b4a205d9a232)<br>
     _Click on Create Firewall_
+
     ![Screenshot 2025-06-14 133706](https://github.com/user-attachments/assets/ea4440dc-25f7-4d60-a889-cf945189b282)<br>
-    _To find out what your Public IP is, there are plenty of sites that can help you_   
+    _To find out what your Public IP is, there are plenty of sites that can help you_
+       
     -   Apply firewall to `wazuh` droplet
     ![Screenshot 2025-06-14 134610](https://github.com/user-attachments/assets/c95c20c1-eff4-47b3-b370-cd4684d9b11e)<br>
     _Click on Networking → Droplets → Add Droplets_
+    
     ![Screenshot 2025-06-14 134635](https://github.com/user-attachments/assets/6db021c4-5877-4d3b-a982-3445136b55cb)<br>
     _Select Add Droplet → Wazuh droplet_
 
-3.  **Install Wazuh**
+5.  **Install Wazuh**
     -   SSH into the droplet or use the Launch Droplet Console and run:
     ![Screenshot 2025-06-14 135355](https://github.com/user-attachments/assets/8e5cbf54-5a36-4838-a7eb-03edafefb438)<br>
     _From Droplet Console_
+    
     ![image](https://github.com/user-attachments/assets/3357e801-2d20-4833-924e-cf57d77f9892)<br>
     _SSH from PowerShell_
+    
     ```powershell
     ssh root@Wazuh Public IP
     ```
+    
     -   Before Wazuh installation, it is always recommended to update and upgrade the OS
     ![Screenshot 2025-06-14 141051](https://github.com/user-attachments/assets/f8c31e1c-2f68-4713-89ba-18716fb72052)<br>
     _Updating OS_
+
     ```bash
     apt-get update && apt-get upgrde
     ```
+    
     -   Install Wazuh using curl command
     ![Screenshot 2025-06-14 141505](https://github.com/user-attachments/assets/3236032c-a888-45f3-937b-0a2a0da1bf39)<br>
     _Wazuh installation_
+
     ```bash
     curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh bash wazuh-install.sh -a
     ```
+    
     ![Screenshot 2025-06-14 141600](https://github.com/user-attachments/assets/c52e532e-babe-4691-83ac-8c934e941051)<br>
     _Installation process_
+    
     -   Note the default admin credentials
+    
     ![Screenshot 2025-06-14 142343](https://github.com/user-attachments/assets/1454e5d4-4815-4926-8c9b-f2f3d4f236aa)<br>
     _Wazuh credentials_
 
-5.  **Login**
+7.  **Login**
     -   Access the dashboard via `https://<your-public-ip>`
+    
     ![Screenshot 2025-06-14 142425](https://github.com/user-attachments/assets/b7e58ddb-e9fe-4ed4-9e1f-1ccca2dd4b74)<br>
-    _Wazuh login page_   
+    _Wazuh login page_
+   
     -   Use `admin / <generated password>`
+    
     ![Screenshot 2025-06-14 144001](https://github.com/user-attachments/assets/80c9c512-fe14-4eda-9acc-5badf1401c49)<br>
     _Wazuh Dashboard page_
 
