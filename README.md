@@ -336,40 +336,57 @@ _Start the Windows 10 VM_
 
 2.  **Set Up Cloud Firewall**
     -   Go to **Networking > Firewalls**
-    ![Screenshot 2025-06-14 133413](https://github.com/user-attachments/assets/c11871bb-951d-4513-86fa-9fa503535c06)
+    ![Screenshot 2025-06-14 133413](https://github.com/user-attachments/assets/c11871bb-951d-4513-86fa-9fa503535c06)<br>
     _Take note of your Public and Private IPs, then click on edit_
-    ![Screenshot 2025-06-14 133428](https://github.com/user-attachments/assets/0fb68643-0186-4c56-bc8f-5615274de017)
+    ![Screenshot 2025-06-14 133428](https://github.com/user-attachments/assets/0fb68643-0186-4c56-bc8f-5615274de017)<br>
     _Click on Create Firewall_
     -   Allow only your IP for SSH (TCP/22)
-    ![Screenshot 2025-06-14 133858](https://github.com/user-attachments/assets/ff3b3635-1adb-4e49-88b6-78135dbacfe0)
+    ![Screenshot 2025-06-14 133858](https://github.com/user-attachments/assets/ff3b3635-1adb-4e49-88b6-78135dbacfe0)<br>
     _Allow All TCP connections to All Ports for your IP address_
-    ![Screenshot 2025-06-14 134204](https://github.com/user-attachments/assets/f0639036-be63-41f0-bbaa-b4a205d9a232)
+    ![Screenshot 2025-06-14 134204](https://github.com/user-attachments/assets/f0639036-be63-41f0-bbaa-b4a205d9a232)<br>
     _Click on Create Firewall_
-    ![Screenshot 2025-06-14 133706](https://github.com/user-attachments/assets/ea4440dc-25f7-4d60-a889-cf945189b282)
+    ![Screenshot 2025-06-14 133706](https://github.com/user-attachments/assets/ea4440dc-25f7-4d60-a889-cf945189b282)<br>
     _To find out what your Public IP is, there are plenty of sites that can help you_   
     -   Apply firewall to `wazuh` droplet
-    ![Screenshot 2025-06-14 134610](https://github.com/user-attachments/assets/c95c20c1-eff4-47b3-b370-cd4684d9b11e)
+    ![Screenshot 2025-06-14 134610](https://github.com/user-attachments/assets/c95c20c1-eff4-47b3-b370-cd4684d9b11e)<br>
     _Click on Networking → Droplets → Add Droplets_
-    ![Screenshot 2025-06-14 134635](https://github.com/user-attachments/assets/6db021c4-5877-4d3b-a982-3445136b55cb)
+    ![Screenshot 2025-06-14 134635](https://github.com/user-attachments/assets/6db021c4-5877-4d3b-a982-3445136b55cb)<br>
     _Select Add Droplet → Wazuh droplet_
 
 3.  **Install Wazuh**
-    -   SSH into the droplet and run:
-
-        bash
-
-        CopyEdit
-
-        `curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh bash wazuh-install.sh -a`
-
+    -   SSH into the droplet or use the Launch Droplet Console and run:
+    ![Screenshot 2025-06-14 135355](https://github.com/user-attachments/assets/8e5cbf54-5a36-4838-a7eb-03edafefb438)<br>
+    _From Droplet Console_
+    ![image](https://github.com/user-attachments/assets/3357e801-2d20-4833-924e-cf57d77f9892)<br>
+    _SSH from PowerShell_
+    ```powershell
+    ssh root@Wazuh Public IP
+    ```
+    -   Before Wazuh installation, it is always recommended to update and upgrade the OS
+    ![Screenshot 2025-06-14 141051](https://github.com/user-attachments/assets/f8c31e1c-2f68-4713-89ba-18716fb72052)<br>
+    _Updating OS_
+    ```bash
+    apt-get update && apt-get upgrde
+    ```
+    -   Install Wazuh using curl command
+    ![Screenshot 2025-06-14 141505](https://github.com/user-attachments/assets/3236032c-a888-45f3-937b-0a2a0da1bf39)<br>
+    _Wazuh installation_
+    ```bash
+    curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh bash wazuh-install.sh -a
+    ```
+    ![Screenshot 2025-06-14 141600](https://github.com/user-attachments/assets/c52e532e-babe-4691-83ac-8c934e941051)<br>
+    _Installation process_
     -   Note the default admin credentials
+    ![Screenshot 2025-06-14 142343](https://github.com/user-attachments/assets/1454e5d4-4815-4926-8c9b-f2f3d4f236aa)<br>
+    _Wazuh credentials_
 
-    📸 _Insert Screenshot 7: Wazuh Dashboard login page_
-
-4.  **Login**
+5.  **Login**
     -   Access the dashboard via `https://<your-public-ip>`
+    ![Screenshot 2025-06-14 142425](https://github.com/user-attachments/assets/b7e58ddb-e9fe-4ed4-9e1f-1ccca2dd4b74)<br>
+    _Wazuh login page_   
     -   Use `admin / <generated password>`
-
+    ![Screenshot 2025-06-14 144001](https://github.com/user-attachments/assets/80c9c512-fe14-4eda-9acc-5badf1401c49)<br>
+    _Wazuh Dashboard page_
 
 
 
