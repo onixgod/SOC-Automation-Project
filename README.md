@@ -352,7 +352,8 @@ _Start the Windows 10 VM_
     -   Plan: 2 vCPU / 8GB RAM minimum (Premium)
     
     ![Screenshot 2025-06-14 132609](https://github.com/user-attachments/assets/1fb8aa81-7ef7-442b-8148-7ab3eb3b74fe)<br>
-    _Select Shared CPU, Premium Intel, 2 CPUs, 160 GB SSDs and 8 GB memory_   
+    _Select Shared CPU, Premium Intel, 2 CPUs, 160 GB SSDs and 8 GB memory_
+       
     -   Hostname: `wazuh` and Set root password
     
     ![Screenshot 2025-06-14 132913](https://github.com/user-attachments/assets/4c6d6007-7da4-40d0-99da-b23febb76b9d)<br>
@@ -386,7 +387,7 @@ _Start the Windows 10 VM_
     ![Screenshot 2025-06-14 134635](https://github.com/user-attachments/assets/6db021c4-5877-4d3b-a982-3445136b55cb)<br>
     _Select Add Droplet → Wazuh droplet_
 
-5.  **Install Wazuh**
+4.  **Install Wazuh**
     -   SSH into the droplet or use the Launch Droplet Console and run:
     ![Screenshot 2025-06-14 135355](https://github.com/user-attachments/assets/8e5cbf54-5a36-4838-a7eb-03edafefb438)<br>
     _From Droplet Console_
@@ -422,7 +423,7 @@ _Start the Windows 10 VM_
     ![Screenshot 2025-06-14 142343](https://github.com/user-attachments/assets/1454e5d4-4815-4926-8c9b-f2f3d4f236aa)<br>
     _Wazuh credentials_
 
-7.  **Login**
+5.  **Login**
     -   Access the dashboard via `https://<your-public-ip>`
     
     ![Screenshot 2025-06-14 142425](https://github.com/user-attachments/assets/b7e58ddb-e9fe-4ed4-9e1f-1ccca2dd4b74)<br>
@@ -432,6 +433,234 @@ _Start the Windows 10 VM_
     
     ![Screenshot 2025-06-14 144001](https://github.com/user-attachments/assets/80c9c512-fe14-4eda-9acc-5badf1401c49)<br>
     _Wazuh Dashboard page_
+
+### 2.3 Deploy TheHive Server (Cloud - DigitalOcean)
+
+#### Step-by-Step:
+
+1.  **Create Droplet**
+    -   Same settings as Wazuh
+    ![Screenshot 2025-06-14 144407](https://github.com/user-attachments/assets/e0f70066-28e8-4b77-ac94-1cc2969dff04)<br>
+    _Click on create → Droplets and then select location and OS_
+
+    ![Screenshot 2025-06-14 144503](https://github.com/user-attachments/assets/82fcfc50-b6c7-452a-8b04-c6372f32dfde)<br>
+    _Select Shared CPU, Premium Intel, 2 CPUs, 160 GB SSDs and 8 GB memory_
+
+    -   Hostname: `TheHive`
+    ![Screenshot 2025-06-14 144702](https://github.com/user-attachments/assets/b16958e4-518d-43ac-b0e3-b5dde72649f6)<br>
+    _Pick a strong password and select a Hostname_
+
+    ![Screenshot 2025-06-14 144717](https://github.com/user-attachments/assets/395c6877-5b29-4cff-a7b5-926f950ff2cc)<br>
+    _Click on Create Droplet_
+    
+    -   Attach to the same firewall
+    ![Screenshot 2025-06-14 144900](https://github.com/user-attachments/assets/9e7576d4-77dc-42fb-8468-4d8b816048e7)<br>
+    _Add TheHive droplet to Wazuh-Firewall rule_
+
+    ![Screenshot 2025-06-14 144912](https://github.com/user-attachments/assets/0e302266-3a04-4ba9-be56-1209ae7fd5ba)<br>
+    _Select TheHive droplet_
+
+    ![Screenshot 2025-06-14 145001](https://github.com/user-attachments/assets/2fb0c9f2-6493-4cf4-be89-5a936f025471)<br>
+    _Wazuh-Firewall rue droplets_
+    
+2.  **Install Dependencies**
+    -   SSH into the VM, install:
+        -   Java (OpenJDK)
+        -   Cassandra
+        -   Elasticsearch
+        -   TheHive
+
+     ![Screenshot 2025-06-14 145256](https://github.com/user-attachments/assets/a0e48a89-51cf-4577-a2a4-cb715b981dff)<br>
+     _SSH from PowerShell_
+    
+    ```powershell
+    ssh root@TheHive Public IP
+    ```
+
+    -   Before TheHive installation, it is always recommended to update and upgrade the OS
+    ![Screenshot 2025-06-14 145346](https://github.com/user-attachments/assets/361b2f42-5fea-4a44-8c79-9766233f54af)<br>
+
+    ![Screenshot 2025-06-14 145506](https://github.com/user-attachments/assets/40ec915a-df8f-4896-9c0d-5a13b5f03d19)<br>
+
+    ![Screenshot 2025-06-14 145613](https://github.com/user-attachments/assets/6bc4089e-9899-4896-a510-c7392f368450)<br>
+    _Updating OS_
+    
+    ![Screenshot 2025-06-14 150227](https://github.com/user-attachments/assets/7c455fa2-c788-45fa-8da6-cd1fc915e923)
+    _Installing Java (OpenJDK)_
+
+    ```bash
+    wget -qO- https://apt.corretto.aws/corretto.key | sudo gpg --dearmor  -o /usr/share/keyrings/corretto.gpg
+    echo "deb [signed-by=/usr/share/keyrings/corretto.gpg] https://apt.corretto.aws stable main" |  sudo tee -a /etc/apt/sources.list.d/corretto.sources.list
+    sudo apt update
+    sudo apt install java-common java-11-amazon-corretto-jdk
+    echo JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto" | sudo tee -a /etc/environment 
+    export JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto"
+    ```
+    
+    ![Screenshot 2025-06-14 150318](https://github.com/user-attachments/assets/0ca330e9-c151-4d1a-949a-2d6bfc3f48dc)
+    _Click on OK_
+    
+    ![Screenshot 2025-06-14 150436](https://github.com/user-attachments/assets/2a366b7c-1135-420a-a3ff-c1b76fdab329)
+    _Installing Cassandra_
+
+    ```bash
+    wget -qO -  https://downloads.apache.org/cassandra/KEYS | sudo gpg --dearmor  -o /usr/share/keyrings/cassandra-archive.gpg
+    echo "deb [signed-by=/usr/share/keyrings/cassandra-archive.gpg] https://debian.cassandra.apache.org 40x main" |  sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+    sudo apt update
+    sudo apt install cassandra
+    ```
+    
+    ![Screenshot 2025-06-14 150448](https://github.com/user-attachments/assets/9563385d-d36d-4a94-88f3-756ca6a0ea4a)
+    _Click on OK_
+    
+    ![Screenshot 2025-06-14 150623](https://github.com/user-attachments/assets/b688bc28-774f-4124-956a-afbf780a4a00)
+    _Installing Elasticsearch_
+
+    ```bash
+    wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch |  sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
+    sudo apt-get install apt-transport-https
+    echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main" |  sudo tee /etc/apt/sources.list.d/elastic-7.x.list
+    sudo apt update
+    sudo apt install elasticsearch
+    ```
+
+    ![Screenshot 2025-06-14 150632](https://github.com/user-attachments/assets/6fa50e78-fd62-4e3b-94e5-fe12e7834b93)
+    _Click on OK_
+    
+    ![Screenshot 2025-06-14 154158](https://github.com/user-attachments/assets/dcd0058a-248c-4ab6-b5bc-ec3a072f7c8b)
+    _Configuring Cassandra_
+
+    ```bash
+    nano /etc/cassandra/cassandra. yaml
+    ```
+
+    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
+    _Change the listen address to your TheHive public IP_
+
+    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
+    _Change the RCP address to your TheHive public IP_
+
+    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
+    _Change the seed address to your TheHive public IP_
+
+    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
+    _Stop Cassandra service_
+    
+    ```bash
+    systemctl stop cassandra. service
+    ```
+
+    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
+    _We need to remove any Cassandra data when setting up Cassandra for the first time and no critical data exists_
+
+    ```bash
+    rm -rf /var/lib/cassandra/*
+    ```
+
+    ![Screenshot 2025-06-14 155159](https://github.com/user-attachments/assets/851fed1b-c039-46a2-9774-c422eacd5881)
+    _Start and check the status of the Cassandra service_
+
+    ```bash
+    systemctl start cassandra.service
+    ```
+
+    ```bash
+    systemctl status cassandra.service
+    ```
+
+    ![Screenshot 2025-06-14 154158](https://github.com/user-attachments/assets/dcd0058a-248c-4ab6-b5bc-ec3a072f7c8b)
+    _Configuring Elasticsearch_
+
+    ```bash
+    nano /etc/elasticsearch/elasticsearch.yml
+    ```
+
+    ![image](https://github.com/user-attachments/assets/861fb4de-2f1b-48f0-aca9-0f66bb5f5c9e)
+    _Change cluster.name to thehive_
+
+    ![Screenshot 2025-06-14 160110](https://github.com/user-attachments/assets/aa9ad9fa-e501-4b63-b226-5df52aad8d6a)
+    _Change network.host to TheHive public IP_
+
+    ![Screenshot 2025-06-14 160340](https://github.com/user-attachments/assets/09cf0c0a-45b3-49e6-a638-192944cee988)
+    _Start and check the status of the Elasticsearch service_
+
+    ```bash
+    systemctl start elasticsearch.service
+    ```
+
+    ```bash
+    systemctl status elasticsearch.service
+    ```
+
+    ![Screenshot 2025-06-14 230305](https://github.com/user-attachments/assets/47101d45-6434-488d-882f-4f659cb6a55b)
+    _Installing TheHive_
+
+    ```bash
+    wget -O- https://archives.strangebee.com/keys/strangebee.gpg | sudo gpg --dearmor -o /usr/share/keyrings/strangebee-archive-keyring.gpg
+    echo 'deb [signed-by=/usr/share/keyrings/strangebee-archive-keyring.gpg] https://deb.strangebee.com thehive-5.2 main' | sudo tee -a /etc/apt/sources.list.d/strangebee.list
+    sudo apt-get update
+    sudo apt-get install -y thehive
+    ```
+
+    ![Screenshot 2025-06-14 230722](https://github.com/user-attachments/assets/2b477265-57db-4330-8687-6b383f38584d)
+    _Navigate to TheHive directory and change ownership_
+
+    ![Screenshot 2025-06-14 230950](https://github.com/user-attachments/assets/e34759bb-6e1b-4ad3-8bd0-16f1bfe29320)
+    _Configuring TheHive_
+
+    ```bash
+    nano /etc/thehive/application.conf
+    ```
+
+    ![image](https://github.com/user-attachments/assets/c9dbd10d-4ecb-4ddc-b7c6-699ad68f75d5)
+    _Change hostnames and application.baserule to TheHive public IP, give a name to the cluster, in this case 'mylab'_
+
+    ![Screenshot 2025-06-14 231441](https://github.com/user-attachments/assets/04802257-9b15-46af-9389-864f9e255e7c)
+    __Start, enable and check the status of the TheHive service__
+
+    ```bash
+    systemctl start thehive.service
+    ```
+
+    ```bash
+    systemctl enable thehive.service
+    ```
+
+    ```bash
+    systemctl status thehive.service
+    ```
+
+4.  **Run TheHive**
+    -   Launch the service
+    -   Access via `http://<thehive public IP>:9000` or set up reverse proxy for HTTPS
+
+    ![Screenshot 2025-06-14 231655](https://github.com/user-attachments/assets/d3c0a7e1-6299-403e-bc11-8687b3754092)
+    _TheHive login page_
+
+    -   TheHive will fail on the first login attempt
+    -   Check Elasticsearch status
+  
+    ![Screenshot 2025-06-14 232242](https://github.com/user-attachments/assets/8140e2ad-07c1-41de-90fa-840a6c90297b)
+    _Activation has failed, we need to create a jvm.options file to address the heap memory issue on ElasticSearch_
+
+    ![Screenshot 2025-06-14 232242](https://github.com/user-attachments/assets/a229bd64-fcd0-4593-af51-f5314fcef669)
+    _Navigate to `/etc/elasticsearch/jvm. options.d/` and create the file jvm.options_
+
+    ```bash
+    nano /etc/elasticsearch/jvm. options.d/jvm. options
+    ```
+
+    ![Screenshot 2025-06-14 232323](https://github.com/user-attachments/assets/6e0f2081-0426-4a25-9e4a-c2b06aa67f15)
+    _Heap memory allocation_
+
+    ```bash
+    -Dlog4j2. formatMsgNoLookups=true
+    -Xms2g
+    -Xmx2g
+    ```
+    **Note:**
+    >The `jvm.options` file serves as a critical configuration point for Java applications, particularly for controlling the Java Virtual Machine's (JVM) behaviour and resource allocation. Within this file, lines such as `-    Dlog4j2.formatMsgNoLookups=true`, `-Xms2g`, and `-Xmx2g` instruct the JVM on how to operate. The `-Dlog4j2.formatMsgNoLookups=true` option is a vital security measure, specifically disabling dangerous message lookup features in the Log4j2 logging framework to mitigate the Log4Shell vulnerability and prevent remote code execution. Concurrently, `-Xms2g` and `-Xmx2g` are used to manage the JVM's memory heap: precisely `-Xms2g` sets the initial heap size to 2 gigabytes, ensuring the application has sufficient memory from the moment it starts, while `-Xmx2g` defines the maximum heap size also as 2 gigabytes, preventing the application from consuming excessive system resources. Together, these settings optimise application performance by preventing dynamic heap resizing and enhancing security, making them fundamental for stable and secure Java deployments.
+
 
 
 
