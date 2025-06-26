@@ -797,27 +797,27 @@ By completing this step, you now have:
 
 `C:\Program Files (x86)\ossec-agent`
 
-![Screenshot 2025-06-15 000304](https://github.com/user-attachments/assets/7b5d46c9-8c8e-4346-a88f-cf43150efd84)
+![Screenshot 2025-06-15 000304](https://github.com/user-attachments/assets/7b5d46c9-8c8e-4346-a88f-cf43150efd84)<br>
 _Wazuh agent configuration files location_
 
 -   Backup the file (e.g., rename to `ossec-backup.conf`).
 
-![Screenshot 2025-06-15 000613](https://github.com/user-attachments/assets/18e3ee10-cc94-48f5-8037-c1d220aaf43b)
+![Screenshot 2025-06-15 000613](https://github.com/user-attachments/assets/18e3ee10-cc94-48f5-8037-c1d220aaf43b)<br>
 _Backup `ossec.conf` is recommended in case we need to restore the system_
 
 -   Open `ossec.conf` with admin rights via Notepad.
 
-![Screenshot 2025-06-15 000505](https://github.com/user-attachments/assets/3393db7f-b8c4-4150-9620-ce791df69660)
+![Screenshot 2025-06-15 000505](https://github.com/user-attachments/assets/3393db7f-b8c4-4150-9620-ce791df69660)<br>
 _`ossec.conf`_
 
 -   Copy one of the `<localfile>` parameters to use for our Sysmon parameters
 
-![Screenshot 2025-06-15 000803](https://github.com/user-attachments/assets/331282fb-df1d-43fa-a8a2-566680eba680)
+![Screenshot 2025-06-15 000803](https://github.com/user-attachments/assets/331282fb-df1d-43fa-a8a2-566680eba680)<br>
 _Copying application parameters_
 
 -   Under `<localfile>` entries, add:
 
-![Screenshot 2025-06-15 001037](https://github.com/user-attachments/assets/384b20c0-f2ad-4f74-9312-b0c581c0a6a0)
+![Screenshot 2025-06-15 001037](https://github.com/user-attachments/assets/384b20c0-f2ad-4f74-9312-b0c581c0a6a0)<br>
 _Sysmon parameter, for this project, we will just be using the Sysmon events, but we can ingest other logs like PowerShell, System, etc_
 
 ```xml
@@ -829,7 +829,7 @@ _Sysmon parameter, for this project, we will just be using the Sysmon events, bu
 
 -   To find out the channel name
 
-![image](https://github.com/user-attachments/assets/5d55dfec-21b1-4088-b65d-7db0045b5072)
+![image](https://github.com/user-attachments/assets/5d55dfec-21b1-4088-b65d-7db0045b5072)<br>
 _Sysmon channel name_
 
 -   Optional: Remove other logs like Application, Security and System for focused testing.
@@ -838,7 +838,7 @@ _Sysmon channel name_
 
 -   Open Services → Restart **Wazuh Agent**
 
-![image](https://github.com/user-attachments/assets/dcc400f0-547b-49f3-ab75-fdee1d8c20b0)
+![image](https://github.com/user-attachments/assets/dcc400f0-547b-49f3-ab75-fdee1d8c20b0)<br>
 _Services window_
 
 -   Or run in PowerShell (Admin):
@@ -846,6 +846,289 @@ _Services window_
 ```bash
 net stop wazuhsvc net start wazuhsvc
 ```
+
+-   Check that we are getting Sysmon telemetry on Wazuh
+
+![Screenshot 2025-06-15 001855](https://github.com/user-attachments/assets/6493b5b8-7de4-4d3c-b930-ef7ed26312e0)<br>
+_Sysmon telemetry on Wazuh_
+
+## **Generate Mimikatz Telemetry**
+
+### 1\. **Exclude Defender Protection**
+
+-   Windows Security → Virus & Threat Protection → Manage Settings → Add Exclusion (Downloads folder)
+
+![image](https://github.com/user-attachments/assets/63d3f875-5a95-400c-bb84-dd8946e69830)<br>
+
+![Screenshot 2025-06-15 002112](https://github.com/user-attachments/assets/d833c107-423e-4f0d-9ec7-e7fc43b14fef)<br>
+
+![Screenshot 2025-06-15 002142](https://github.com/user-attachments/assets/b9aa9360-93e6-41f6-ad3b-9c92776f343e)<br>
+_Disabling Defender_
+
+### 2\. **Download and Execute Mimikatz**
+
+![Screenshot 2025-06-15 002204](https://github.com/user-attachments/assets/bdfd0222-8e77-464c-ac54-5bf923fb1c5e)<br>
+
+![image](https://github.com/user-attachments/assets/a1389b62-29d2-46e2-8e3f-ffcca497ffb4)<br>
+
+![image](https://github.com/user-attachments/assets/36592c33-82fb-4460-b45f-b82171edb662)<br>
+_Exclude Downloads from Defender_
+
+-   Download Mimikatz ZIP
+
+Go to the link github.com/gentilkiwi/mimikatz/releases
+
+![image](https://github.com/user-attachments/assets/1fac7816-29ee-4bbc-89f0-7598d1d29969)<br>
+_Mimikatz installer_
+
+- Disable browsing protection for downloading Mimikatz; otherwise, the browser will stop the transfer.
+
+![Screenshot 2025-06-15 002657](https://github.com/user-attachments/assets/8f64d7f0-d43e-4da6-b0a8-c3b1c7c2c0bd)<br>
+_Disable browsing protection_
+
+-   Extract to the Downloads folder
+
+![Screenshot 2025-06-15 002759](https://github.com/user-attachments/assets/13bd51cd-16b8-409a-a4d9-55c2d050c16b)<br>
+
+![Screenshot 2025-06-15 002858](https://github.com/user-attachments/assets/31c232b1-3c44-4833-b845-c18b40be5357)<br>
+_Extracting Mimikatz_
+
+-   Using PowerShell as (Admin), navigate to the Mimikatz folder. Run the binary.
+
+```powershell
+cd C:\Users\Jhon\Downloads\mimikatz_trunk\x64
+```
+
+```powershell
+cd Downloads\mimikatz .\mimikatz.exe
+```
+
+![Screenshot 2025-06-15 003018](https://github.com/user-attachments/assets/1bd72f3b-a126-4214-8a48-50f837e9dc03)
+_Mimikatz running in PowerShell_
+
+
+## Configure Wazuh manager to Archive All Logs**
+
+### 1\. **Edit Wazuh Manager Config (Ubuntu Server)**
+
+SSH on the Wazuh server and edit the `ossec.conf` file.
+
+First make a copy of the file for safety
+
+```bash
+sudo cp /var/ossec/etc/ossec.conf ~/ossec-backup.conf
+```
+
+```bash
+nano /var/ossec/etc/ossec.conf
+```
+
+Change the following:
+
+```xml
+<logall>yes</logall>
+<logall_json>yesk/logall_json>
+```
+
+![image](https://github.com/user-attachments/assets/01cf85aa-8c2c-4851-897b-aa3c5ed2aa7c)
+_Initial setup_
+
+![Screenshot 2025-06-15 005127](https://github.com/user-attachments/assets/f8330c30-bfaf-461c-85a6-5c359423e431)
+_Wazuh `ossec.conf` logall settings_
+
+Check if Wazuh is ingesting JSON logs.
+
+``bash
+ls /var/ossec/logs/archives/
+``
+
+![Screenshot 2025-06-15 005350](https://github.com/user-attachments/assets/b10bd74e-a9bd-4d04-a73d-e27bf5c76082)
+_Archives logs_
+
+### 2\. **Enable Filebeat to Ingest Archive Logs**
+
+```bash
+sudo nano /etc/filebeat/filebeat.yml`
+````
+
+![image](https://github.com/user-attachments/assets/7824ce97-520c-4ddb-94b2-fc884277461b)
+_Edit filebeat_
+
+-   Change:
+
+`archives: enabled: true`
+
+![Screenshot 2025-06-15 005628](https://github.com/user-attachments/assets/4e7fb64a-a5f4-4bd8-8410-ad4c0bc19cef)
+_Filebeat archives enabled_
+
+then restart Filebeat service
+
+```bash
+systemctl restart filebeat. service
+```
+
+## **Create Custom Index for Archive Logs**
+
+1.  **Wazuh Dashboard → Stack Management → Index Patterns**
+
+![Screenshot 2025-06-15 010100](https://github.com/user-attachments/assets/3b30c83e-17ec-4691-842d-0092be280f40)
+_Stack Management_
+
+![Screenshot 2025-06-15 010225](https://github.com/user-attachments/assets/98a4851b-3bf2-4d5a-a351-bf53c7d6eace)
+_Index Patterns_
+
+2.  **Create New Index**:
+
+![image](https://github.com/user-attachments/assets/a5509989-6e59-4cb6-a79b-894332c6d3a9)
+_Create index pattern_
+
+-   Pattern: `wazuh-archives-*`
+
+![Screenshot 2025-06-15 010500](https://github.com/user-attachments/assets/9d7c5317-c6aa-4692-b004-c56348625ce2)
+_Index pattern name_
+
+-   Select time field: `@timestamp` and then click on Create index pattern.
+
+![Screenshot 2025-06-15 010537](https://github.com/user-attachments/assets/e8ff09e7-2f92-4065-b4c0-22a2a31e8ce5)
+_Time field_
+
+![Screenshot 2025-06-15 011019](https://github.com/user-attachments/assets/cb3068c7-947b-4f90-adc3-563242d2c52c)
+_New Index Pattern for archives_
+
+## **Create Custom Detection Rule for Mimikatz**
+
+### 1\. **Find Sysmon Event Data**
+
+-   Generate Mimikatz events by running it again
+
+![Screenshot 2025-06-15 011356](https://github.com/user-attachments/assets/195b1991-e7e5-41dd-97a4-4ab60655cd0d)
+_Run Mimikatz_
+
+-   Search in Archive Index: `event_id:1` and `original_file_name:mimikatz`
+
+On Windows Event Viewer, go to Event Viewer (Local) → Applications and Services Logs → Microsoft → Windows → Sysmon → Operational, and filter the events 1
+
+![Screenshot 2025-06-15 011449](https://github.com/user-attachments/assets/98d704b9-75ed-4320-b999-ba84ce51de96)
+_Events 1_
+
+![Screenshot 2025-06-15 011601](https://github.com/user-attachments/assets/76389baf-a2a8-47b3-bd0d-1fbf23ce2545)
+_Mimikazt event being logged by Sysmon_
+
+- Check whether Wazuh manager is logging the Mimikatz logs gather by Sysmon_
+
+```bash
+cat archives.json | grep -i mimikatz
+```
+ 
+![Screenshot 2025-06-15 011744](https://github.com/user-attachments/assets/736d78b6-d582-459d-b07e-fa102ed99737)
+_Wazuh Mimikatz logs_
+
+![Screenshot 2025-06-15 011837](https://github.com/user-attachments/assets/eb7af982-76d5-4bb7-bcfc-d79bc380c97a)
+_Wazuh Mimikatz logs on the web interface_
+
+![Screenshot 2025-06-15 011952](https://github.com/user-attachments/assets/d6559200-f702-4f29-a2fe-1321bc640425)
+_Wazuh Mimikatz logs on the web interface, we will use the original filename to build our rule as it will be always the same even if someone change the name of the file_
+
+### 2\. **Write Custom Rule via Dashboard**
+
+-   Go to: **Rules → Custom Rules → Edit Local Rules**
+
+![Screenshot 2025-06-15 012137](https://github.com/user-attachments/assets/d3b19cd2-bea4-45c6-b69a-cbe99ee518ce)
+_Add a rule_
+
+![Screenshot 2025-06-15 012322](https://github.com/user-attachments/assets/ae2c5d77-e608-4a27-af42-fded4e8d3735)
+_Manage rules files_
+
+As we are interested on Sysmon event ID 1, we will have a look at the XML file.
+
+![Screenshot 2025-06-15 012409](https://github.com/user-attachments/assets/22c2ab4f-6abc-460c-b9c2-80b2ac05592f)
+_Sysmon ID 1 XML rule_
+
+Then, copy one of the rules to use as an example for our custom rule.
+![Screenshot 2025-06-15 012720](https://github.com/user-attachments/assets/515e73ca-1b82-4a1d-926a-68ae99961614)
+_Copy rule_
+
+-   Go to custom rules
+
+![Screenshot 2025-06-15 012802](https://github.com/user-attachments/assets/23019364-fdc8-40a5-a195-5f2d01ff5323)
+_Click on custom rules_
+
+![Screenshot 2025-06-15 012926](https://github.com/user-attachments/assets/28d5f8e0-744a-49fe-94a6-2df43030a9ba)
+_Edit custom rules_
+
+-   Paste and modify the rule we copied from the Sysmon XML file:
+
+![image](https://github.com/user-attachments/assets/bd69c55f-b7dc-43cf-a672-ec1db8be8817)
+_Our custom rule to alert about Mimikatz usage_
+
+Note: custom rules start from `100000`.
+
+```xml
+<rule id="100002" level="15">
+   <if_sid>80001</if_sid>
+   <field name="win.eventdata.originalFileName" type="pcre2">(?i)mimikatz\.exe</field>
+   <description>Mimikatz Usage Detected</description>
+   <mitre>
+      <id>T1003</id>
+   </mitre>
+</rule>
+```
+
+### 3\. **Restart Wazuh Manager**
+
+-   Use the Dashboard restart option.
+
+![image](https://github.com/user-attachments/assets/92b02a75-37b5-497a-8e64-b92e4aa8e0ab)
+_Restart from dashboard_
+
+![image](https://github.com/user-attachments/assets/a98527d2-15f8-4f15-a144-79a2a2f05fcf)
+_Confirm_
+
+-   or:
+
+```bash
+sudo systemctl restart wazuh-manager
+```
+
+## **Final Test: Bypass Filename and Trigger Alert**
+
+-   Rename Mimikatz executable to a decoy name (e.g., `ztakimim.exe`)
+
+![Screenshot 2025-06-15 013827](https://github.com/user-attachments/assets/2fc5c5a0-5f73-44dc-b20b-a886dd0660d0)
+_Rename file_
+
+-   Execute it via PowerShell:
+
+```powershell
+.\ztakimim.exe`
+```
+
+-   Confirm alert is triggered in Wazuh using `originalFileName`
+
+![Screenshot 2025-06-15 015503](https://github.com/user-attachments/assets/1f7a7f51-ff37-479b-a4d8-d60db5a4e7db)
+_Mimikatz alert triggered_
+
+![Screenshot 2025-06-15 195607](https://github.com/user-attachments/assets/3be90d65-af26-42ec-9b56-04ebda4d9141)
+_Wazuh alert for renamed Mimikatz_
+
+## **End of Step 4 – Expected Outcome**
+
+You have now:
+
+-   Configured Wazuh Agent to ingest **Sysmon logs**
+-   Tuned **Wazuh Manager** to log and archive everything
+-   Created a **custom detection rule** for Mimikatz that resists binary renaming
+-   Verified that alerts are triggered based on **original file name**
+
+
+
+
+
+
+
+
+
+
 
 
 
