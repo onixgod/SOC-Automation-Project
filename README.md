@@ -785,6 +785,68 @@ By completing this step, you now have:
 -   Wazuh ingesting Sysmon telemetry from Windows 10 client
 -   All components verified and communicating
 
+# **Step 4: Generating Telemetry and Creating Custom Alerts in Wazuh**
+
+> _Objective: Ingest telemetry from the Windows 10 client using Sysmon, configure Wazuh to receive and log all events, and create a custom detection rule for Mimikatz based on the original binary name._
+
+## **Configure Wazuh Agent to Ingest Sysmon Logs**
+
+### 1\. **Modify Agent Config (Windows 10 Client)**
+
+-   Navigate to:
+
+`C:\Program Files (x86)\ossec-agent`
+
+![Screenshot 2025-06-15 000304](https://github.com/user-attachments/assets/7b5d46c9-8c8e-4346-a88f-cf43150efd84)
+_Wazuh agent configuration files location_
+
+-   Backup the file (e.g., rename to `ossec-backup.conf`).
+
+![Screenshot 2025-06-15 000613](https://github.com/user-attachments/assets/18e3ee10-cc94-48f5-8037-c1d220aaf43b)
+_Backup `ossec.conf` is recommended in case we need to restore the system_
+
+-   Open `ossec.conf` with admin rights via Notepad.
+
+![Screenshot 2025-06-15 000505](https://github.com/user-attachments/assets/3393db7f-b8c4-4150-9620-ce791df69660)
+_`ossec.conf`_
+
+-   Copy one of the `<localfile>` parameters to use for our Sysmon parameters
+
+![Screenshot 2025-06-15 000803](https://github.com/user-attachments/assets/331282fb-df1d-43fa-a8a2-566680eba680)
+_Copying application parameters_
+
+-   Under `<localfile>` entries, add:
+
+![Screenshot 2025-06-15 001037](https://github.com/user-attachments/assets/384b20c0-f2ad-4f74-9312-b0c581c0a6a0)
+_Sysmon parameter, for this project, we will just be using the Sysmon events, but we can ingest other logs like PowerShell, System, etc_
+
+```xml
+<localfile>
+   <location>Microsoft-Windows-Sysmon/Operational</location>
+   <log_format>eventchannel</log_format>
+</localfile>
+```
+
+-   To find out the channel name
+
+![image](https://github.com/user-attachments/assets/5d55dfec-21b1-4088-b65d-7db0045b5072)
+_Sysmon channel name_
+
+-   Optional: Remove other logs like Application, Security and System for focused testing.
+
+### 2\. **Restart Wazuh Agent Service**
+
+-   Open Services → Restart **Wazuh Agent**
+
+![image](https://github.com/user-attachments/assets/dcc400f0-547b-49f3-ab75-fdee1d8c20b0)
+_Services window_
+
+-   Or run in PowerShell (Admin):
+
+```bash
+net stop wazuhsvc net start wazuhsvc
+```
+
 
 
 
