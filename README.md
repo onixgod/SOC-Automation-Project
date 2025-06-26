@@ -483,14 +483,14 @@ _Start the Windows 10 VM_
 4.  **Install Java**
 
     -   Before TheHive installation, it is always recommended to update and upgrade the OS
-    ![Screenshot 2025-06-14 145346](https://github.com/user-attachments/assets/361b2f42-5fea-4a44-8c79-9766233f54af)<br>
+    ![Screenshot 2025-06-14 145346](https://github.com/user-attachments/assets/361b2f42-5fea-4a44-8c79-9766233f54af)<br><br>
 
-    ![Screenshot 2025-06-14 145506](https://github.com/user-attachments/assets/40ec915a-df8f-4896-9c0d-5a13b5f03d19)<br>
+    ![Screenshot 2025-06-14 145506](https://github.com/user-attachments/assets/40ec915a-df8f-4896-9c0d-5a13b5f03d19)<br><br>
 
-    ![Screenshot 2025-06-14 145613](https://github.com/user-attachments/assets/6bc4089e-9899-4896-a510-c7392f368450)<br>
+    ![Screenshot 2025-06-14 145613](https://github.com/user-attachments/assets/6bc4089e-9899-4896-a510-c7392f368450)<br><br>
     _Updating OS_
     
-    ![Screenshot 2025-06-14 150227](https://github.com/user-attachments/assets/7c455fa2-c788-45fa-8da6-cd1fc915e923)
+    ![Screenshot 2025-06-14 150227](https://github.com/user-attachments/assets/7c455fa2-c788-45fa-8da6-cd1fc915e923)<br>
     _Installing Java (OpenJDK)_
 
     ```bash
@@ -502,12 +502,12 @@ _Start the Windows 10 VM_
     export JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto"
     ```
     
-    ![Screenshot 2025-06-14 150318](https://github.com/user-attachments/assets/0ca330e9-c151-4d1a-949a-2d6bfc3f48dc)
+    ![Screenshot 2025-06-14 150318](https://github.com/user-attachments/assets/0ca330e9-c151-4d1a-949a-2d6bfc3f48dc)<br>
     _Click on OK_
 
 5.  **Install Cassandra**
 
-    ![Screenshot 2025-06-14 150436](https://github.com/user-attachments/assets/2a366b7c-1135-420a-a3ff-c1b76fdab329)
+    ![Screenshot 2025-06-14 150436](https://github.com/user-attachments/assets/2a366b7c-1135-420a-a3ff-c1b76fdab329)<br>
     _Installing Cassandra_
 
     ```bash
@@ -517,12 +517,12 @@ _Start the Windows 10 VM_
     sudo apt install cassandra
     ```
     
-    ![Screenshot 2025-06-14 150448](https://github.com/user-attachments/assets/9563385d-d36d-4a94-88f3-756ca6a0ea4a)
+    ![Screenshot 2025-06-14 150448](https://github.com/user-attachments/assets/9563385d-d36d-4a94-88f3-756ca6a0ea4a)<br>
     _Click on OK_
 
 6.  **Install Elasticsearch**
     
-    ![Screenshot 2025-06-14 150623](https://github.com/user-attachments/assets/b688bc28-774f-4124-956a-afbf780a4a00)
+    ![Screenshot 2025-06-14 150623](https://github.com/user-attachments/assets/b688bc28-774f-4124-956a-afbf780a4a00)<br>
     _Installing Elasticsearch_
 
     ```bash
@@ -533,42 +533,42 @@ _Start the Windows 10 VM_
     sudo apt install elasticsearch
     ```
 
-    ![Screenshot 2025-06-14 150632](https://github.com/user-attachments/assets/6fa50e78-fd62-4e3b-94e5-fe12e7834b93)
+    ![Screenshot 2025-06-14 150632](https://github.com/user-attachments/assets/6fa50e78-fd62-4e3b-94e5-fe12e7834b93)<br>
     _Click on OK_
 
 7.  **Configuring Cassandra**
 
-    ![Screenshot 2025-06-14 154158](https://github.com/user-attachments/assets/dcd0058a-248c-4ab6-b5bc-ec3a072f7c8b)
+    ![Screenshot 2025-06-14 154158](https://github.com/user-attachments/assets/dcd0058a-248c-4ab6-b5bc-ec3a072f7c8b)<br>
     _Configuring Cassandra_
 
     ```bash
     nano /etc/cassandra/cassandra.yaml
     ```
 
-    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
+    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
     _Change `cluster_name` to `'mylab'` and the `listen_address` to your TheHive public IP_
 
-    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
+    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
     _Change the `rpc_address` to your TheHive public IP_
 
-    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
+    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
     _Change the seedaddress `seeds` to your TheHive public IP_
 
-    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
+    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
     _Stop Cassandra service_
     
     ```bash
     systemctl stop cassandra.service
     ```
 
-    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
+    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
     _We need to remove any Cassandra data when setting up Cassandra for the first time and no critical data exists_
 
     ```bash
     rm -rf /var/lib/cassandra/*
     ```
 
-    ![Screenshot 2025-06-14 155159](https://github.com/user-attachments/assets/851fed1b-c039-46a2-9774-c422eacd5881)
+    ![Screenshot 2025-06-14 155159](https://github.com/user-attachments/assets/851fed1b-c039-46a2-9774-c422eacd5881)<br>
     _Start and check the status of the Cassandra service_
 
     ```bash
@@ -581,20 +581,20 @@ _Start the Windows 10 VM_
 
 8.  **Configuring Elasticsearch**
 
-    ![Screenshot 2025-06-14 154158](https://github.com/user-attachments/assets/dcd0058a-248c-4ab6-b5bc-ec3a072f7c8b)
+    ![Screenshot 2025-06-14 154158](https://github.com/user-attachments/assets/dcd0058a-248c-4ab6-b5bc-ec3a072f7c8b)<br>
     _Configuring Elasticsearch_
 
     ```bash
     nano /etc/elasticsearch/elasticsearch.yml
     ```
 
-    ![image](https://github.com/user-attachments/assets/861fb4de-2f1b-48f0-aca9-0f66bb5f5c9e)
+    ![image](https://github.com/user-attachments/assets/861fb4de-2f1b-48f0-aca9-0f66bb5f5c9e)<br>
     _Remove the comment # and change `cluster.name` to thehive, remove the comment # to `node.name`_
 
-    ![Screenshot 2025-06-14 160110](https://github.com/user-attachments/assets/aa9ad9fa-e501-4b63-b226-5df52aad8d6a)
+    ![Screenshot 2025-06-14 160110](https://github.com/user-attachments/assets/aa9ad9fa-e501-4b63-b226-5df52aad8d6a)<br>
     _Remove the comment # and change `network.host` to TheHive public IP, remove the comment # for `http.port`, remove the comment # for `cluster.initial_nodes` and delete `"node-2"`_
 
-    ![Screenshot 2025-06-14 160340](https://github.com/user-attachments/assets/09cf0c0a-45b3-49e6-a638-192944cee988)
+    ![Screenshot 2025-06-14 160340](https://github.com/user-attachments/assets/09cf0c0a-45b3-49e6-a638-192944cee988)<br>
     _Start, enable and check the status of the Elasticsearch service_
 
     ```bash
@@ -611,7 +611,7 @@ _Start the Windows 10 VM_
 
 9.  **Install TheHive**
 
-    ![Screenshot 2025-06-14 230305](https://github.com/user-attachments/assets/47101d45-6434-488d-882f-4f659cb6a55b)
+    ![Screenshot 2025-06-14 230305](https://github.com/user-attachments/assets/47101d45-6434-488d-882f-4f659cb6a55b)<br>
     _Installing TheHive_
 
     ```bash
@@ -621,7 +621,7 @@ _Start the Windows 10 VM_
     sudo apt-get install -y thehive
     ```
 
-    ![Screenshot 2025-06-14 230722](https://github.com/user-attachments/assets/2b477265-57db-4330-8687-6b383f38584d)
+    ![Screenshot 2025-06-14 230722](https://github.com/user-attachments/assets/2b477265-57db-4330-8687-6b383f38584d)<br>
     _Check TheHive directory and change ownership, `-R` to change user and group_
 
     ```bash
@@ -634,18 +634,18 @@ _Start the Windows 10 VM_
 
 10. **Configuring TheHive**
 
-    ![Screenshot 2025-06-14 230950](https://github.com/user-attachments/assets/e34759bb-6e1b-4ad3-8bd0-16f1bfe29320)
+    ![Screenshot 2025-06-14 230950](https://github.com/user-attachments/assets/e34759bb-6e1b-4ad3-8bd0-16f1bfe29320)<br>
     _Configuring TheHive_
 
     ```bash
     nano /etc/thehive/application.conf
     ```
 
-    ![image](https://github.com/user-attachments/assets/c9dbd10d-4ecb-4ddc-b7c6-699ad68f75d5)
+    ![image](https://github.com/user-attachments/assets/c9dbd10d-4ecb-4ddc-b7c6-699ad68f75d5)<br>
     _Change `hostname` and `application.baseUrl` to TheHive public IP, give a name to the `cluster-name`, in this case `'mylab'`_
 
-    ![Screenshot 2025-06-14 231441](https://github.com/user-attachments/assets/04802257-9b15-46af-9389-864f9e255e7c)
-    __Start, enable and check the status of the TheHive service__
+    ![Screenshot 2025-06-14 231441](https://github.com/user-attachments/assets/04802257-9b15-46af-9389-864f9e255e7c)<br>
+    _Start, enable and check the status of the TheHive service_
 
     ```bash
     systemctl start thehive.service
@@ -663,23 +663,23 @@ _Start the Windows 10 VM_
     -   Launch the service
     -   Access via `http://<TheHive public IP>:9000`
 
-    ![Screenshot 2025-06-14 231655](https://github.com/user-attachments/assets/d3c0a7e1-6299-403e-bc11-8687b3754092)
+    ![Screenshot 2025-06-14 231655](https://github.com/user-attachments/assets/d3c0a7e1-6299-403e-bc11-8687b3754092)<br>
     _TheHive login page_
 
     -   TheHive will fail on the first login attempt
     -   Check Elasticsearch status
   
-    ![Screenshot 2025-06-14 232242](https://github.com/user-attachments/assets/8140e2ad-07c1-41de-90fa-840a6c90297b)
+    ![Screenshot 2025-06-14 232242](https://github.com/user-attachments/assets/8140e2ad-07c1-41de-90fa-840a6c90297b)<br>
     _Activation has failed, we need to create a jvm.options file to address the heap memory issue on ElasticSearch_
 
-    ![Screenshot 2025-06-14 232242](https://github.com/user-attachments/assets/a229bd64-fcd0-4593-af51-f5314fcef669)
+    ![Screenshot 2025-06-14 232242](https://github.com/user-attachments/assets/a229bd64-fcd0-4593-af51-f5314fcef669)<br>
     _Navigate to `/etc/elasticsearch/jvm. options.d/` and create the file jvm.options_
 
     ```bash
     nano /etc/elasticsearch/jvm.options.d/jvm. options
     ```
 
-    ![Screenshot 2025-06-14 232323](https://github.com/user-attachments/assets/6e0f2081-0426-4a25-9e4a-c2b06aa67f15)
+    ![Screenshot 2025-06-14 232323](https://github.com/user-attachments/assets/6e0f2081-0426-4a25-9e4a-c2b06aa67f15)<br>
     _Heap memory allocation, copy and paste the below setup and save_
 
     ```bash
@@ -700,57 +700,58 @@ _Start the Windows 10 VM_
     >The `jvm.options` file serves as a critical configuration point for Java applications, particularly for controlling the Java Virtual Machine's (JVM) behaviour and resource allocation. Within this file, lines such as `-    Dlog4j2.formatMsgNoLookups=true`, `-Xms2g`, and `-Xmx2g` instruct the JVM on how to operate. The `-Dlog4j2.formatMsgNoLookups=true` option is a vital security measure, specifically disabling dangerous message lookup features in the Log4j2 logging framework to mitigate the Log4Shell vulnerability and prevent remote code execution. Concurrently, `-Xms2g` and `-Xmx2g` are used to manage the JVM's memory heap: precisely `-Xms2g` sets the initial heap size to 2 gigabytes, ensuring the application has sufficient memory from the moment it starts, while `-Xmx2g` defines the maximum heap size also as 2 gigabytes, preventing the application from consuming excessive system resources. Together, these settings optimise application performance by preventing dynamic heap resizing and enhancing security, making them fundamental for stable and secure Java deployments.
 
     -   Launch TheHive
-    ![Screenshot 2025-06-14 232510](https://github.com/user-attachments/assets/2787b884-13f5-4855-8b70-3f37fa9e7c86)
+    ![Screenshot 2025-06-14 232510](https://github.com/user-attachments/assets/2787b884-13f5-4855-8b70-3f37fa9e7c86)<br>
     _TheHive Dashboard_
 
 12. **Configure Wazuh and Connect Windows Client**
 
-### 1\. **Access Wazuh Dashboard**
+**Access Wazuh Dashboard**
 
 -   Login using admin credentials from Step 2
 -   URL: `https://<WAZUH_PUBLIC_IP>`
 
-![image](https://github.com/user-attachments/assets/030479e0-1cfb-47b3-b3fe-bb10184a4b98)
+![image](https://github.com/user-attachments/assets/030479e0-1cfb-47b3-b3fe-bb10184a4b98)<br>
 _Wazuh Dashboard_
 
-### 2\. **Find API Credentials (if lost)**
+**Find API Credentials (if lost)**
 
 ```bash
 tar -xvf wazuh-install.tar cd wazuh-install-files cat wazuh-passwords.txt
 ```
 
-### 3\. **Add Windows Agent**
+**Add Windows Agent**
 
 -   On Wazuh dashboard:
     `Agents > Add Agent > Platform: Windows`
 
-![Screenshot 2025-06-14 234041](https://github.com/user-attachments/assets/be97cb46-6cf7-4e31-ae19-c5e3730c0c4d)
+![Screenshot 2025-06-14 234041](https://github.com/user-attachments/assets/be97cb46-6cf7-4e31-ae19-c5e3730c0c4d)<br>
 -Adding agent_
 
 -   Use Wazuh public IP as the manager address
 
-![image](https://github.com/user-attachments/assets/99ad8269-6b94-43c3-8e2c-8da8103a7a05)
+![image](https://github.com/user-attachments/assets/99ad8269-6b94-43c3-8e2c-8da8103a7a05)<br>
 _Selecting the platform_
 
 -   Copy the generated install command
 
-![Screenshot 2025-06-14 234309](https://github.com/user-attachments/assets/9777b528-0ca0-4aab-8848-2fc0dec7640f)
+![Screenshot 2025-06-14 234309](https://github.com/user-attachments/assets/9777b528-0ca0-4aab-8848-2fc0dec7640f)<br>
 -PowerShell command for agent installation_
 
-### 4\. **Install on Windows Client**
+**Install on Windows Client**
 
 -   Open **PowerShell as Administrator**
 
-![image](https://github.com/user-attachments/assets/2b38dab5-21c0-447a-81f4-09a3ff7f0c40)
+![image](https://github.com/user-attachments/assets/2b38dab5-21c0-447a-81f4-09a3ff7f0c40)<br>
 _PowerShell running as administrator_
+
 -   Paste and run the command
 
-![image](https://github.com/user-attachments/assets/5d5ab1e6-872b-4989-b439-d325ca7fee9b)
+![image](https://github.com/user-attachments/assets/5d5ab1e6-872b-4989-b439-d325ca7fee9b)<br>
 _PowerShell command_
  
 -   Then start the service:
 
-![image](https://github.com/user-attachments/assets/9cb8f941-e637-4d9c-9b8d-c47db5c03ae6)
+![image](https://github.com/user-attachments/assets/9cb8f941-e637-4d9c-9b8d-c47db5c03ae6)<br>
 _Starting Wazuh service from PowerShell_
 
 
@@ -758,31 +759,31 @@ _Starting Wazuh service from PowerShell_
 net start WazuhSvc
 ```
 
-![Screenshot 2025-06-14 235441](https://github.com/user-attachments/assets/107913db-02ea-4cc5-b662-90d8e09d2834)
+![Screenshot 2025-06-14 235441](https://github.com/user-attachments/assets/107913db-02ea-4cc5-b662-90d8e09d2834)<br>
 _Check Wazuh service is running_
 
-### 5\. **Verify Agent Connectivity**
+**Verify Agent Connectivity**
 
 -   Wazuh dashboard → Agents tab → Confirm agent shows as "Active"
 -   Navigate to **Security Events** to confirm telemetry ingestion
 
-![image](https://github.com/user-attachments/assets/980f0354-686e-46d3-b2b6-b2cfca7970d8)
+![image](https://github.com/user-attachments/assets/980f0354-686e-46d3-b2b6-b2cfca7970d8)<br>
 _Agent appears in Wazuh Dashboard_
 
-![Screenshot 2025-06-14 235719](https://github.com/user-attachments/assets/65c68e8d-1f68-418c-a2fb-b0d5642b5e5f)
+![Screenshot 2025-06-14 235719](https://github.com/user-attachments/assets/65c68e8d-1f68-418c-a2fb-b0d5642b5e5f)<br>
 _Agent appears in Wazuh Dashboard_
 
-![Screenshot 2025-06-14 235756](https://github.com/user-attachments/assets/711b48e6-ac6e-4309-8dd2-4abda5b177b9)
+![Screenshot 2025-06-14 235756](https://github.com/user-attachments/assets/711b48e6-ac6e-4309-8dd2-4abda5b177b9)<br>
 _Events being recorded_
 
-## ✅ **End of Step 3 – Expected Outcome**
+**End of Step 3 – Expected Outcome**
 
 By completing this step, you now have:
 
--   ✅ TheHive fully configured and accessible via port 9000
--   ✅ Cassandra and Elasticsearch integrated
--   ✅ Wazuh ingesting Sysmon telemetry from Windows 10 client
--   ✅ All components verified and communicating
+-   TheHive fully configured and accessible via port 9000
+-   Cassandra and Elasticsearch integrated
+-   Wazuh ingesting Sysmon telemetry from Windows 10 client
+-   All components verified and communicating
 
 
 
