@@ -260,7 +260,7 @@ This flowchart illustrates the logic behind your automated incident response pro
     ![image](https://github.com/user-attachments/assets/36934d57-ec43-4b14-93eb-c21f9028456f)<br>
     _ISO downloading_
 
-4.  **Create Windows 10 VM in VirtualBox**
+3.  **Create Windows 10 VM in VirtualBox**
     -   VM Name: `Win10-Sysmon`
     -   RAM: 4GB, Disk: 50GB
     -   Load the Windows ISO during creation
@@ -269,8 +269,8 @@ This flowchart illustrates the logic behind your automated incident response pro
     ![image](https://github.com/user-attachments/assets/8d7be4d8-26f0-4679-9b14-ba2c8cb68c6f)<br>
     _VirtualBox VM creation settings_
 
-5.  **Install Windows 10 OS**
-6.  **Download and Install Sysmon**
+4.  **Install Windows 10 OS**
+5.  **Download and Install Sysmon**
     -   Download Sysmon from Microsoft Sysinternals
     ![Screenshot 2025-06-14 123115](https://github.com/user-attachments/assets/93e6de2c-63e7-4ddc-aaa6-e7efe236f134)<br>
     _Sysmon download_
@@ -362,7 +362,7 @@ _Start the Windows 10 VM_
     ![Screenshot 2025-06-14 132936](https://github.com/user-attachments/assets/70283a0d-9de8-4ab7-aedd-6f40073619bc)<br>
     _Click on Create Droplet_  
 
-3.  **Set Up Cloud Firewall**
+2.  **Set Up Cloud Firewall**
     -   Go to **Networking > Firewalls**
     ![Screenshot 2025-06-14 133413](https://github.com/user-attachments/assets/c11871bb-951d-4513-86fa-9fa503535c06)<br>
     _Take note of your Public and Private IPs, then click on edit_
@@ -387,52 +387,6 @@ _Start the Windows 10 VM_
     ![Screenshot 2025-06-14 134635](https://github.com/user-attachments/assets/6db021c4-5877-4d3b-a982-3445136b55cb)<br>
     _Select Add Droplet → Wazuh droplet_
 
-4.  **Install Wazuh**
-    -   SSH into the droplet or use the Launch Droplet Console and run:
-    ![Screenshot 2025-06-14 135355](https://github.com/user-attachments/assets/8e5cbf54-5a36-4838-a7eb-03edafefb438)<br>
-    _From Droplet Console_
-    
-    ![image](https://github.com/user-attachments/assets/3357e801-2d20-4833-924e-cf57d77f9892)<br>
-    _SSH from PowerShell_
-    
-    ```powershell
-    ssh root@Wazuh Public IP
-    ```
-    
-    -   Before Wazuh installation, it is always recommended to update and upgrade the OS
-    ![Screenshot 2025-06-14 141051](https://github.com/user-attachments/assets/f8c31e1c-2f68-4713-89ba-18716fb72052)<br>
-    _Updating OS_
-
-    ```bash
-    apt-get update && apt-get upgrde
-    ```
-    
-    -   Install Wazuh using curl command
-    ![Screenshot 2025-06-14 141505](https://github.com/user-attachments/assets/3236032c-a888-45f3-937b-0a2a0da1bf39)<br>
-    _Wazuh installation_
-
-    ```bash
-    curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh bash wazuh-install.sh -a
-    ```
-    
-    ![Screenshot 2025-06-14 141600](https://github.com/user-attachments/assets/c52e532e-babe-4691-83ac-8c934e941051)<br>
-    _Installation process_
-    
-    -   Note the default admin credentials
-    
-    ![Screenshot 2025-06-14 142343](https://github.com/user-attachments/assets/1454e5d4-4815-4926-8c9b-f2f3d4f236aa)<br>
-    _Wazuh credentials_
-
-5.  **Login**
-    -   Access the dashboard via `https://<your-public-ip>`
-    
-    ![Screenshot 2025-06-14 142425](https://github.com/user-attachments/assets/b7e58ddb-e9fe-4ed4-9e1f-1ccca2dd4b74)<br>
-    _Wazuh login page_
-   
-    -   Use `admin / <generated password>`
-    
-    ![Screenshot 2025-06-14 144001](https://github.com/user-attachments/assets/80c9c512-fe14-4eda-9acc-5badf1401c49)<br>
-    _Wazuh Dashboard page_
 
 ### 2.3 Deploy TheHive Server (Cloud - DigitalOcean)
 
@@ -463,7 +417,56 @@ _Start the Windows 10 VM_
     ![Screenshot 2025-06-14 145001](https://github.com/user-attachments/assets/2fb0c9f2-6493-4cf4-be89-5a936f025471)<br>
     _Wazuh-Firewall rue droplets_
     
-2.  **Install Dependencies**
+# **Step 3 – Installing and Configuring TheHive and Wazuh Servers**
+
+1.  **Install Wazuh**
+    -   SSH into the droplet or use the Launch Droplet Console and run:
+    ![Screenshot 2025-06-14 135355](https://github.com/user-attachments/assets/8e5cbf54-5a36-4838-a7eb-03edafefb438)<br>
+    _From Droplet Console_
+    
+    ![image](https://github.com/user-attachments/assets/3357e801-2d20-4833-924e-cf57d77f9892)<br>
+    _SSH from PowerShell_
+    
+    ```powershell
+    ssh root@Wazuh Public IP
+    ```
+    
+    -   Before Wazuh installation, it is always recommended to update and upgrade the OS
+    ![Screenshot 2025-06-14 141051](https://github.com/user-attachments/assets/f8c31e1c-2f68-4713-89ba-18716fb72052)<br>
+    _Updating OS_
+
+    ```bash
+    apt-get update && apt-get upgrade
+    ```
+    
+    -   Install Wazuh using curl command
+    ![Screenshot 2025-06-14 141505](https://github.com/user-attachments/assets/3236032c-a888-45f3-937b-0a2a0da1bf39)<br>
+    _Wazuh installation_
+
+    ```bash
+    curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh bash wazuh-install.sh -a
+    ```
+    
+    ![Screenshot 2025-06-14 141600](https://github.com/user-attachments/assets/c52e532e-babe-4691-83ac-8c934e941051)<br>
+    _Installation process_
+    
+    -   Note the default admin credentials
+    
+    ![Screenshot 2025-06-14 142343](https://github.com/user-attachments/assets/1454e5d4-4815-4926-8c9b-f2f3d4f236aa)<br>
+    _Wazuh credentials_
+
+2.  **Login**
+    -   Access the dashboard via `https://<Wazuh public IP>`
+    
+    ![Screenshot 2025-06-14 142425](https://github.com/user-attachments/assets/b7e58ddb-e9fe-4ed4-9e1f-1ccca2dd4b74)<br>
+    _Wazuh login page_
+   
+    -   Use `admin / <generated password>`
+    
+    ![Screenshot 2025-06-14 144001](https://github.com/user-attachments/assets/80c9c512-fe14-4eda-9acc-5badf1401c49)<br>
+    _Wazuh Dashboard page_
+
+3.  **Install Dependencies**
     -   SSH into the VM, install:
         -   Java (OpenJDK)
         -   Cassandra
@@ -476,6 +479,8 @@ _Start the Windows 10 VM_
     ```powershell
     ssh root@TheHive Public IP
     ```
+
+4.  **Install Java**
 
     -   Before TheHive installation, it is always recommended to update and upgrade the OS
     ![Screenshot 2025-06-14 145346](https://github.com/user-attachments/assets/361b2f42-5fea-4a44-8c79-9766233f54af)<br>
@@ -499,7 +504,9 @@ _Start the Windows 10 VM_
     
     ![Screenshot 2025-06-14 150318](https://github.com/user-attachments/assets/0ca330e9-c151-4d1a-949a-2d6bfc3f48dc)
     _Click on OK_
-    
+
+5.  **Install Cassandra**
+
     ![Screenshot 2025-06-14 150436](https://github.com/user-attachments/assets/2a366b7c-1135-420a-a3ff-c1b76fdab329)
     _Installing Cassandra_
 
@@ -512,6 +519,8 @@ _Start the Windows 10 VM_
     
     ![Screenshot 2025-06-14 150448](https://github.com/user-attachments/assets/9563385d-d36d-4a94-88f3-756ca6a0ea4a)
     _Click on OK_
+
+6.  **Install Elasticsearch**
     
     ![Screenshot 2025-06-14 150623](https://github.com/user-attachments/assets/b688bc28-774f-4124-956a-afbf780a4a00)
     _Installing Elasticsearch_
@@ -526,28 +535,30 @@ _Start the Windows 10 VM_
 
     ![Screenshot 2025-06-14 150632](https://github.com/user-attachments/assets/6fa50e78-fd62-4e3b-94e5-fe12e7834b93)
     _Click on OK_
-    
+
+7.  **Configuring Cassandra**
+
     ![Screenshot 2025-06-14 154158](https://github.com/user-attachments/assets/dcd0058a-248c-4ab6-b5bc-ec3a072f7c8b)
     _Configuring Cassandra_
 
     ```bash
-    nano /etc/cassandra/cassandra. yaml
+    nano /etc/cassandra/cassandra.yaml
     ```
 
     ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
-    _Change the listen address to your TheHive public IP_
+    _Change `cluster_name` to `'mylab'` and the `listen_address` to your TheHive public IP_
 
     ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
-    _Change the RCP address to your TheHive public IP_
+    _Change the `rpc_address` to your TheHive public IP_
 
     ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
-    _Change the seed address to your TheHive public IP_
+    _Change the seedaddress `seeds` to your TheHive public IP_
 
     ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
     _Stop Cassandra service_
     
     ```bash
-    systemctl stop cassandra. service
+    systemctl stop cassandra.service
     ```
 
     ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)
@@ -568,6 +579,8 @@ _Start the Windows 10 VM_
     systemctl status cassandra.service
     ```
 
+8.  **Configuring Elasticsearch**
+
     ![Screenshot 2025-06-14 154158](https://github.com/user-attachments/assets/dcd0058a-248c-4ab6-b5bc-ec3a072f7c8b)
     _Configuring Elasticsearch_
 
@@ -576,21 +589,27 @@ _Start the Windows 10 VM_
     ```
 
     ![image](https://github.com/user-attachments/assets/861fb4de-2f1b-48f0-aca9-0f66bb5f5c9e)
-    _Change cluster.name to thehive_
+    _Remove the comment # and change `cluster.name` to thehive, remove the comment # to `node.name`_
 
     ![Screenshot 2025-06-14 160110](https://github.com/user-attachments/assets/aa9ad9fa-e501-4b63-b226-5df52aad8d6a)
-    _Change network.host to TheHive public IP_
+    _Remove the comment # and change `network.host` to TheHive public IP, remove the comment # for `http.port`, remove the comment # for `cluster.initial_nodes` and delete `"node-2"`_
 
     ![Screenshot 2025-06-14 160340](https://github.com/user-attachments/assets/09cf0c0a-45b3-49e6-a638-192944cee988)
-    _Start and check the status of the Elasticsearch service_
+    _Start, enable and check the status of the Elasticsearch service_
 
     ```bash
     systemctl start elasticsearch.service
+    ```
+    
+    ```bash
+    systemctl enable elasticsearch.service
     ```
 
     ```bash
     systemctl status elasticsearch.service
     ```
+
+9.  **Install TheHive**
 
     ![Screenshot 2025-06-14 230305](https://github.com/user-attachments/assets/47101d45-6434-488d-882f-4f659cb6a55b)
     _Installing TheHive_
@@ -603,7 +622,17 @@ _Start the Windows 10 VM_
     ```
 
     ![Screenshot 2025-06-14 230722](https://github.com/user-attachments/assets/2b477265-57db-4330-8687-6b383f38584d)
-    _Navigate to TheHive directory and change ownership_
+    _Check TheHive directory and change ownership, `-R` to change user and group_
+
+    ```bash
+    ls -la /opt/thp/
+    ```
+    
+    ```bash
+    chown -R thehive:thehive /opt/thp
+    ```
+
+10. **Configuring TheHive**
 
     ![Screenshot 2025-06-14 230950](https://github.com/user-attachments/assets/e34759bb-6e1b-4ad3-8bd0-16f1bfe29320)
     _Configuring TheHive_
@@ -613,7 +642,7 @@ _Start the Windows 10 VM_
     ```
 
     ![image](https://github.com/user-attachments/assets/c9dbd10d-4ecb-4ddc-b7c6-699ad68f75d5)
-    _Change hostnames and application.baserule to TheHive public IP, give a name to the cluster, in this case 'mylab'_
+    _Change `hostname` and `application.baseUrl` to TheHive public IP, give a name to the `cluster-name`, in this case `'mylab'`_
 
     ![Screenshot 2025-06-14 231441](https://github.com/user-attachments/assets/04802257-9b15-46af-9389-864f9e255e7c)
     __Start, enable and check the status of the TheHive service__
@@ -630,9 +659,9 @@ _Start the Windows 10 VM_
     systemctl status thehive.service
     ```
 
-4.  **Run TheHive**
+11. **Run TheHive**
     -   Launch the service
-    -   Access via `http://<thehive public IP>:9000` or set up reverse proxy for HTTPS
+    -   Access via `http://<TheHive public IP>:9000`
 
     ![Screenshot 2025-06-14 231655](https://github.com/user-attachments/assets/d3c0a7e1-6299-403e-bc11-8687b3754092)
     _TheHive login page_
@@ -647,20 +676,113 @@ _Start the Windows 10 VM_
     _Navigate to `/etc/elasticsearch/jvm. options.d/` and create the file jvm.options_
 
     ```bash
-    nano /etc/elasticsearch/jvm. options.d/jvm. options
+    nano /etc/elasticsearch/jvm.options.d/jvm. options
     ```
 
     ![Screenshot 2025-06-14 232323](https://github.com/user-attachments/assets/6e0f2081-0426-4a25-9e4a-c2b06aa67f15)
-    _Heap memory allocation_
+    _Heap memory allocation, copy and paste the below setup and save_
 
     ```bash
     -Dlog4j2. formatMsgNoLookups=true
     -Xms2g
     -Xmx2g
     ```
+
+    ```bash
+    systemctl stop elasticsearch.service
+    ```
+
+    ```bash
+    systemctl start elasticsearch.service
+    ```
+    
     **Note:**
     >The `jvm.options` file serves as a critical configuration point for Java applications, particularly for controlling the Java Virtual Machine's (JVM) behaviour and resource allocation. Within this file, lines such as `-    Dlog4j2.formatMsgNoLookups=true`, `-Xms2g`, and `-Xmx2g` instruct the JVM on how to operate. The `-Dlog4j2.formatMsgNoLookups=true` option is a vital security measure, specifically disabling dangerous message lookup features in the Log4j2 logging framework to mitigate the Log4Shell vulnerability and prevent remote code execution. Concurrently, `-Xms2g` and `-Xmx2g` are used to manage the JVM's memory heap: precisely `-Xms2g` sets the initial heap size to 2 gigabytes, ensuring the application has sufficient memory from the moment it starts, while `-Xmx2g` defines the maximum heap size also as 2 gigabytes, preventing the application from consuming excessive system resources. Together, these settings optimise application performance by preventing dynamic heap resizing and enhancing security, making them fundamental for stable and secure Java deployments.
 
+    -   Launch TheHive
+    ![Screenshot 2025-06-14 232510](https://github.com/user-attachments/assets/2787b884-13f5-4855-8b70-3f37fa9e7c86)
+    _TheHive Dashboard_
+
+12. **Configure Wazuh and Connect Windows Client**
+
+### 1\. **Access Wazuh Dashboard**
+
+-   Login using admin credentials from Step 2
+-   URL: `https://<WAZUH_PUBLIC_IP>`
+
+![image](https://github.com/user-attachments/assets/030479e0-1cfb-47b3-b3fe-bb10184a4b98)
+_Wazuh Dashboard_
+
+### 2\. **Find API Credentials (if lost)**
+
+```bash
+tar -xvf wazuh-install.tar cd wazuh-install-files cat wazuh-passwords.txt
+```
+
+### 3\. **Add Windows Agent**
+
+-   On Wazuh dashboard:
+    `Agents > Add Agent > Platform: Windows`
+
+![Screenshot 2025-06-14 234041](https://github.com/user-attachments/assets/be97cb46-6cf7-4e31-ae19-c5e3730c0c4d)
+-Adding agent_
+
+-   Use Wazuh public IP as the manager address
+
+![image](https://github.com/user-attachments/assets/99ad8269-6b94-43c3-8e2c-8da8103a7a05)
+_Selecting the platform_
+
+-   Copy the generated install command
+
+![Screenshot 2025-06-14 234309](https://github.com/user-attachments/assets/9777b528-0ca0-4aab-8848-2fc0dec7640f)
+-PowerShell command for agent installation_
+
+### 4\. **Install on Windows Client**
+
+-   Open **PowerShell as Administrator**
+
+![image](https://github.com/user-attachments/assets/2b38dab5-21c0-447a-81f4-09a3ff7f0c40)
+_PowerShell running as administrator_
+-   Paste and run the command
+
+![image](https://github.com/user-attachments/assets/5d5ab1e6-872b-4989-b439-d325ca7fee9b)
+_PowerShell command_
+ 
+-   Then start the service:
+
+![image](https://github.com/user-attachments/assets/9cb8f941-e637-4d9c-9b8d-c47db5c03ae6)
+_Starting Wazuh service from PowerShell_
+
+
+```bash
+net start WazuhSvc
+```
+
+![Screenshot 2025-06-14 235441](https://github.com/user-attachments/assets/107913db-02ea-4cc5-b662-90d8e09d2834)
+_Check Wazuh service is running_
+
+### 5\. **Verify Agent Connectivity**
+
+-   Wazuh dashboard → Agents tab → Confirm agent shows as "Active"
+-   Navigate to **Security Events** to confirm telemetry ingestion
+
+![image](https://github.com/user-attachments/assets/980f0354-686e-46d3-b2b6-b2cfca7970d8)
+_Agent appears in Wazuh Dashboard_
+
+![Screenshot 2025-06-14 235719](https://github.com/user-attachments/assets/65c68e8d-1f68-418c-a2fb-b0d5642b5e5f)
+_Agent appears in Wazuh Dashboard_
+
+![Screenshot 2025-06-14 235756](https://github.com/user-attachments/assets/711b48e6-ac6e-4309-8dd2-4abda5b177b9)
+_Events being recorded_
+
+## ✅ **End of Step 3 – Expected Outcome**
+
+By completing this step, you now have:
+
+-   ✅ TheHive fully configured and accessible via port 9000
+-   ✅ Cassandra and Elasticsearch integrated
+-   ✅ Wazuh ingesting Sysmon telemetry from Windows 10 client
+-   ✅ All components verified and communicating
 
 
 
