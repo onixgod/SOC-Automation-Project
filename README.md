@@ -1,4 +1,4 @@
-# SOC Automation Project (Wazuh, TheHive and Shuffle)
+![image](https://github.com/user-attachments/assets/19048584-91d7-4393-a40d-47bf0478fedc)# SOC Automation Project (Wazuh, TheHive and Shuffle)
 ## **Project Overview**
 
 This project focuses on the design, deployment, and automation of a cloud-based Security Operations Centre (SOC) using open-source tools: **Wazuh** for Security Information and Event Management (SIEM), **TheHive** for case management, and **Shuffle** for orchestration and automation (SOAR). The primary objective is to simulate and streamline Tier 1 SOC analyst workflows in a lab environment.
@@ -893,7 +893,7 @@ _Disable browsing protection_
 ![Screenshot 2025-06-15 002858](https://github.com/user-attachments/assets/31c232b1-3c44-4833-b845-c18b40be5357)<br>
 _Extracting Mimikatz_
 
--   Using PowerShell as (Admin), navigate to the Mimikatz folder. Run the binary.
+- Using PowerShell as an Admin, navigate to the Mimikatz folder. Run the binary.
 
 ```powershell
 cd C:\Users\Jhon\Downloads\mimikatz_trunk\x64
@@ -903,7 +903,7 @@ cd C:\Users\Jhon\Downloads\mimikatz_trunk\x64
 cd Downloads\mimikatz .\mimikatz.exe
 ```
 
-![Screenshot 2025-06-15 003018](https://github.com/user-attachments/assets/1bd72f3b-a126-4214-8a48-50f837e9dc03)
+![Screenshot 2025-06-15 003018](https://github.com/user-attachments/assets/1bd72f3b-a126-4214-8a48-50f837e9dc03)<br>
 _Mimikatz running in PowerShell_
 
 
@@ -913,7 +913,7 @@ _Mimikatz running in PowerShell_
 
 SSH on the Wazuh server and edit the `ossec.conf` file.
 
-First make a copy of the file for safety
+First, make a copy of the file for safety.
 
 ```bash
 sudo cp /var/ossec/etc/ossec.conf ~/ossec-backup.conf
@@ -930,19 +930,19 @@ Change the following:
 <logall_json>yesk/logall_json>
 ```
 
-![image](https://github.com/user-attachments/assets/01cf85aa-8c2c-4851-897b-aa3c5ed2aa7c)
+![image](https://github.com/user-attachments/assets/01cf85aa-8c2c-4851-897b-aa3c5ed2aa7c)<br>
 _Initial setup_
 
-![Screenshot 2025-06-15 005127](https://github.com/user-attachments/assets/f8330c30-bfaf-461c-85a6-5c359423e431)
+![Screenshot 2025-06-15 005127](https://github.com/user-attachments/assets/f8330c30-bfaf-461c-85a6-5c359423e431)<br>
 _Wazuh `ossec.conf` logall settings_
 
-Check if Wazuh is ingesting JSON logs.
+Checking if Wazuh is ingesting JSON logs.
 
 ``bash
 ls /var/ossec/logs/archives/
 ``
 
-![Screenshot 2025-06-15 005350](https://github.com/user-attachments/assets/b10bd74e-a9bd-4d04-a73d-e27bf5c76082)
+![Screenshot 2025-06-15 005350](https://github.com/user-attachments/assets/b10bd74e-a9bd-4d04-a73d-e27bf5c76082)<br>
 _Archives logs_
 
 ### 2\. **Enable Filebeat to Ingest Archive Logs**
@@ -951,17 +951,17 @@ _Archives logs_
 sudo nano /etc/filebeat/filebeat.yml`
 ````
 
-![image](https://github.com/user-attachments/assets/7824ce97-520c-4ddb-94b2-fc884277461b)
+![image](https://github.com/user-attachments/assets/7824ce97-520c-4ddb-94b2-fc884277461b)<br>
 _Edit filebeat_
 
 -   Change:
 
 `archives: enabled: true`
 
-![Screenshot 2025-06-15 005628](https://github.com/user-attachments/assets/4e7fb64a-a5f4-4bd8-8410-ad4c0bc19cef)
+![Screenshot 2025-06-15 005628](https://github.com/user-attachments/assets/4e7fb64a-a5f4-4bd8-8410-ad4c0bc19cef)<br>
 _Filebeat archives enabled_
 
-then restart Filebeat service
+Then restart the Filebeat service
 
 ```bash
 systemctl restart filebeat. service
@@ -971,28 +971,28 @@ systemctl restart filebeat. service
 
 1.  **Wazuh Dashboard → Stack Management → Index Patterns**
 
-![Screenshot 2025-06-15 010100](https://github.com/user-attachments/assets/3b30c83e-17ec-4691-842d-0092be280f40)
+![Screenshot 2025-06-15 010100](https://github.com/user-attachments/assets/3b30c83e-17ec-4691-842d-0092be280f40)<br>
 _Stack Management_
 
-![Screenshot 2025-06-15 010225](https://github.com/user-attachments/assets/98a4851b-3bf2-4d5a-a351-bf53c7d6eace)
+![Screenshot 2025-06-15 010225](https://github.com/user-attachments/assets/98a4851b-3bf2-4d5a-a351-bf53c7d6eace)<br>
 _Index Patterns_
 
 2.  **Create New Index**:
 
-![image](https://github.com/user-attachments/assets/a5509989-6e59-4cb6-a79b-894332c6d3a9)
+![image](https://github.com/user-attachments/assets/a5509989-6e59-4cb6-a79b-894332c6d3a9)<br>
 _Create index pattern_
 
 -   Pattern: `wazuh-archives-*`
 
-![Screenshot 2025-06-15 010500](https://github.com/user-attachments/assets/9d7c5317-c6aa-4692-b004-c56348625ce2)
+![Screenshot 2025-06-15 010500](https://github.com/user-attachments/assets/9d7c5317-c6aa-4692-b004-c56348625ce2)<br>
 _Index pattern name_
 
 -   Select time field: `@timestamp` and then click on Create index pattern.
 
-![Screenshot 2025-06-15 010537](https://github.com/user-attachments/assets/e8ff09e7-2f92-4065-b4c0-22a2a31e8ce5)
+![Screenshot 2025-06-15 010537](https://github.com/user-attachments/assets/e8ff09e7-2f92-4065-b4c0-22a2a31e8ce5)<br>
 _Time field_
 
-![Screenshot 2025-06-15 011019](https://github.com/user-attachments/assets/cb3068c7-947b-4f90-adc3-563242d2c52c)
+![Screenshot 2025-06-15 011019](https://github.com/user-attachments/assets/cb3068c7-947b-4f90-adc3-563242d2c52c)<br>
 _New Index Pattern for archives_
 
 ## **Create Custom Detection Rule for Mimikatz**
@@ -1001,64 +1001,64 @@ _New Index Pattern for archives_
 
 -   Generate Mimikatz events by running it again
 
-![Screenshot 2025-06-15 011356](https://github.com/user-attachments/assets/195b1991-e7e5-41dd-97a4-4ab60655cd0d)
+![Screenshot 2025-06-15 011356](https://github.com/user-attachments/assets/195b1991-e7e5-41dd-97a4-4ab60655cd0d)<br>
 _Run Mimikatz_
 
 -   Search in Archive Index: `event_id:1` and `original_file_name:mimikatz`
 
 On Windows Event Viewer, go to Event Viewer (Local) → Applications and Services Logs → Microsoft → Windows → Sysmon → Operational, and filter the events 1
 
-![Screenshot 2025-06-15 011449](https://github.com/user-attachments/assets/98d704b9-75ed-4320-b999-ba84ce51de96)
+![Screenshot 2025-06-15 011449](https://github.com/user-attachments/assets/98d704b9-75ed-4320-b999-ba84ce51de96)<br>
 _Events 1_
 
-![Screenshot 2025-06-15 011601](https://github.com/user-attachments/assets/76389baf-a2a8-47b3-bd0d-1fbf23ce2545)
+![Screenshot 2025-06-15 011601](https://github.com/user-attachments/assets/76389baf-a2a8-47b3-bd0d-1fbf23ce2545)<br>
 _Mimikazt event being logged by Sysmon_
 
-- Check whether Wazuh manager is logging the Mimikatz logs gather by Sysmon_
+- Check whether Wazuh manager is logging the Mimikatz logs gathered by Sysmon_
 
 ```bash
 cat archives.json | grep -i mimikatz
 ```
  
-![Screenshot 2025-06-15 011744](https://github.com/user-attachments/assets/736d78b6-d582-459d-b07e-fa102ed99737)
+![Screenshot 2025-06-15 011744](https://github.com/user-attachments/assets/736d78b6-d582-459d-b07e-fa102ed99737)<br>
 _Wazuh Mimikatz logs_
 
-![Screenshot 2025-06-15 011837](https://github.com/user-attachments/assets/eb7af982-76d5-4bb7-bcfc-d79bc380c97a)
+![Screenshot 2025-06-15 011837](https://github.com/user-attachments/assets/eb7af982-76d5-4bb7-bcfc-d79bc380c97a)<br>
 _Wazuh Mimikatz logs on the web interface_
 
-![Screenshot 2025-06-15 011952](https://github.com/user-attachments/assets/d6559200-f702-4f29-a2fe-1321bc640425)
-_Wazuh Mimikatz logs on the web interface, we will use the original filename to build our rule as it will be always the same even if someone change the name of the file_
+![Screenshot 2025-06-15 011952](https://github.com/user-attachments/assets/d6559200-f702-4f29-a2fe-1321bc640425)<br>
+_Wazuh Mimikatz logs on the web interface, we will use the original filename to build our rule as it will always be the same even if someone changes the name of the file_
 
 ### 2\. **Write Custom Rule via Dashboard**
 
 -   Go to: **Rules → Custom Rules → Edit Local Rules**
 
-![Screenshot 2025-06-15 012137](https://github.com/user-attachments/assets/d3b19cd2-bea4-45c6-b69a-cbe99ee518ce)
+![Screenshot 2025-06-15 012137](https://github.com/user-attachments/assets/d3b19cd2-bea4-45c6-b69a-cbe99ee518ce)<br>
 _Add a rule_
 
-![Screenshot 2025-06-15 012322](https://github.com/user-attachments/assets/ae2c5d77-e608-4a27-af42-fded4e8d3735)
+![Screenshot 2025-06-15 012322](https://github.com/user-attachments/assets/ae2c5d77-e608-4a27-af42-fded4e8d3735)<br>
 _Manage rules files_
 
 As we are interested on Sysmon event ID 1, we will have a look at the XML file.
 
-![Screenshot 2025-06-15 012409](https://github.com/user-attachments/assets/22c2ab4f-6abc-460c-b9c2-80b2ac05592f)
+![Screenshot 2025-06-15 012409](https://github.com/user-attachments/assets/22c2ab4f-6abc-460c-b9c2-80b2ac05592f)<br>
 _Sysmon ID 1 XML rule_
 
 Then, copy one of the rules to use as an example for our custom rule.
-![Screenshot 2025-06-15 012720](https://github.com/user-attachments/assets/515e73ca-1b82-4a1d-926a-68ae99961614)
+![Screenshot 2025-06-15 012720](https://github.com/user-attachments/assets/515e73ca-1b82-4a1d-926a-68ae99961614)<br>
 _Copy rule_
 
 -   Go to custom rules
 
-![Screenshot 2025-06-15 012802](https://github.com/user-attachments/assets/23019364-fdc8-40a5-a195-5f2d01ff5323)
+![Screenshot 2025-06-15 012802](https://github.com/user-attachments/assets/23019364-fdc8-40a5-a195-5f2d01ff5323)<br>
 _Click on custom rules_
 
-![Screenshot 2025-06-15 012926](https://github.com/user-attachments/assets/28d5f8e0-744a-49fe-94a6-2df43030a9ba)
+![Screenshot 2025-06-15 012926](https://github.com/user-attachments/assets/28d5f8e0-744a-49fe-94a6-2df43030a9ba)<br>
 _Edit custom rules_
 
 -   Paste and modify the rule we copied from the Sysmon XML file:
 
-![image](https://github.com/user-attachments/assets/bd69c55f-b7dc-43cf-a672-ec1db8be8817)
+![image](https://github.com/user-attachments/assets/bd69c55f-b7dc-43cf-a672-ec1db8be8817)<br>
 _Our custom rule to alert about Mimikatz usage_
 
 Note: custom rules start from `100000`.
@@ -1078,10 +1078,10 @@ Note: custom rules start from `100000`.
 
 -   Use the Dashboard restart option.
 
-![image](https://github.com/user-attachments/assets/92b02a75-37b5-497a-8e64-b92e4aa8e0ab)
+![image](https://github.com/user-attachments/assets/92b02a75-37b5-497a-8e64-b92e4aa8e0ab)<br>
 _Restart from dashboard_
 
-![image](https://github.com/user-attachments/assets/a98527d2-15f8-4f15-a144-79a2a2f05fcf)
+![image](https://github.com/user-attachments/assets/a98527d2-15f8-4f15-a144-79a2a2f05fcf)<br>
 _Confirm_
 
 -   or:
@@ -1094,7 +1094,7 @@ sudo systemctl restart wazuh-manager
 
 -   Rename Mimikatz executable to a decoy name (e.g., `ztakimim.exe`)
 
-![Screenshot 2025-06-15 013827](https://github.com/user-attachments/assets/2fc5c5a0-5f73-44dc-b20b-a886dd0660d0)
+![Screenshot 2025-06-15 013827](https://github.com/user-attachments/assets/2fc5c5a0-5f73-44dc-b20b-a886dd0660d0)<br>
 _Rename file_
 
 -   Execute it via PowerShell:
@@ -1105,10 +1105,10 @@ _Rename file_
 
 -   Confirm alert is triggered in Wazuh using `originalFileName`
 
-![Screenshot 2025-06-15 015503](https://github.com/user-attachments/assets/1f7a7f51-ff37-479b-a4d8-d60db5a4e7db)
+![Screenshot 2025-06-15 015503](https://github.com/user-attachments/assets/1f7a7f51-ff37-479b-a4d8-d60db5a4e7db)<br>
 _Mimikatz alert triggered_
 
-![Screenshot 2025-06-15 195607](https://github.com/user-attachments/assets/3be90d65-af26-42ec-9b56-04ebda4d9141)
+![Screenshot 2025-06-15 195607](https://github.com/user-attachments/assets/3be90d65-af26-42ec-9b56-04ebda4d9141)<br>
 _Wazuh alert for renamed Mimikatz_
 
 ## **End of Step 4 – Expected Outcome**
@@ -1120,10 +1120,269 @@ You have now:
 -   Created a **custom detection rule** for Mimikatz that resists binary renaming
 -   Verified that alerts are triggered based on **original file name**
 
+# **Step 5 – Automation Integration with Shuffle, Wazuh, and TheHive**
+
+> _Objective: Finalise SOC automation by integrating Shuffle (SOAR) with Wazuh (SIEM) and TheHive (case management). Automate alert parsing, threat enrichment, email notifications, and responsive actions._
+
+## **Connect Shuffle with Wazuh via Webhook**
+
+### 1\. **Set up Webhook Trigger in Shuffle**
+
+-   Create new workflow: `SOC Automation Project`
+
+![image](https://github.com/user-attachments/assets/6d03c4e1-7e96-4dc8-85c1-c3f30fc44258)<br>
+
+![Screenshot 2025-06-15 200132](https://github.com/user-attachments/assets/aba61c09-8e6a-479b-b65d-4dca18f3aca6)<br>
+_SOC Automation Project workflow_
+
+-   Drag a **Webhook** trigger to the canvas and copy the **Webhook URL**
+
+![image](https://github.com/user-attachments/assets/afcbc490-9919-408c-a2c2-330ca21efc2e)<br>
+_Shuffle webhook configuration_
+
+![Screenshot 2025-06-15 200521](https://github.com/user-attachments/assets/5dfc9c80-b722-4d7e-99db-14457139f14e)<br>
+_Copy Webhook URI_
+
+### 2\. **Configure Wazuh to Use Webhook**
+
+-   Edit Wazuh Manager config (`/var/ossec/etc/ossec.conf`):
+
+![image](https://github.com/user-attachments/assets/e80654e4-ad75-4e6c-a26c-edcb88836ab3)<br>
+_ossec.conf_
+
+- Edit `<integration>` 
+
+![Screenshot 2025-06-15 201729](https://github.com/user-attachments/assets/8e3a3ae0-eac6-4da4-a389-d2f8d0b094c6)<br>
+_Suffle/Wazuh integration_
+
+![Screenshot 2025-06-15 202234](https://github.com/user-attachments/assets/d93d953e-2392-4dc4-9387-e559e7e30851)<br>
+_Targeting events by rule ID 100002, all other events will be ignored by the Webhook_
+
+```xml
+<integration>
+   <name>shuffle</name>
+   <hook_url>https://webhook-url-from-shuffle </hook_url>
+   <rule_id>100002</rule_id>
+   <alert_format>json</alert_format>
+</integration>
+```
+-   Restart Wazuh Manager:
+
+```bash
+sudo systemctl restart wazuh-manager
+```
+
+```bash
+sudo systemctl status wazuh-manager
+```
+
+![Screenshot 2025-06-15 202333](https://github.com/user-attachments/assets/748e3a90-39e9-4b43-921e-ef4f66f8d8c5)<br>
+_Restarting and checking the status of Wazuh manager_
+
+-   Start Wazuh Webhook to recieve logs
+
+![image](https://github.com/user-attachments/assets/8af5ada1-7081-4882-aa37-7213f50a316e)<br>
+_Webhook started_
+
+- Generate Mimikatz logs by running the binary again
+
+![image](https://github.com/user-attachments/assets/f4515d64-b7bc-4d46-8b5c-728c7100907a)<br>
+_Mimikatz running_
+
+![Screenshot 2025-06-15 202658](https://github.com/user-attachments/assets/a68105cb-3fac-4ea7-bcb1-296b2e98fb82)<br>
+_Wazuh, Mimkatz rule ID 100002 triggered_
+
+![Screenshot 2025-06-15 202858](https://github.com/user-attachments/assets/f9a5fa36-2764-41b3-8900-b87a6970f78c)<br>
+_Wazuh Webhook capturing traffic_
+
+![Screenshot 2025-06-15 203111](https://github.com/user-attachments/assets/81977675-f5e4-47bc-b4ea-a6c300ddedb0)<br>
+_Rule ID 100002 captured_
+
+## **Create the Workflow Logic in Shuffle**
+
+### 1\. **Parse SHA256 Hash with Regex**
+
+-   Add `Regex Capture Group` app
+
+![image](https://github.com/user-attachments/assets/bd696309-9796-4f3d-8779-65c6791940ee)
+_Drag a Suffle tool, label it `SHA256_Value` and change it to 'Regex Capture Group'_
+
+-   Parse hash value from field: `SHA256=<value>`
+
+With the help of ChatGPT or Claude, let's generate a regex pattern to extract the SHA256 hash from the input data
+
+![image](https://github.com/user-attachments/assets/6774e963-5c6c-4258-915b-ebf7f7f23e6d)
+
+Input data: 
+```bash
+$exec.text.win.eventdata.hashes
+```
+
+Regex:
+```regex
+(?:^|,)SHA256=([A-Fa-f0-9]{64})(?=,|$)
+```
+
+-   Use this value as input for enrichment 
+
+![image](https://github.com/user-attachments/assets/4539ec30-fd77-465b-ac71-5c1ab99421e7)
+_Regex parsing setup in Shuffle_
+
+## **Enrich Alert with VirusTotal**
+
+### 1\. **Configure VirusTotal App in Shuffle**
+
+-   Add VirusTotal app, authenticate via API key
+
+![image](https://github.com/user-attachments/assets/4269d3c6-2a75-49d4-9307-492727d46345)
+_Drag VirusTotal app_
+
+-   Label the App and change Action: `Get hash report`
+![image](https://github.com/user-attachments/assets/cc4f241d-36bd-41bb-86f8-bccee3a62673)
+_Get hash_
+
+-   Input: SHA256 value extracted via regex
+
+![image](https://github.com/user-attachments/assets/8ddb381a-9809-4482-9ba1-69390fb07f57)
+
+![image](https://github.com/user-attachments/assets/0dc959aa-cbc9-4277-9c1d-9c741dbd5ff0)
+_Get the ID from the generated value by the Regex extension_
+
+
+-   Re-run the last log to test the VirusTotal App
+
+![image](https://github.com/user-attachments/assets/8b4919e6-8c6f-4b0b-907d-e2cfc3542953)
+_Re-running alert_
+
+![Screenshot 2025-06-15 210311](https://github.com/user-attachments/assets/d4ecbc37-ac19-4c43-8d28-2c1396c932ef)
+_VirusTotal hash report setup_
+
+
+## **Create Alert in TheHive**
+
+### 1\. **Create API Key and Org in TheHive**
+
+Go to TheHive portal.
+
+![image](https://github.com/user-attachments/assets/911cb58b-bd97-4ad2-b04c-8ff9bce4378c)
+_Click on the + button_
+
+-   Create:
+    -   Organisation: `MyLab`, Description: `SOC Automation Project`
+ 
+    ![image](https://github.com/user-attachments/assets/ea14bf4a-4caf-449e-9dc4-44148713038e)
+
+    -   Analyst user
+ 
+    ![Screenshot 2025-06-15 211123](https://github.com/user-attachments/assets/b6e11f7a-4d6b-498a-8c25-9644687955ee)
+    _Add users_
+
+    ![image](https://github.com/user-attachments/assets/93490510-1f3f-4d57-ace6-1f81527bbc61)
+    _Type: `Normal`, Login: `mylab@test.com`, Name: `mylab`, Profile: `Analyst`
+    
+    -   Service account user for Shuffle
+    
+    ![Screenshot 2025-06-15 211258](https://github.com/user-attachments/assets/88c17851-451a-4a9f-abca-0645d4b626f4)
+    _Type: `Service`, Login: `shuffle@test.com`, Name: `SOAR`, Profile: `Analyst`
+
+    ![Screenshot 2025-06-15 211450](https://github.com/user-attachments/assets/a5485a03-d46e-4b01-b025-1fde7d81ac30)
+    _Preview Normal-Analyst account_
+
+    ![Screenshot 2025-06-15 211530](https://github.com/user-attachments/assets/59b93849-71e0-4f2f-91c9-ec8d11e7371f)
+    _Set password for Normal-Analyst account_
+
+-   Generate API key for Shuffle
+
+![image](https://github.com/user-attachments/assets/95de12b6-5fac-4ceb-89c8-c80802eba1dd)
+_Preview Service-Analyst account_
+
+![Screenshot 2025-06-15 211751](https://github.com/user-attachments/assets/9823acc1-4492-4263-8911-a75fe4c31701)
+_TheHive API key_
+
+- Log in to the `mylab@test.com` account
+
+![Screenshot 2025-06-15 211936](https://github.com/user-attachments/assets/dccb6c3f-cbcd-4861-9e53-dab51f004caa)
+_`mylab@test.com` account_
 
 
 
 
+
+
+
+
+
+
+
+
+### 2\. **Configure TheHive App in Shuffle**
+
+-   Action: `Create Alert`
+-   Fill alert fields:
+    -   Title, Description
+    -   Hostname, User, Process ID
+    -   MITRE ID (e.g., T1003 for Mimikatz)
+    -   Severity, Source, Tags
+
+📷 _Insert Image 6: TheHive alert field mapping_
+
+* * *
+
+## 📬 **Part E: Notify Analyst via Email**
+
+### 1\. **Add Email App in Workflow**
+
+-   To: Analyst email (e.g., disposable email for testing)
+-   Subject: `Mimikatz Detected on Host`
+-   Body: Include Hostname, Time, Process details
+
+📷 _Insert Image 7: Email notification output_
+
+* * *
+
+## 🚨 **Part F: Responsive Actions – Wazuh API Integration**
+
+### 1\. **Expose Wazuh API Port**
+
+-   Open DigitalOcean firewall port `55000` for inbound traffic
+
+### 2\. **Use HTTP App to Fetch Wazuh Token**
+
+-   POST request with Wazuh API user credentials
+-   Extract JWT from response
+
+📷 _Insert Image 8: HTTP request to get Wazuh token_
+
+### 3\. **Add Wazuh App – Run Command**
+
+-   Action: `Run Command`
+-   Command: `firewalldrop-0`
+-   Dynamic argument: Source IP
+-   Target Agent ID: Dynamically extracted
+
+📷 _Insert Image 9: Shuffle Wazuh run command setup_
+
+* * *
+
+## 🧑‍💼 **Part G: Add User Input for IP Blocking Decision**
+
+### 1\. **Add User Input App**
+
+-   Prompt: “Would you like to block IP \[source\_ip\]?”
+-   Email delivery to analyst
+-   If “Yes”, execute Wazuh response command
+
+📷 _Insert Image 10: User input form in email_
+
+* * *
+
+## ✅ **End of Step 5 – Expected Outcome**
+
+-   🟢 Wazuh alerts are parsed and sent to Shuffle
+-   🧠 Hash is enriched via VirusTotal
+-   🔔 Alerts are created in TheHive
+-   📧 Analysts receive emails with event context
+-   🔒 Optional: Active response triggers IP blocks via Wazuh API upon analyst approval
 
 
 
