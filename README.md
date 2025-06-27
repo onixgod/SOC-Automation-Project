@@ -2460,7 +2460,7 @@ if __name__ == "__main__":
      ![Screenshot 2025-06-17 210236](https://github.com/user-attachments/assets/e78dcbb4-5975-4226-9051-b2b8a8c7529f)
 
    
-### Wazuh server
+## Wazuh server
 
 Perform the following steps on the Wazuh server to configure the Active Response. These steps also enable and trigger the active response script whenever a suspicious file is detected.
 
@@ -2498,4 +2498,22 @@ Paste within `<ossec_config>   </ossec_config>`.
      ```
 
 
+## Wazuh App to Delete File Set Up
+
+We first give the app a name, then pass the arguments.
+
+Apikey: `<Get_API>`, you need to the it from the Get API App
+Url: Url: `https://<Wazuh Server IP>:55000`
+
+![image](https://github.com/user-attachments/assets/709cb17c-836f-40c2-819f-94565ad2a517)
+
+Command: `remove-threat-shuffle0`, we call the binary we create.
+Agent list: `$exec.all_fields.agent.id`, we get the agent ID dynamically
+Alert: The script is expecting the Rule ID and the location of the file.
+
+```json
+{"rule":{"id":"$exec.all_fields.rule.id"},"data":{"win":{"eventdata":{"image":"$exec.text.win.eventdata.image"}}}}
+```
+
+![image](https://github.com/user-attachments/assets/7b3c5784-2e81-49a4-98b4-bebdea0d34d7)
 
