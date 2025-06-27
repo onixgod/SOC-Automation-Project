@@ -1763,16 +1763,16 @@ _VirusTotal App_
 
 ![image](https://github.com/user-attachments/assets/dd54e239-1947-412f-8dee-eed5eb62fd1f)
 
-- Connect all the Apps, see the connections bellow.
+- Connect all the Apps, see the connections below.
 
 ![Screenshot 2025-06-17 131746](https://github.com/user-attachments/assets/6e4b087f-514b-43a3-a191-af77e47f5bda)
 
 
--   Add the rules on our local rules XML, to capture the events.
+-   Add the rules on our local rules XML to capture the events.
 
-We create two rules, one to capture non-existing accounts attempts (ID 100003 targetiing 5710 events) and the one for existing accounts (ID 100004 targgeting 5760 events).
+We create two rules: one to capture non-existent account attempts (ID 100003, targeting 5710 events) and the other for existing accounts (ID 100004, targeting 5760 events). We do this to reduce the number of API calls.
 
-The rule will just be triggered if the attempt fails three times in a space of 60 seconds, you can use the XML below and do the modifcation if you need.
+The rule will only be triggered if the attempt fails three times within 60 seconds. You can use the XML below and make any necessary changes as needed.
 
 ```xml
   <rule id="100003" level="5" frequency="3" timeframe="60">
@@ -1797,43 +1797,182 @@ The rule will just be triggered if the attempt fails three times in a space of 6
 ![image](https://github.com/user-attachments/assets/4e836125-b661-4a00-876a-923cd0e2d98e)
 
 
+-   Branch conditions and Python setup.
 
-
-
-
--   Branches conditions and Python setup
-
-![image](https://github.com/user-attachments/assets/6eb5b3f6-a8e8-494d-af57-668e3a836060)
-
+![image](https://github.com/user-attachments/assets/5feea2ad-8a7a-4933-8b42-1078aa5b17c1)
+_Conditions and Python setup_
 
 -  Brach connecting Get Api and VirusTotal App
 
-![image](https://github.com/user-attachments/assets/8f93179c-6be4-439b-9acd-36e4fcc4dbe3)
+![image](https://github.com/user-attachments/assets/ddf76564-aae3-4790-94ee-547246fd6518)
+
+We need to let Rule ID `100003` pass through.
+
+![image](https://github.com/user-attachments/assets/802071ad-23d4-4d86-8004-bda01ca91cb2)
+_Rule 100003 condition_
+
+-   Python App set up.
+
+I will use this App as a bridge to allow me to get an extra branch for the other condition. It should be a better way, but for the purpose os the project, this works just fine.
+
+![image](https://github.com/user-attachments/assets/83669112-fea9-4186-ac83-6efecd129ff7)
+
+
+-  Brach connecting Python App and VirusTotal App
+
+![image](https://github.com/user-attachments/assets/70f6b187-31a9-4a04-bd9d-deccb53d0b04)
+
+We need to let Rule ID `100004` pass through.
+
+![image](https://github.com/user-attachments/assets/27d8c4f6-096a-4186-a755-721509c41a38)
+
+- Set up VirusTotal App
+
+We first give the app a name, then pass the arguments.
+
+Find Actions: `Get an IP address report`
+IP: `$exec.all_fields.data.srcip`, this is the source IP we want to block.
+
+![image](https://github.com/user-attachments/assets/20503af2-ec9f-434e-a96f-a53953a10cc9)
+
+
+- Set up TheHive App
+
+We first give the app a name, then pass the arguments.
+
+Find Actions: `Create alert`
+Body:
+```xml
+{
+  "description": "${description}",
+  "externallink": "${externallink}",
+  "flag": "${flag}",
+  "pap": "${pap}",
+  "severity": "${severity}",
+  "source": "${source}",
+  "sourceRef": "${sourceref}",
+  "status": "${status}",
+  "summary": "${summary}",
+  "tags": ["${tags}"],
+  "title": "${title}",
+  "tlp": "${tlp}",
+  "type": "${type}"
+}
+```
+Title: `$exec.title`
+Tags: `T1110`
+
+![image](https://github.com/user-attachments/assets/aad4f583-69cf-4f6e-92d0-0a145e372534)
+
+Summary:
+```bash
+$exec.title were detected on Host: $exec.all_fields.predecoder.hostname from source IP: $exec.all_fields.data.srcip on $utc_time.message, the IP was idetified coming from $virustotal_ip_block.body.data.attributes.country with $virustotal_ip_block.body.data.attributes.last_analysis_stats.malicious highlighting as malicius. Check emails to block the IP if needed.
+```
+Severity: `2`
+
+![image](https://github.com/user-attachments/assets/c23b92ac-a463-4dfa-b23c-62889bd42270)
+
+
+-   Set up User Input
+
+We first give the app a name, then pass the arguments.
+
+Email: `disposable email`, Email delivery to analyst
+Input options: `Email`
+Information: With the help of ChatGPT I got this template.
+```markdown
+<h3>🚨 Suspicious IP Activity Detected</h3>
+
+  The IP <strong>$exec.all_fields.data.srcip</strong> made multiple login attempts from an unknown location.
+  A <strong>VirusTotal</strong> scan returned:
+
+<table style="border-collapse:collapse; margin:0;">
+  <tr><th align="left">Metric</th><th align="left">Result</th></tr>
+  <tr><td>Last Analysis Date</td><td>$utc_time.message</td></tr>
+  <tr><td>Malicious</td><td>$virustotal_ip_block.body.data.attributes.last_analysis_stats.malicious</td></tr>
+  <tr><td>Suspicious</td><td>$virustotal_ip_block.body.data.attributes.last_analysis_stats.suspicious</td></tr>
+  <tr><td>Undetected</td><td>$virustotal_ip_block.body.data.attributes.last_analysis_stats.undetected</td></tr>
+  <tr><td>Harmless</td><td>$virustotal_ip_block.body.data.attributes.last_analysis_stats.harmless</td></tr>
+  <tr><td>Country</td><td>$virustotal_ip_block.body.data.attributes.country</td></tr>
+  <tr><td>VirusTotal Report</td>
+      <td><a href="$virustotal_ip_block.body.data.links.self">$virustotal_ip_block.body.data.links.self</a></td></tr>
+</table>
+
+<strong>Block source IP $exec.all_fields.data.srcip?</strong>
+```
+
+![image](https://github.com/user-attachments/assets/a4f9ddd4-d3ec-442e-95a2-9375bd625722)
+
+![image](https://github.com/user-attachments/assets/8be04994-5452-40b4-94d8-045cc3a6bc92)
+
+
+-   Set up Wazuh App
+
+We first give the app a name, then pass the arguments.
+
+Find Actions: `Run Command`
+Apikey: you need to get this one from the Get API App
+
+![image](https://github.com/user-attachments/assets/b672c8cf-910d-483f-9880-5966bc43b9d5)
+
+Url: `https://<Wazuh Server IP>:55000`
+
+![image](https://github.com/user-attachments/assets/53250be1-ed29-4999-95f4-98cea1c991dd)
+
+Command: `firewall-drop0`, the Active Response command
+Alert: make it dynamic
+```xml
+{"data":{"srcip":"$exec.all_fields.data.srcip"}}
+```
+
+![image](https://github.com/user-attachments/assets/a1db85df-83be-415f-ab6f-dcf61b2a36b5)
+
+Agent list: `$exec.all_fields.agent.id`, make it dynamic
+
+![image](https://github.com/user-attachments/assets/291ee4e8-e535-45a8-9299-bd9eaaade6b5)
+
+Now that we have all the node connected and the set up, it is time to run or rerun the flow to test is working.
+
+## **Testing the Workflow**
+
+Check the Ubuntu client IP table is empty `iptables --list`, if it doesn't use `iptables --flush`.
+
+![Screenshot 2025-06-17 132533](https://github.com/user-attachments/assets/f39cb48b-1543-4160-bef9-d5c6abd51844)
+
+
+I will rerun on of the flows cotaining Rule ID 100003 or 100004, if you don't have any you need to generate it trying to SSH the Unbuntu client with a VPN to get a IP to block with a non-existen account or try to login with the root with the wrong password more than three times to generate the alert. 
+
+![Screenshot 2025-06-17 132931](https://github.com/user-attachments/assets/76231f84-3b48-4531-8737-f827589ece10)
+_Wazuh dashboard_
+
+![Screenshot 2025-06-17 133028](https://github.com/user-attachments/assets/06652bb9-0ef2-445b-a96f-d24e411a8aa0)
+_Shuffle alerts, remember Shuffle getting alerts from level 5 and above_
+
+![Screenshot 2025-06-17 133047](https://github.com/user-attachments/assets/efe8e547-0b34-4df2-aaa4-bc0892e6ceb4)
+_Rule ID 100003 on the list_
+
+-   Check TheHive for alerts
+
+![Screenshot 2025-06-17 133215](https://github.com/user-attachments/assets/4d14a32a-0112-4743-a313-5393b250d264)
+_Alert for multiple attempts using non-existent accounts_
+
+![Screenshot 2025-06-17 133248](https://github.com/user-attachments/assets/f89053bf-de34-4f38-805c-e1de67007558)
+_TheHive arguments has been passed successfully_
+
+![image](https://github.com/user-attachments/assets/05e2dca5-2a96-4dc6-9d7b-23eb5b0601bf)
+_Email alert received, arguments passed correctly_
+
+![Screenshot 2025-06-17 134002](https://github.com/user-attachments/assets/46cea115-da7b-4f8b-a176-64d7482fd424)
+_Copy and paste the response on a blank web tab to action the response_
+
+![Screenshot 2025-06-17 133944](https://github.com/user-attachments/assets/77855fa7-bf5d-4bdd-99ec-a1b3a9f07d4f)
+_Ubuntu client IP tables dropping connection for the malicious IP_
 
 
 
 
 
--   Action: `Run Command`
--   Command: `firewalldrop0`
--   Dynamic argument: Source IP
--   Target Agent ID: Dynamically extracted
 
-📷 _Insert Image 9: Shuffle Wazuh run command setup_
-
-* * *
-
-## 🧑‍💼 **Part G: Add User Input for IP Blocking Decision**
-
-### 1\. **Add User Input App**
-
--   Prompt: “Would you like to block IP \[source\_ip\]?”
--   Email delivery to analyst
--   If “Yes”, execute Wazuh response command
-
-📷 _Insert Image 10: User input form in email_
-
-* * *
 
 ## ✅ **End of Step 5 – Expected Outcome**
 
