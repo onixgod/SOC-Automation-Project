@@ -2429,12 +2429,73 @@ if __name__ == "__main__":
 
     You use Pyinstaller here to convert the active response Python script into an executable application that can run on a Windows endpoint.
 
-6.  Create an active response script `remove-threat-shuffle.py` to remove a file from the Windows endpoint:
+7.  Create an active response script `remove-threat-shuffle.py` to remove a file from the Windows endpoint. Copy and paste from the modified script above:
 
+![image](https://github.com/user-attachments/assets/e4bc3d74-08dc-42a3-ad68-f2f34dacdc4a)
 
+8.  Convert the active response Python script `remove-threat.py` to a Windows executable application. Run the following PowerShell command as an administrator to create the executable:
 
+    ```powershell
+    pyinstaller \-F \\path\_to\_remove-threat-shuffle.py
+    ```
+    
+    ![Screenshot 2025-06-17 190308](https://github.com/user-attachments/assets/7a2984a8-d0ff-4ed3-bbc5-b4c0ec960370)
 
+    Take note of the path where `pyinstaller` created `remove-threat-shuffle.exe`.
 
+    ![Screenshot 2025-06-17 190416](https://github.com/user-attachments/assets/e67fb15c-cf8a-48a9-aa79-dc2f2caf8d17)
+
+    ![image](https://github.com/user-attachments/assets/97cd8dbf-6284-409b-9eb4-dd1013430ea6)
+
+10.  Move the executable file `remove-threat.exe` to the `C:\Program Files (x86)\ossec-agent\active-response\bin` directory.
+
+![image](https://github.com/user-attachments/assets/67207f0b-cb57-4297-bd45-a15f7ea0dde3)
+
+11.  Restart the Wazuh agent to apply the changes. Run the following PowerShell command as an administrator:
+
+     ```powershell
+     Restart-Service \-Name wazuh
+     ```
+     
+     ![Screenshot 2025-06-17 210236](https://github.com/user-attachments/assets/e78dcbb4-5975-4226-9051-b2b8a8c7529f)
+
+   
+### Wazuh server
+
+Perform the following steps on the Wazuh server to configure the Active Response. These steps also enable and trigger the active response script whenever a suspicious file is detected.
+
+12.  Append the following blocks to the Wazuh server `/var/ossec/etc/ossec.conf` file. This enables Active Response and triggers the `remove-threat-shuffle.exe` executable when the VirusTotal query returns positive matches for threats:
+
+Paste within `<ossec_config>   </ossec_config>`.
+```xml
+<command>
+  <name>remove-threat-shuffle</name>
+  <executable>remove-threat-shuffle.exe</executable>
+  <timeout_allowed>no</timeout_allowed>
+</command>
+```
+
+![image](https://github.com/user-attachments/assets/1519a604-6977-4ad0-a14b-f602a0b156d5)
+
+```xml
+<active-response>
+  <disabled>no</disabled>
+  <command>remove-threat-shuffle</command>
+  <location>local</location>
+  <rules_id>100010</rules_id>
+</active-response>
+```
+![image](https://github.com/user-attachments/assets/98d5a733-566b-4e68-bec9-6d4eacc10e02)
+
+13.   Check that we still have the initial Rule ID 100002 on the Wazuh server `/var/ossec/etc/rules/local_rules.xml` file to alert about the Active Response results.
+
+![image](https://github.com/user-attachments/assets/48ad0f1e-cdf8-4b35-999d-9dc2379d3885)
+
+14.  Restart the Wazuh manager to apply the configuration changes:
+
+     ```bash
+     sudo systemctl restart wazuh-manager
+     ```
 
 
 
