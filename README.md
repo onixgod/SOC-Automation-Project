@@ -1735,11 +1735,80 @@ cat active-responses. log
 ![Screenshot 2025-06-16 133440](https://github.com/user-attachments/assets/67c75b3b-f39a-4ffb-b868-f1ec1c249070)
 _Active Response logs, script was run successfully_
 
+## **Modifications to the Original Project**
+
+Before we proceed with the project proposed by @MyDFIR, I decided to take it a step further and add some extra features. He suggests blocking IP addresses based on ID 5710, which is SSH failed login attempts using a non-existent user. However, I decided to add failed authentication attempts for known users, ID 5760, which can send us alerts of brute force on root or any specific existing account, and also send the alert to TheHive. So the aim is the following.
+
+![Screenshot 2025-06-17 131746](https://github.com/user-attachments/assets/5d7ce409-4328-44b0-b3b0-82193311367a)
+_Modified Workflow_
+
+Now that we have identified the parameters to be passed to the Wazuh App, let's add a VirusTotal App to enrich the data collected and determine whether the source IP of the attack is blacklisted on the portal.
+
+-   Add a VirusTotal App for IP enrichment
+
+![image](https://github.com/user-attachments/assets/2fb80e57-81b0-4a1d-96aa-a9d71db86b6b)
+_VirusTotal App_
+
+-   Add TheHive App for Notifications
+
+![image](https://github.com/user-attachments/assets/516f3295-f705-41c2-9be9-a2e3c209046d)
+
+
+-   Add User Input App for manual reponses
+
+![image](https://github.com/user-attachments/assets/f2b645d9-8711-4ed1-9c2c-dcbcc4781d45)
+
+
+-   Add a Shuffle Tool App, we will use this to get to branches for some condictions. I could not find another way for this (change it to Execute Python).
+
+![image](https://github.com/user-attachments/assets/dd54e239-1947-412f-8dee-eed5eb62fd1f)
+
+- Connect all the Apps, see the connections bellow.
+
+![Screenshot 2025-06-17 131746](https://github.com/user-attachments/assets/6e4b087f-514b-43a3-a191-af77e47f5bda)
+
+
+-   Add the rules on our local rules XML, to capture the events.
+
+We create two rules, one to capture non-existing accounts attempts (ID 100003 targetiing 5710 events) and the one for existing accounts (ID 100004 targgeting 5760 events).
+
+The rule will just be triggered if the attempt fails three times in a space of 60 seconds, you can use the XML below and do the modifcation if you need.
+
+```xml
+  <rule id="100003" level="5" frequency="3" timeframe="60">
+    <if_matched_sid>5710</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple SSH login attempts using non-existent usernames</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+  </rule>
+  
+  <rule id="100004" level="5" frequency="3" timeframe="60">
+    <if_matched_sid>5760</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple SSH login attempts using root username</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+  </rule>
+```
+
+![image](https://github.com/user-attachments/assets/4e836125-b661-4a00-876a-923cd0e2d98e)
 
 
 
 
 
+
+-   Branches conditions and Python setup
+
+![image](https://github.com/user-attachments/assets/6eb5b3f6-a8e8-494d-af57-668e3a836060)
+
+
+-  Brach connecting Get Api and VirusTotal App
+
+![image](https://github.com/user-attachments/assets/8f93179c-6be4-439b-9acd-36e4fcc4dbe3)
 
 
 
