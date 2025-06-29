@@ -2705,9 +2705,10 @@ _Email file deletion notification_
 _Wazuh file delete log_
 
 
+## Workflow Logon from IP range outside of the office IP range, BLock IP and disbale user
 
 
-
+![image](https://github.com/user-attachments/assets/0e0352b5-3fd2-4e87-ac33-6b7046049389)
 
 
 
