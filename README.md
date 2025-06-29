@@ -2246,6 +2246,12 @@ payload = {
 }
 ```
 
+Also, we need to make sure the script is able to remove the file, even if the application is running; for that, we need to check if the process is running and then kill the process, then remove the file afterwards. We require Python's psutil module to find and kill the process. You must ensure psutil is installed on the agent, so let's install the modue on our Windows client.
+
+```powershell
+pip install psutil
+```
+
 Modifying the line `file_path = alert["data"]["win"]["eventdata"]["image"]`, the final script is as follows.
 
 ```python
@@ -2257,6 +2263,7 @@ import os
 import sys
 import json
 import datetime
+import psutil
 
 if os.name == 'nt':
     LOG_FILE = "C:\\Program Files (x86)\\ossec-agent\\active-response\\active-responses.log"
@@ -2343,6 +2350,19 @@ def send_keys_and_check_message(argv, keys):
         write_debug_file(argv[0], "Invalid value of 'command'")
         return OS_INVALID
 
+def kill_process_by_path(file_path, log_prefix):
+    killed = False
+    for proc in psutil.process_iter(['pid', 'exe']):
+        try:
+            if proc.info['exe'] and proc.info['exe'].lower() == file_path.lower():
+                proc.kill()
+                write_debug_file(log_prefix, f"Killed process PID {proc.pid} for {file_path}")
+                killed = True
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+    if not killed:
+        write_debug_file(log_prefix, f"No running process found for {file_path}")
+
 def main(argv):
     write_debug_file(argv[0], "Started")
 
@@ -2366,9 +2386,10 @@ def main(argv):
 
         try:
             file_path = alert["data"]["win"]["eventdata"]["image"]
+            kill_process_by_path(file_path, argv[0])  # 🔪 Kill the process first
             if os.path.exists(file_path):
                 os.remove(file_path)
-                write_debug_file(argv[0], json.dumps(msg.alert) + " Successfully removed threat")
+                write_debug_file(argv[0], json.dumps(msg.alert) + " Successfully removed threat file.")
             else:
                 write_debug_file(argv[0], json.dumps(msg.alert) + " File not found: " + file_path)
         except Exception as error:
@@ -2384,7 +2405,13 @@ if __name__ == "__main__":
     main(sys.argv)
 ```
 
-## Configuration for the Windows endpoint (Steps copied from Wazuh Documetation)
+This script does
+
+-   Identifies and kills processes matching the exact file path.
+-   Then deletes the file (if it exists).
+-   Logs every step and failure point.
+
+## Configuration for the Windows endpoint (Steps copied from Wazuh Documentation)
 
 ### Windows endpoint
 
@@ -2502,7 +2529,7 @@ Paste within `<ossec_config>   </ossec_config>`.
 
 We first give the app a name, then pass the arguments.
 
-Apikey: `<Get_API>`, you need to the it from the Get API App
+Apikey: `<Get_API>`, you need to get it from the Get API App
 Url: Url: `https://<Wazuh Server IP>:55000`
 
 ![image](https://github.com/user-attachments/assets/709cb17c-836f-40c2-819f-94565ad2a517)
@@ -2516,4 +2543,173 @@ Alert: The script is expecting the Rule ID and the location of the file.
 ```
 
 ![image](https://github.com/user-attachments/assets/7b3c5784-2e81-49a4-98b4-bebdea0d34d7)
+
+
+-   Send email notification after removal
+
+We first give the app a name, then pass the arguments.
+
+Find Actions: `Send email shuffle`
+Recipients: `Disposable email`
+Subject: `$exec.text.win.eventdata.originalFileName file has been deleted`, I used the file name dynamically here.
+Body: With the help of AI.
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Notification: Malicious File Deleted</title>
+    <style>
+        /* Basic CSS for email compatibility */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .header h1 {
+            color: #d9534f; /* Red for security alert */
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px 0;
+        }
+        .content p {
+            margin-bottom: 15px;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eeeeee;
+            font-size: 12px;
+            color: #777777;
+        }
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #ffffff !important; /* Important for email client override */
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Security Notification</h1>
+        </div>
+        <div class="content">
+            <p>Dear User,</p>
+            <p>This is an automated notification from the Shuffle email app to inform you about a recent security action taken on your account.</p>
+            <p>A <span class="highlight">malicious file</span> identified as <span class="highlight">"[$exec.text.win.eventdata.originalFileName]"</span> (or similar description) was detected and has been <span class="highlight">successfully deleted</span> from $exec.text.win.system.computer device.</p>
+            <p>No further action is required from your side regarding this specific file. We recommend regularly scanning your devices with up-to-date antivirus software and being cautious about opening unexpected attachments.</p>
+            <p>If you have any questions or concerns, please do not hesitate to contact our support team.</p>
+            <p>
+                <a href="mailto:support@shufflemail.com" class="button">Contact Support</a>
+            </p>
+        </div>
+        <div class="footer">
+            <p>Thank you for using Shuffle Email App.</p>
+            <p>&copy; 2025 Shuffle Email App. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+```
+
+## Let's test Mimikatz detection and removal all together
+
+-   Run Mimikatz on the Windows client machine
+
+![image](https://github.com/user-attachments/assets/94229f05-e787-493d-970a-98a913593a03)
+_Mimikatz running_
+
+-   Check if the log is being sent to Wazuh under Rule ID 100002
+
+![image](https://github.com/user-attachments/assets/e06e59e9-539d-422d-8ba6-8d02e5c7ce58)
+_Wazuh log Rule ID 100002_
+
+ ![image](https://github.com/user-attachments/assets/ba2914c7-75d7-4a74-b7bf-f24b5b1a51ab)
+ _File original name_
+
+-   Check that the Shuffle Webhook is receiving the alert
+
+![image](https://github.com/user-attachments/assets/0fbf8479-5e44-42f1-b861-07bf23a3c35c) 
+
+![image](https://github.com/user-attachments/assets/de012939-9475-4d10-9fe8-d9c93ffe2081)
+_Webhook alert_
+
+-   Confirm the alert is being sent to TheHive (Note: if the alert already exists, you will not see the alert; make sure to delete any old Mimikatz alert to see it working)
+
+![image](https://github.com/user-attachments/assets/de6b3de8-dc96-4506-bda9-9963caab525a)
+_TheHive alert_
+
+- Check email notifications (Note: for this workflow, you should get two initial emails, one from the email app and the second from the trigger)
+
+![image](https://github.com/user-attachments/assets/c6a64255-ae71-4a0d-866e-3a9dab00625f) 
+_Email notifications_
+
+![image](https://github.com/user-attachments/assets/d1d3e700-c341-4aa4-b4f7-ac76acebf750)
+_Email app notification_
+
+![image](https://github.com/user-attachments/assets/11a6aa8f-1e45-4934-911b-2cfb7c933b3c)
+_Trigger notification_
+
+-   Executing the response (True)
+
+![image](https://github.com/user-attachments/assets/e20cf352-9bc2-4652-ada5-dce8d77a2062) 
+_Web trigger_
+
+-   Confirming the file process is stopped and the file has been deleted
+
+![image](https://github.com/user-attachments/assets/085a7eff-a48a-427e-a98a-56786a7868a1) 
+_Mimikatz process killed and fie deleted_
+
+-   Check email confirming removal
+
+![image](https://github.com/user-attachments/assets/c694c0e5-e6f6-4e12-a778-6672b7202975) 
+_Email file deletion notification_
+
+![image](https://github.com/user-attachments/assets/a27f5e1f-df48-4e1a-8c0e-4798cef126bd)
+_Email file deletion notification_
+
+-   Wazah logs for file deteletion
+
+![image](https://github.com/user-attachments/assets/e30afcd9-8453-447b-818e-e61f1c852e34) 
+_Wazuh file delete log_
+
+
+
+
+
+
+
+
+
 
