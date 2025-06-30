@@ -1485,7 +1485,7 @@ sudo systemctl restart wazuh-manager
 
 ![Screenshot 2025-06-15 015503](https://github.com/user-attachments/assets/1f7a7f51-ff37-479b-a4d8-d60db5a4e7db)<br>
 
-**Figure 115: original Name Detected**
+**Figure 115: Original Name Detected**
 
 ![Screenshot 2025-06-15 195607](https://github.com/user-attachments/assets/3be90d65-af26-42ec-9b56-04ebda4d9141)<br>
 
@@ -1496,67 +1496,75 @@ We have now:
 -   Created a **custom detection rule** for Mimikatz that resists binary renaming
 -   Verified that alerts are triggered based on **original file name**
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# **Step 5 – Automation Integration with Shuffle, Wazuh, and TheHive**
+# SOAR Integration with Shuffle
 
 > _Objective: Finalise SOC automation by integrating Shuffle (SOAR) with Wazuh (SIEM) and TheHive (case management). Automate alert parsing, threat enrichment, email notifications, and responsive actions._
 
-## **Connect Shuffle with Wazuh via Webhook**
+## Connect Shuffle with Wazuh via Webhook
 
-### 1\. **Set up Webhook Trigger in Shuffle**
+### Setup Shuffle Account
 
--   Create new workflow: `SOC Automation Project`
+Create Account
+-   Go to shuffler.io
+-   Create a free account
+-   Log in to the dashboard
+
+### Create Workflow
+
+-   Click "Workflows"
+-   Click "+" to create new workflow
+-   Name: `SOC Automation Project`
+-   Description: "MyDFIR project!"
+-   Use case: Select any
+-   Click "Done"
+
+**Figure 116: SOC Automation Project Workflow**
 
 ![image](https://github.com/user-attachments/assets/6d03c4e1-7e96-4dc8-85c1-c3f30fc44258)<br>
 
 ![Screenshot 2025-06-15 200132](https://github.com/user-attachments/assets/aba61c09-8e6a-479b-b65d-4dca18f3aca6)<br>
-_SOC Automation Project workflow_
 
--   Drag a **Webhook** trigger to the canvas and copy the **Webhook URL**
+### Set up Webhook Trigger in Shuffle
+
+-   Click "Triggers" tab in workflow
+-   Drag "Webhook" app onto canvas
+-   Click on webhook
+-   Name: "wazuh-alerts"
+-   Copy the webhook URI (starts with [https://shuffler.io](https://shuffler.io))
+
+**Figure 117: Shuffle Webhook Configuration**
 
 ![image](https://github.com/user-attachments/assets/afcbc490-9919-408c-a2c2-330ca21efc2e)<br>
-_Shuffle webhook configuration_
+
+**Figure 118: Copy Webhook URI**
 
 ![Screenshot 2025-06-15 200521](https://github.com/user-attachments/assets/5dfc9c80-b722-4d7e-99db-14457139f14e)<br>
-_Copy Webhook URI_
 
-### 2\. **Configure Wazuh to Use Webhook**
+### Configure Wazuh Integration
 
 -   Edit Wazuh Manager config (`/var/ossec/etc/ossec.conf`):
 
+```bash
+nano /var/ossec/etc/ossec.conf
+```
+
+-   Find the `</global>` closing tag
+-   Add AFTER the `</global>` tag:
+
+**Figure 119: ossec.conf**
+
 ![image](https://github.com/user-attachments/assets/e80654e4-ad75-4e6c-a26c-edcb88836ab3)<br>
-_ossec.conf_
 
 - Edit `<integration>` 
 
+**Figure 120: Suffle/Wazuh Integration**
+
 ![Screenshot 2025-06-15 201729](https://github.com/user-attachments/assets/8e3a3ae0-eac6-4da4-a389-d2f8d0b094c6)<br>
-_Suffle/Wazuh integration_
+__
+
+**Figure 121: Targeting events by rule ID 100002**
 
 ![Screenshot 2025-06-15 202234](https://github.com/user-attachments/assets/d93d953e-2392-4dc4-9387-e559e7e30851)<br>
-_Targeting events by rule ID 100002, all other events will be ignored by the Webhook_
 
 ```xml
 <integration>
@@ -1566,7 +1574,12 @@ _Targeting events by rule ID 100002, all other events will be ignored by the Web
    <alert_format>json</alert_format>
 </integration>
 ```
--   Restart Wazuh Manager:
+
+-   **Critical**: Ensure the hook\_url is NOT highlighted in purple
+-   If purple, press space to separate it
+-   Use correct rule\_id: `100002`
+
+### Restart Wazuh Manager
 
 ```bash
 sudo systemctl restart wazuh-manager
@@ -1576,260 +1589,276 @@ sudo systemctl restart wazuh-manager
 sudo systemctl status wazuh-manager
 ```
 
-![Screenshot 2025-06-15 202333](https://github.com/user-attachments/assets/748e3a90-39e9-4b43-921e-ef4f66f8d8c5)<br>
-_Restarting and checking the status of Wazuh manager_
+**Figure 122: Restart Service**
 
--   Start Wazuh Webhook to recieve logs
+![Screenshot 2025-06-15 202333](https://github.com/user-attachments/assets/748e3a90-39e9-4b43-921e-ef4f66f8d8c5)<br>
+
+### Test Integration
+
+-   In Shuffle, click webhook → Click "Start"
+
+**Figure 123: Webhook Started**
 
 ![image](https://github.com/user-attachments/assets/8af5ada1-7081-4882-aa37-7213f50a316e)<br>
-_Webhook started_
 
-- Generate Mimikatz logs by running the binary again
+-   Run Mimikatz on Windows client:
+
+**Figure 124: Mimikatz Running**
 
 ![image](https://github.com/user-attachments/assets/f4515d64-b7bc-4d46-8b5c-728c7100907a)<br>
-_Mimikatz running_
 
-![Screenshot 2025-06-15 202658](https://github.com/user-attachments/assets/a68105cb-3fac-4ea7-bcb1-296b2e98fb82)<br>
-_Wazuh, Mimkatz rule ID 100002 triggered_
+powershell
+
+```powershell
+.\youareawesome.exe
+exit
+```
+
+-   Click "Executions" tab at the bottom
+-   Should see execution with Wazuh alert data
+
+**Figure 125: Wazuh Webhook Capturing Traffic**
 
 ![Screenshot 2025-06-15 202858](https://github.com/user-attachments/assets/f9a5fa36-2764-41b3-8900-b87a6970f78c)<br>
-_Wazuh Webhook capturing traffic_
+
+**Figure 126: Wazuh, Mimkatz Rule ID 100002 Triggered**
+
+![Screenshot 2025-06-15 202658](https://github.com/user-attachments/assets/a68105cb-3fac-4ea7-bcb1-296b2e98fb82)<br>
+
+**Figure 127: Rule ID 100002 Captured**
 
 ![Screenshot 2025-06-15 203111](https://github.com/user-attachments/assets/81977675-f5e4-47bc-b4ea-a6c300ddedb0)<br>
-_Rule ID 100002 captured_
 
-## **Create the Workflow Logic in Shuffle**
 
-### 1\. **Parse SHA256 Hash with Regex**
 
--   Add `Regex Capture Group` app and connect the Webhook to it.
+## Build SOAR Workflow
+
+### Hash Extraction with Regex
+
+-   Click "Change me" icon
+-   Change from "Repeat back to me" to "Regex capture group"
+
+**Figure 128: Regex Capture Group**
 
 ![image](https://github.com/user-attachments/assets/bd696309-9796-4f3d-8779-65c6791940ee)<br>
-_Drag a Suffle tool, label it `SHA256_Value` and change it to 'Regex Capture Group'_
 
--   Parse hash value from field: `SHA256=<value>`
-
-With the help of ChatGPT or Claude, let's generate a regex pattern to extract the SHA256 hash from the input data
-
-![image](https://github.com/user-attachments/assets/6774e963-5c6c-4258-915b-ebf7f7f23e6d)<br>
+-   Rename to "SHA256 Regex"
+-   Input data: Click "+" → Execution argument → Find hash field
+-   **Get Regex from ChatGPT:**
+    -   Prompt: "create a regex to parse the sha256 value of the hash"
+    -   Copy the regex pattern provided
+-   Paste regex in Shuffle
+-   Save workflow and test
 
 Input data: 
 ```bash
 $exec.text.win.eventdata.hashes
 ```
+**Figure 129: Regex**
+
+![image](https://github.com/user-attachments/assets/6774e963-5c6c-4258-915b-ebf7f7f23e6d)<br>
 
 Regex:
 ```regex
 (?:^|,)SHA256=([A-Fa-f0-9]{64})(?=,|$)
 ```
 
--   Use this value as input for enrichment 
+**Figure 129: Regex Parsing Setup in Shuffle**
 
 ![image](https://github.com/user-attachments/assets/4539ec30-fd77-465b-ac71-5c1ab99421e7)<br>
-_Regex parsing setup in Shuffle_
 
-## **Enrich Alert with VirusTotal**
+## Enrich Alert with VirusTotal
 
-### 1\. **Configure VirusTotal App in Shuffle**
+### Configure VirusTotal App in Shuffle
 
--   Add VirusTotal app and connect the Regex app to it, authenticate via API key
+-   Click "Apps" tab → Search "VirusTotal"
+-   Click VirusTotal to activate
+-   Drag VirusTotal app to canvas
+-   Label the App and change Action: `Get hash report`
+
+**Figure 130: Drag VirusTotal App**
 
 ![image](https://github.com/user-attachments/assets/4269d3c6-2a75-49d4-9307-492727d46345)<br>
-_Drag VirusTotal app_
 
--   Label the App and change Action: `Get hash report`
+**Figure 130: Label**
+
 ![image](https://github.com/user-attachments/assets/cc4f241d-36bd-41bb-86f8-bccee3a62673)<br>
-_Get hash_
 
--   Input: SHA256 value extracted via regex
+-   Connect SHA256 Regex to VirusTotal
+-   **Get VirusTotal API Key:**
+    -   Sign up at virustotal.com
+    -   Go to your profile → API Key
+    -   Copy API key
+
+**Figure 131: Get the ID**
 
 ![image](https://github.com/user-attachments/assets/8ddb381a-9809-4482-9ba1-69390fb07f57)<br>
 
+-   Configure VirusTotal app:
+    -   Click "Authenticate" button
+    -   Paste API key → Submit
+    -   Action: "Get a hash report"
+    -   ID field: Select SHA256 regex output (list)
+
+**Figure 132: VirusTotal App Setup**
+
 ![image](https://github.com/user-attachments/assets/0dc959aa-cbc9-4277-9c1d-9c741dbd5ff0)<br>
-_Get the ID from the generated value by the Regex extension_
 
-
+-   **Note**: If getting 404 errors, the VirusTotal app may need updating
+-   Fork the app and change URL from `.../report` to `.../[ID]`
 -   Re-run the last log to test the VirusTotal App
 
+**Figure 133: Re-running Alert**
+
 ![image](https://github.com/user-attachments/assets/8b4919e6-8c6f-4b0b-907d-e2cfc3542953)<br>
-_Re-running alert_
+
+**Figure 134: VirusTotal Hash Report Setup**
 
 ![Screenshot 2025-06-15 210311](https://github.com/user-attachments/assets/d4ecbc37-ac19-4c43-8d28-2c1396c932ef)<br>
-_VirusTotal hash report setup_
 
+## The Hive Integration
 
-## **Create Alert in TheHive**
+### Setup The Hive Users:
 
-### 1\. **Create API Key and Org in TheHive**
+-   Login to The Hive web interface
+-   Click "+" to create new organization: "mylab"
 
-Go to TheHive portal.
+**Figure 135: Add Organisation**
 
 ![image](https://github.com/user-attachments/assets/911cb58b-bd97-4ad2-b04c-8ff9bce4378c)<br>
-_Click on the + button_
 
--   Create:
-    -   Organisation: `MyLab`, Description: `SOC Automation Project`
- 
-    ![image](https://github.com/user-attachments/assets/ea14bf4a-4caf-449e-9dc4-44148713038e)<br>
+**Figure 136: Create New Organisation**
 
-    -   Analyst user
- 
-    ![Screenshot 2025-06-15 211123](https://github.com/user-attachments/assets/b6e11f7a-4d6b-498a-8c25-9644687955ee)<br>
-    _Add users_
+-   Organisation: `MyLab`
+-   Description: `SOC Automation Project`
 
-    ![image](https://github.com/user-attachments/assets/93490510-1f3f-4d57-ace6-1f81527bbc61)<br>
-    _Type: `Normal`, Login: `mylab@test.com`, Name: `mylab`, Profile: `Analyst`
-    
-    -   Service account user for Shuffle
-    
-    ![Screenshot 2025-06-15 211258](https://github.com/user-attachments/assets/88c17851-451a-4a9f-abca-0645d4b626f4)<br>
-    _Type: `Service`, Login: `shuffle@test.com`, Name: `SOAR`, Profile: `Analyst`
+![image](https://github.com/user-attachments/assets/ea14bf4a-4caf-449e-9dc4-44148713038e)<br>
 
-    ![Screenshot 2025-06-15 211450](https://github.com/user-attachments/assets/a5485a03-d46e-4b01-b025-1fde7d81ac30)<br>
-    _Preview Normal-Analyst account_
+-   Create analyst user: `maylab@test.com`
 
-    ![Screenshot 2025-06-15 211530](https://github.com/user-attachments/assets/59b93849-71e0-4f2f-91c9-ec8d11e7371f)<br>
-    _Set password for Normal-Analyst account_
+**Figure 137: Add Users**
 
--   Generate API key for Shuffle
+![Screenshot 2025-06-15 211123](https://github.com/user-attachments/assets/b6e11f7a-4d6b-498a-8c25-9644687955ee)<br>
+
+![image](https://github.com/user-attachments/assets/93490510-1f3f-4d57-ace6-1f81527bbc61)<br>
+
+>-   Type: `Normal`
+>-   Login: `mylab@test.com`
+>-   Name: `mylab`
+>-   Profile: `Analyst`
+
+-   Create service account: `shuffle@test.com` (type: service)
+
+**Figure 138: Service Account**
+
+![Screenshot 2025-06-15 211414](https://github.com/user-attachments/assets/3f422943-1089-4b90-8db7-51ec4d3b39db)
+
+>-   Type: `Service`
+>-   Login: `shuffle@test.com`
+>-   Name: `SOAR`
+>-   Profile: `Analyst`
+
+-   Set password for the analyst account
+
+**Figure 139: Preview Normal-Analyst Account**
+
+![Screenshot 2025-06-15 211450](https://github.com/user-attachments/assets/a5485a03-d46e-4b01-b025-1fde7d81ac30)<br>
+
+**Figure 140: Set Password for Normal-Analyst Account**
+
+![Screenshot 2025-06-15 211530](https://github.com/user-attachments/assets/59b93849-71e0-4f2f-91c9-ec8d11e7371f)<br>
+
+-   Generate API key for service account
+
+**Figure 141: Preview Service-Analyst Account**
 
 ![image](https://github.com/user-attachments/assets/95de12b6-5fac-4ceb-89c8-c80802eba1dd)<br>
-_Preview Service-Analyst account_
+
+**Figure 142: TheHive API Key**
 
 ![Screenshot 2025-06-15 211751](https://github.com/user-attachments/assets/9823acc1-4492-4263-8911-a75fe4c31701)<br>
-_TheHive API key_
 
-- Log in to the `mylab@test.com` account
 
-![Screenshot 2025-06-15 211936](https://github.com/user-attachments/assets/dccb6c3f-cbcd-4861-9e53-dab51f004caa)<br>
-_`mylab@test.com` account_
+**Configure The Hive App:**
 
-### 2\. **Configure TheHive App in Shuffle**
+-   Search and add "The Hive" app in Shuffle
+-   Drag to canvas and connect VirusTotal to The Hive
 
--   Add TheHive App and connecet the VirusTotal App to it
+**Figure 143: TheHive App**
 
 ![image](https://github.com/user-attachments/assets/9bca6b72-17e9-41e5-80f3-9e289cca502c)<br>
-_Drag TheHive App_
 
--   Action: `Create Alert`
--   Fill alert fields:
-  
-   -   Title, Description
-  
-   ![image](https://github.com/user-attachments/assets/43ef2114-c971-449b-b634-30e7534fede2)<br>
-   _TheHive name_
+**Figure 144: TheHive Label**
 
-   -   Authenticate TheHive
+![image](https://github.com/user-attachments/assets/43ef2114-c971-449b-b634-30e7534fede2)<br>
 
-   ![image](https://github.com/user-attachments/assets/58a37e2e-4472-431c-96d3-0bff80955a5f)<br>
-   _apiKey, the API key can be copied from TheHive service account_
+-   Authenticate with API key and URL: `http://YOUR_HIVE_IP:9000`
 
-   -   TheHive apiKey and URL
-   
-   ![Screenshot 2025-06-15 212307](https://github.com/user-attachments/assets/5616050a-f1cf-4d1e-b900-b06b9291f009)<br>
-   _TheHive Public IP and port `http://<TheHive public IP>:9000`, click on Submit_
+**Figure 145: TheHive Authentication**
 
-   -   Title, Tags, Summary, Severity
+![image](https://github.com/user-attachments/assets/58a37e2e-4472-431c-96d3-0bff80955a5f)<br>
+_apiKey, the API key can be copied from TheHive service account_
 
-   Title:
+**Figure 146: TheHive Public IP**
 
-   ```bash
-   $exec.title
-   ```
+![Screenshot 2025-06-15 212307](https://github.com/user-attachments/assets/5616050a-f1cf-4d1e-b900-b06b9291f009)<br>
+_TheHive Public IP and port `http://<TheHive public IP>:9000`, click on Submit_
 
-   Tags: MITRE ID (e.g., T1003 for Mimikatz)
-   
-   ```bash
-   ["T1003"]
-   ```
+-   Action: "Create alert"
+-   Configure fields:
+    -   Title: `$exec.title`
+    -   Tags: `["T1003"]` (in array format)
+    -   Summary:
+    ```bash
+    Mimikatz detected on host: $exec.text.win.system.computer with the processor ID: $exec.text.win.system.processID and the command line: $exec.text.win.eventdata.commandLine, VirusTotal Reputation:   $virustotal.#.body.data.attributes.reputation//$virustotal.#.body.data.attributes.sandbox_verdicts.Zenbox.confidence`
+    ```
+    Severity: `2`
 
-   Summary: (Use my example below to create your summary)
+    **Figure 147: TheHive Alert Field Mapping**
+    
+    ![Screenshot 2025-06-15 215814](https://github.com/user-attachments/assets/cd46b131-1847-46ba-aa9a-0010840eabf8)<br>
 
-   ```bash
-   Mimikatz detected on host: $exec.text.win.system.computer with the processor ID: $exec.text.win.system.processID and the command line: $exec.text.win.eventdata.commandLine, VirusTotal Reputation:   $virustotal.#.body.data.attributes.reputation//$virustotal.#.body.data.attributes.sandbox_verdicts.Zenbox.confidence
-   ```
-   
-   Severity:
-   
-   ```bash
-   2
-   ```
-   
-   ![Screenshot 2025-06-15 215814](https://github.com/user-attachments/assets/cd46b131-1847-46ba-aa9a-0010840eabf8)<br>
-   _TheHive alert field mapping `Title`, `Tags`, `Summary`, `Severity`_
+    -   Type: `Internal`
+    -   TLP: `2`
+    -   Status: `New`
+    -   Sourceref: `100002`
+    -   Source: `Wazuh`
+    -   Pap: `2`
+    -   Flag: `false`
+    -   Description: 
+    ```bash
+    Mimikatz Detected on Host: $exec.text.win.system.computer from user: $exec.text.win.eventdata.user
+    ```
 
-   -   Type, Tip, Status, Sourceref, Source, Pap, Flag, Description
+    **Figure 148: TheHive Alert Field Mapping**
+    
+    ![image](https://github.com/user-attachments/assets/37079a2e-fd0e-44c3-ab47-137125a2e5bc)<br>
+    _TheHive alert field mapping `Type`, `Tip`, `Status`, `Sourceref`, `Source`, `Pap`, `Flag`, `Description`_
 
-   Type:
-
-   ```bash
-   Internal
-   ```
-   
-   Tip:
-
-   ```bash
-   2
-   ```
-
-   Status:
-
-   ```bash
-   New
-   ```
-   
-   Sourceref:
-   
-   ```bash
-   \"Rule: 100002\"
-   ```
-   
-   Source:
-   
-   ```bash
-   Wazuh
-   ```
-   
-   Pap:
-   
-   ```bash
-   2
-   ```
-   
-   Flag:
-   
-   ```bash
-   false
-   ```
-   
-   Description: (Use my example below to create your description)
-
-   ```bash
-   Mimikatz Detected on Host: $exec.text.win.system.computer from user: $exec.text.win.eventdata.user
-   ```
-
-   ![image](https://github.com/user-attachments/assets/37079a2e-fd0e-44c3-ab47-137125a2e5bc)<br>
-   _TheHive alert field mapping `Type`, `Tip`, `Status`, `Sourceref`, `Source`, `Pap`, `Flag`, `Description`_
-
-
-### 1\. **Expose TheHive API Port**
+### Expose TheHive API Port
 
 -   Open DigitalOcean firewall port `9000` for inbound traffic
+
+**Figure 149: Open firewall port `9000`**
 
 ![image](https://github.com/user-attachments/assets/76b2bc1f-5450-4c8f-83b0-3be47bf7f7c6)<br>
 
 ![Screenshot 2025-06-15 220202](https://github.com/user-attachments/assets/e1502738-1d67-4483-a862-108b7d73cda1)<br>
-_Opening port 9000 for incoming traffic_
 
-Note: I faced an issue with the ThHive API After troubleshooting, I found out the API was passing the arguments in the wrong format. I managed to fix the API body; see below the default setup and the changes I made. If you are facing similar issues, this may help you resolve them. I noted that Steven from @MyDFIR has a different problem with another API.
+
+### Rerunning a 100002 Alert 
+
+> **Note:** I faced an issue with the ThHive API After troubleshooting, I found out the API was passing the arguments in the wrong format. I managed to fix the API body; see below the default setup and the changes I made. If you are facing similar issues, this may help you resolve them. I noted that Steven from @MyDFIR has a different problem with another API.
+
+**Figure 150: Default API Request**
 
 ![Screenshot 2025-06-16 093947](https://github.com/user-attachments/assets/12363a95-4b28-4e23-b6db-4ab0dd2053ac)<br>
-_Default API request format_
 
 I found out that `description`, `flag`, `pap`, `tags` and `tip` were not passing the values in the correct format, so I changed them.
 
+**Figure 151: New TheHive Body Format**
+
 ![image](https://github.com/user-attachments/assets/f2d82347-897a-48cc-9ffe-27c342b55d58)<br>
-_New TheHive Body format_
 
 ```json
 {
@@ -1849,41 +1878,73 @@ _New TheHive Body format_
 }
 ```
 
+**Figure 152: Submit the API changes**
+
 ![image](https://github.com/user-attachments/assets/e6b8efa5-7bde-4ab0-94a4-8f3953872f02)<br>
-_Submit the API changes_
+
+**Figure 153: Save API**
 
 ![image](https://github.com/user-attachments/assets/37258b31-98a9-4567-8272-d5c75300b849)<br>
-_Save API_
-
 
 -   Testing TheHive API changes again by re-running the alert
 
+**Figure 153: Error 400**
+
 ![Screenshot 2025-06-16 094414](https://github.com/user-attachments/assets/1bae997b-8b59-4cba-891a-43abb19d7e9c)<br>
-_Error 400, we need to change the way we pass the Tags value_
 
-   Tags: 
-   
-   ```bash
-   T1003
-   ```
+Error 400, we need to change the way we pass the Tags value.
+
+Tags: `T1003`
+
+**Figure 154: New Tags Format**
+
 ![Screenshot 2025-06-16 094636](https://github.com/user-attachments/assets/36e6a046-a6bf-4376-887a-e35d5ac5198d)<br>
-_Tags value_
 
--   Testing TheHive API changes by re-running the alert with the new Tags format
+### Rerunning the 100002 Alert With the API Changes
+
+**Figure 154: Status 200**
 
 ![Screenshot 2025-06-16 094833](https://github.com/user-attachments/assets/57af4177-b940-454f-9119-b95e68d84742)<br>
-_Status 200!!, the alert has been sent to TheHive_
+
+Status 200!!, the alert has been sent to TheHive.
+
+### TheHive Alert
+
+**Figure 155: Alert**
 
 ![Screenshot 2025-06-16 094853](https://github.com/user-attachments/assets/c859951d-1714-4949-9849-6048e5faf947)<br>
-_TheHive dashboard, alert created_
+
+The alert has been created on TheHive Dashboard.
+
+**Figure 156: TheHive Ddashboard**
 
 ![Screenshot 2025-06-16 094949](https://github.com/user-attachments/assets/c3512820-f815-4bb2-8bae-68156bbf477b)<br>
-_All values have been passed to TheHive dashboard_
 
-So far, our workflow should look like the one below.
+All values have been passed to TheHive dashboard.
+
+We have now completed our flow for executing Mimikatz on the Windows client's Downloads folder. So far, our workflow should look like the one below.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**Figure 157: Shuffle Workflow Overview**
 
 ![Screenshot 2025-06-16 095202](https://github.com/user-attachments/assets/a5a56ece-6731-4730-90d9-7515a5edf1c7)<br>
-_Workflow stage_
+
 
 ## **Notify Analyst via Email**
 
@@ -1912,6 +1973,53 @@ Spawned From: $exec.text.win.eventdata.parentImage
 
 ![image](https://github.com/user-attachments/assets/66394e83-9469-463c-b872-a3c291478e24)<br>
 _Email App setup_
+
+
+
+
+
+
+
+
+
+
+-   Generate API key for Shuffle
+
+
+
+- Log in to the `mylab@test.com` account
+
+![Screenshot 2025-06-15 211936](https://github.com/user-attachments/assets/dccb6c3f-cbcd-4861-9e53-dab51f004caa)<br>
+_`mylab@test.com` account_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -   Rerun the flow
 
