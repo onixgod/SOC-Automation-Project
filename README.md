@@ -2707,10 +2707,312 @@ _Wazuh file delete log_
 
 ## Workflow Logon from IP range outside of the office IP range, BLock IP and disbale user
 
+The first step on this flow is to create a custom rule to capture events accessing the Ubuntu client through SSH externally. Go to the Wazuh web interface and in custom rules add the following.
+
+```xml
+  <rule id="100006" level="5">
+    <if_sid>5715</if_sid>
+    <srcip negate="yes"><add your public IP>/24</srcip>
+    <description>Successful SSH logins originating outside of the office</description>    
+    <mitre>
+      <id>T1078</id>
+      <id>T1021.004</id>      
+    </mitre>
+  </rule>
+```
+With the piece of code above, we are telling it to record any successful SSH connection with event code 5717, and it is outside our public IP range, you can find out your public IP using available websetes onlone, e.g if your public IP is 205.198.5.6 you will put 205.198.5.0/24 to cover the range. The negate=yes is to evaluate that the IP is not in the range.
+
+![image](https://github.com/user-attachments/assets/4e6f7799-7fe7-41f6-a7d0-45d292307327)
+
+
+-  Editing ossec.conf
+
+Now we need to edit our ossec.conf and enable the Block IP and Disable account Active responses. As we have already enabled the blocking IP part, just copy the following code for disabling accounts on Linux.
+
+```xml
+  <active-response>
+    <disabled>no</disabled>
+    <command>disable-account</command>
+    <location>local</location>
+    <rules_id>100007</rules_id>
+    <timeout>no</timeout>
+  </active-response>
+```
+
+![image](https://github.com/user-attachments/assets/4d5135a6-40de-4d58-90e3-2451f3dacaba)
+
+For this part of the workflow we are going to filter aletr with Rule ID 100006 where we are tracking successful SSH logins originating outside of the office. if the rule is triggered we will enrich the IP with VirusTotal App, we will get an alert on TheHive and an email notification asking us if we want to block the IP and disable the user account.
 
 ![image](https://github.com/user-attachments/assets/0e0352b5-3fd2-4e87-ac33-6b7046049389)
 
+Let's drag all the components need it for this and connect the nodes as desscibe on the figure above.
 
+-   Setup condition
+
+![image](https://github.com/user-attachments/assets/04ac70a6-e20f-468b-921e-ce6c3ae382bb)
+
+
+-   Enrich IP address with VirusTotal App
+
+![image](https://github.com/user-attachments/assets/5c001bfe-c253-4634-a96f-5267f9ffb847)
+
+-   Setup TheHive App
+
+Name: `TheHive_Out_Office_Logon`
+Find Actions: `Create alert`
+Title: `$exec.title (IP: $exec.all_fields.data.srcip)`
+Tags: `T1078, T1021.004`
+Severity: `2`
+Type: `External`
+Tip: `2`
+Status: `New`
+Sourceref: `\"Rule: 100006-$exec.all_fields.data.srcip\"`
+Source: `Wazuh`
+Pap: `2`
+Flag: `false`
+Description:
+```json
+false
+```
+Summary:
+```json
+Successful external VPN access was detected on host $exec.all_fields.predecoder.hostname from source IP $exec.all_fields.data.srcip on $exec.all_fields.timestamp . The IP address was identified as originating from $virustotal_ip_check.body.data.attributes.country, and its VirusTotal score indicates $virustotal_ip_check.body.data.attributes.last_analysis_stats.malicious malicious detections. Please check email alerts immediately to block the source IP address and disable the associated user account if necessary.
+```
+
+![image](https://github.com/user-attachments/assets/2c6ea78c-a9da-4f2d-af26-b753aea12873)
+
+![image](https://github.com/user-attachments/assets/736f0328-5bca-4a11-98bc-029a564c4647)
+
+-   Trigger App
+
+Name: `Block_Acc_n_IP`
+Input options: `Email`
+Email: `Disposable email`
+Information: 
+```html
+<h2 style="color:#d9534f;">🚨 	Successful SSH login originating outside of the office</h2>
+
+
+A login was detected from an IP address <strong>outside the official office IP range</strong>.
+
+<ul>
+  <li><strong>Source IP:</strong> $exec.all_fields.data.srcip</li>
+  <li><strong>Target Host:</strong> $exec.all_fields.predecoder.hostname</li>
+  <li><strong>Username Used:</strong> $exec.all_fields.data.dstuser</li>
+</ul>
+
+<h3>🧪 VirusTotal Scan Summary</h3>
+
+The IP <strong>$exec.all_fields.data.srcip</strong> was checked with VirusTotal. Results:
+
+<ul>
+  <li><strong>Last Analysis Date:</strong> 11111</li>
+  <li><strong>Malicious:</strong> $virustotal_ip_check.body.data.attributes.last_analysis_stats.malicious</li>
+  <li><strong>Suspicious:</strong> $virustotal_ip_check.body.data.attributes.last_analysis_stats.suspicious</li>
+  <li><strong>Undetected:</strong> $virustotal_ip_check.body.data.attributes.last_analysis_stats.undetected</li>
+  <li><strong>Harmless:</strong> $virustotal_ip_check.body.data.attributes.last_analysis_stats.harmless</li>
+  <li><strong>Country:</strong> $virustotal_ip_check.body.data.attributes.country</li>
+  <li><strong>Full Report:</strong> <a href="$virustotal_ip_check.body.data.links.self" target="_blank">View on VirusTotal</a></li>
+</ul>
+
+<h3>🛡️ Action Required</h3>
+
+Would you like to <strong>block the source IP</strong> <code>$exec.all_fields.data.srcip</code>?
+
+Please review and respond to take manual action.
+```
+
+![image](https://github.com/user-attachments/assets/7d3c7486-fc0e-42cf-9612-9bee70f9bc49)
+
+-   Wazuh responds to disable the user
+
+
+Name: `Wazuh_Response_Acc`
+Find actions: `Run command`
+Apikey: `From Get_API App`
+Url: `https://<Wazuh Public IP>:55000`
+Command: `disable-account0`
+Alert: `{"data":{"dstuser":"$exec.all_fields.data.dstuser"}}`
+Agent list: `$exec.all_fields.agent.id`
+
+![image](https://github.com/user-attachments/assets/3e35978e-4420-4eb5-b838-7462ddbaee21)
+
+![image](https://github.com/user-attachments/assets/6c60c29f-e860-41bd-b82a-60d2c5f4dfd4)
+
+
+-   Wazuh responds to Block IP
+
+Name: `Wazuh_Response_IP`
+Find actions: `Run command`
+Apikey: `From Get_API App`
+Url: `https://<Wazuh Public IP>:55000`
+Command: `firewall-drop0`
+Alert: `{"data":{"srcip":"$exec.all_fields.data.srcip"}}`
+Agent list: `$exec.all_fields.agent.id`
+
+![image](https://github.com/user-attachments/assets/42f017d5-dd1a-4865-a51d-96b70fe11ce6)
+
+![image](https://github.com/user-attachments/assets/5374d331-9ac4-430d-b874-5509d9e99ab7)
+
+- Email notification
+
+-   Name: `email_ip_and_user_blocked`
+-   Recipients: `email@dispoableemail.com`   
+-   Subject: `IP Blocked & Account Disabled ($exec.all_fields.data.srcip, $exec.all_fields.data.dstuser)`
+-   Body: (You can use my template to create yours)
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  /* Basic styling for email client compatibility */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  .email-container {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .header {
+    background-color: #dc3545; /* Red for alert, indicating urgency */
+    color: #ffffff;
+    padding: 10px 20px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    text-align: center;
+  }
+  .content {
+    padding: 20px;
+    line-height: 1.6;
+    color: #333333;
+  }
+  .footer {
+    text-align: center;
+    padding: 10px;
+    font-size: 0.8em;
+    color: #777777;
+    border-top: 1px solid #eeeeee;
+    margin-top: 20px;
+  }
+  .highlight {
+    font-weight: bold;
+    color: #dc3545; /* Red for emphasis on critical information */
+  }
+</style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <h2>Security Alert: Immediate Action Required</h2>
+    </div>
+    <div class="content">
+      <p>Dear Security Team,</p>
+      <p>This is an automated notification from Wazuh regarding a recent security incident.</p>
+      <p>
+        An unauthorized connection was originated from an IP address outside our allowed office range.
+        As a result, the following actions have been taken:
+      </p>
+      <ul>
+        <li>The IP address <span class="highlight">$exec.all_fields.data.srcip</span> has been <span class="highlight">blocked</span> on the host.</li>
+        <li>The account <span class="highlight">$exec.all_fields.data.dstuser</span> has been <span class="highlight">disabled</span>.</li>
+      </ul>
+      <p>
+        **Details:** The connection was originated from <span class="highlight">$exec.all_fields.data.srcip</span>, which is outside the designated office IP range.
+      </p>
+      <p>Please investigate this incident immediately and take any further necessary actions.</p>
+      <p>Thank you,</p>
+      <p>Wazuh Security Monitoring System</p>
+    </div>
+    <div class="footer">
+      This is an automated email. Please do not reply.
+    </div>
+  </div>
+</body>
+</html>
+```
+
+![image](https://github.com/user-attachments/assets/0525efcd-1023-468a-b04b-2eed0ac26a18)
+
+![image](https://github.com/user-attachments/assets/d8121c43-6614-4f58-aec2-43994c63ead6)
+
+
+-  Let's see the workflow in action.
+
+Using a VPN or any way to obtain a public IP differentfrom  the one set up on 100006 rule, let's SSH on te Ubuntu client, make sure you are using a account different ot the root acoount as we will aim to disble the account.
+
+Follow these steps if you have not set up one.
+
+```bash
+useradd mylab
+```
+```bash
+passwd mylab
+```
+
+-   Checking the IP and user are not disbaled or blacklisted
+
+To check IP table, run the following command
+```bash
+iptables --list
+```
+If the IP from your computer is trying to connect is blocked, run the following to clear the table
+```bash
+iptables --flush
+```
+Run the following to check the user
+```bash
+passwd -S mylab
+```
+If the result is an L on instead of P, that means the user is locked. To unlock it, run the following command
+```bash
+passwd -u mylab
+```
+
+![image](https://github.com/user-attachments/assets/da4db960-39b4-4945-9079-d33ffded615b)
+
+
+-   SSH to the Ubuntu client using the user you created
+
+```bash
+SSH mylab@<Ubuntu client Public IP>
+```
+
+- Wazuh logs of successful login outside IP range
+
+![image](https://github.com/user-attachments/assets/4b1fa794-ebf6-4f70-adce-55f13bea46fa)
+
+![image](https://github.com/user-attachments/assets/be2a1ad3-b93c-4612-9297-10efae99f434)
+
+-    TheHive alert
+
+![image](https://github.com/user-attachments/assets/45d4c44d-a2a4-44c2-8b30-eab17577c8a3)
+
+![image](https://github.com/user-attachments/assets/696ca23f-5cd9-448b-94b7-74b1996e1901)
+
+
+-   Email notification trigger
+
+![image](https://github.com/user-attachments/assets/bc4ace94-ddcf-4b07-aef0-b99d327f554d)
+
+- Triger the response (True)
+
+![image](https://github.com/user-attachments/assets/5ac997c2-7a45-4a80-a53d-1ff746f89290)
+_Triggering action_
+
+![image](https://github.com/user-attachments/assets/1805d45f-d532-460e-89c2-ffb782a0a825)
+_IP has been blocked_
+
+![image](https://github.com/user-attachments/assets/0e2eb6a0-415d-4ae0-acda-7ee231abbb96)
+_User disable_
+
+This concludes our project.
 
 
 
