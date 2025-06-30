@@ -241,6 +241,7 @@ Get-FileHash .\VirtualBox-*.exe -Algorithm SHA256
 ```
 
 **Figure 3: VirtualBox download**
+
 ![image](https://github.com/user-attachments/assets/d2f7013a-fbca-4d09-94ca-3f2ddea36f8e)<br>
 
 2.  **Download Windows ISO**
@@ -249,9 +250,11 @@ Get-FileHash .\VirtualBox-*.exe -Algorithm SHA256
     -   Select “Create installation media” → Choose **ISO file** → Save locally
 
 **Figure 4: Download Media Creation Tool**
+
 ![image](https://github.com/user-attachments/assets/64437e1d-0643-45a9-bfed-fc55700a8f48)<br>
 
 **Figure 5: ISO Creation Screen**
+
 ![image](https://github.com/user-attachments/assets/4d9c6c44-0bb2-4b06-9927-cf14facafaca)<br>
 
 ![image](https://github.com/user-attachments/assets/f4bcbc24-3d60-4798-887d-48f9f4940e02)<br>
@@ -272,6 +275,7 @@ Get-FileHash .\VirtualBox-*.exe -Algorithm SHA256
     -   Check "Skip unattended installation" to do a manual setup
 
 **Figure 6: VirtualBox VM Creation & Settings**
+
 ![image](https://github.com/user-attachments/assets/8d7be4d8-26f0-4679-9b14-ba2c8cb68c6f)<br>
 
 4.  **Install Windows 10 OS**
@@ -282,6 +286,7 @@ There are numerous guides available online for this process.
     -   Download Sysmon from Microsoft Sysinternals
 
 **Figure 7: Sysmon Download & Installation**
+
 ![Screenshot 2025-06-14 123115](https://github.com/user-attachments/assets/93e6de2c-63e7-4ddc-aaa6-e7efe236f134)<br>
 
 Download the ZIP file and uncompress it.
@@ -305,6 +310,7 @@ Navigate to the Sysmon binary location.
 ![Screenshot 2025-06-14 124308](https://github.com/user-attachments/assets/ac00b60e-44fc-4125-b484-dfc7de1f9bbb)<br>
 
 **Figure 9: Sysmon Configuration File**
+
 ![Screenshot 2025-06-14 124342](https://github.com/user-attachments/assets/c2a65b1a-b433-41df-aa98-fb3c51d68e3a)<br>
 
 ![Screenshot 2025-06-14 124416](https://github.com/user-attachments/assets/e8dae915-1516-4cd3-9422-2a0400fec3cc)<br>
@@ -313,7 +319,8 @@ Move the configuration file to the Sysmon main folder.
 
 -   Open PowerShell as Admin:
 
-**Figure 9: Sysmon Installation**
+**Figure 10: Sysmon Installation**
+
 ![Screenshot 2025-06-14 123401](https://github.com/user-attachments/assets/27ed729b-50d3-4921-9e46-349a51a8b006)<br>
 
 Run PowerShell as Administrator.
@@ -326,489 +333,693 @@ Run the following command in PowerShell to start the installation of Sysmon.
 .\Sysmon64.exe -i sysmonconfig.xml
 ```
 
-**Figure 10: Sysmon Installation Process**
+Or
+
+```powershell
+Sysmon64.exe -accepteula -i sysmonconfig.xml
+```
+
+**Figure 11: Sysmon Installation Process**
+
 ![Screenshot 2025-06-14 124907](https://github.com/user-attachments/assets/7860d7b1-f8e2-42aa-8b87-1dc740d12d16)<br>
- _Accept EULA_
+
+Accept the EULA.
 
 ![Screenshot 2025-06-14 124931](https://github.com/user-attachments/assets/029fa419-ae00-4fe1-bad8-9c88878cba33)<br>
- _Sysmon Installed_
 
-**Figure 11: Sysmon running in Event Viewer & Services**
+
+Check Windows Event Viewer → `Applications and Services Logs > Microsoft > Windows > Sysmon > Operational`
+
+**Figure 12: Sysmon running in Event Viewer & Services**
+
 ![Screenshot 2025-06-14 125022](https://github.com/user-attachments/assets/a1a3d8a4-1407-45b4-8f40-ca0a2daeef57)<br>
 
 ![Screenshot 2025-06-14 125255](https://github.com/user-attachments/assets/0081d901-fb04-4b5f-b154-a6f5f4656e60)<br>
 
-
-
-
-
-
-
-
-
-
-
-
-#### **Option B: Using Proxmox (Project-specific setup)**
+### Option B: Using Proxmox (Project-specific setup)
 
 > 💡 If you're following my exact setup:
 
 -   I cloned a preconfigured Windows 10 Pro template from my **Proxmox** environment.
+
+**Figure 13: Proxmox Templates**
 ![Screenshot 2025-06-14 111515 PNG](https://github.com/user-attachments/assets/267150d9-cb84-4c7b-bb2c-d5da1adc21f1)<br>
-_Proxmox Templates_
+
+**Figure 14: Clone Windows 10 template**
 
 ![Screenshot 2025-06-14 111544](https://github.com/user-attachments/assets/6750d31e-e675-425c-a2bf-0a4e7dbd4628)<br>
-_Clone Windows 10 template_
+
+**Figure 15: Label the New Windows 10 VM**
 
 ![Screenshot 2025-06-14 111756](https://github.com/user-attachments/assets/1da8cde7-376b-42fc-a753-9a01456ff9c3)<br>
-_Label the new Windows 10 VM_
 
 ![Screenshot 2025-06-14 111829](https://github.com/user-attachments/assets/3ae4a0d8-ee6c-4c64-9469-2381d329a43b)<br>
-_Labelled Windows 10 VM_
+
+**Figure 16: Start the Windows 10 VM**
 
 ![Screenshot 2025-06-14 112344](https://github.com/user-attachments/assets/4063fb9d-9966-463d-9246-83b3871d406c)<br>
-_Start the Windows 10 VM_
+
 -   After cloning, I installed Sysmon and applied the configuration as described above.
 
-### **2.2 Deploy Wazuh Server (Cloud - DigitalOcean)**
+### Deploy Wazuh Server (SIEM)
 
-#### Step-by-Step:
+Deployed on DigitalOcean (Ubuntu 22.04 LTS)
 
 1.  **Create Droplet**
-    -   Image: Ubuntu 22.04 LTS
-    ![Screenshot 2025-06-14 132308](https://github.com/user-attachments/assets/ac690233-57c0-40a8-ac09-4243ffa2fa3a)<br>
-    _Click on create → Droplets_
-    
-    ![Screenshot 2025-06-14 132426](https://github.com/user-attachments/assets/3884dfe6-5608-4a8d-a1e4-e9e0f32ac9c0)<br>
-    _Select location and OS_
-    -   Plan: 2 vCPU / 8GB RAM minimum (Premium)
-    
-    ![Screenshot 2025-06-14 132609](https://github.com/user-attachments/assets/1fb8aa81-7ef7-442b-8148-7ab3eb3b74fe)<br>
-    _Select Shared CPU, Premium Intel, 2 CPUs, 160 GB SSDs and 8 GB memory_
-       
-    -   Hostname: `wazuh` and Set root password
-    
-    ![Screenshot 2025-06-14 132913](https://github.com/user-attachments/assets/4c6d6007-7da4-40d0-99da-b23febb76b9d)<br>
-    _Pick a strong password and select a Hostname_
 
-    ![Screenshot 2025-06-14 132936](https://github.com/user-attachments/assets/70283a0d-9de8-4ab7-aedd-6f40073619bc)<br>
-    _Click on Create Droplet_  
+- 2 CPUs, 8 GB RAM, 160 GB SSD
+- Hostname: `wazuh`
+- Use strong root password
+  
+-   Image: Ubuntu 22.04 LTS
+
+**Figure 17: Droplet**
+![Screenshot 2025-06-14 132308](https://github.com/user-attachments/assets/ac690233-57c0-40a8-ac09-4243ffa2fa3a)<br>
+
+**Figure 18: Select Location & OS**
+
+![Screenshot 2025-06-14 132426](https://github.com/user-attachments/assets/3884dfe6-5608-4a8d-a1e4-e9e0f32ac9c0)<br>
+
+-   Plan: 2 vCPU / 8GB RAM minimum (Premium)
+
+**Figure 19: Select Shared CPU, Premium Intel, 2 CPUs, 160 GB SSDs & 8 GB memory**
+![Screenshot 2025-06-14 132609](https://github.com/user-attachments/assets/1fb8aa81-7ef7-442b-8148-7ab3eb3b74fe)<br>
+
+-   Hostname: `wazuh` and Set root password
+
+**Figure 20: Pick Strong Password & Select a Hostname**
+
+![Screenshot 2025-06-14 132913](https://github.com/user-attachments/assets/4c6d6007-7da4-40d0-99da-b23febb76b9d)<br>
+
+**Figure 21: Click on Create Droplet**
+
+![Screenshot 2025-06-14 132936](https://github.com/user-attachments/assets/70283a0d-9de8-4ab7-aedd-6f40073619bc)<br>
 
 2.  **Set Up Cloud Firewall**
     -   Go to **Networking > Firewalls**
-    ![Screenshot 2025-06-14 133413](https://github.com/user-attachments/assets/c11871bb-951d-4513-86fa-9fa503535c06)<br>
-    _Take note of your Public and Private IPs, then click on edit_
-    
-    ![Screenshot 2025-06-14 133428](https://github.com/user-attachments/assets/0fb68643-0186-4c56-bc8f-5615274de017)<br>
-    _Click on Create Firewall_
-    -   Allow only your IP for SSH (TCP/22)
-    
-    ![Screenshot 2025-06-14 133858](https://github.com/user-attachments/assets/ff3b3635-1adb-4e49-88b6-78135dbacfe0)<br>
-    _Allow All TCP connections to All Ports for your IP address_
+  
+**Figure 22: Public and Private IPs**
 
-    ![Screenshot 2025-06-14 134204](https://github.com/user-attachments/assets/f0639036-be63-41f0-bbaa-b4a205d9a232)<br>
-    _Click on Create Firewall_
+![Screenshot 2025-06-14 133413](https://github.com/user-attachments/assets/c11871bb-951d-4513-86fa-9fa503535c06)<br>
 
-    ![Screenshot 2025-06-14 133706](https://github.com/user-attachments/assets/ea4440dc-25f7-4d60-a889-cf945189b282)<br>
-    _To find out what your Public IP is, there are plenty of sites that can help you_
-       
-    -   Apply firewall to `wazuh` droplet
-    ![Screenshot 2025-06-14 134610](https://github.com/user-attachments/assets/c95c20c1-eff4-47b3-b370-cd4684d9b11e)<br>
-    _Click on Networking → Droplets → Add Droplets_
-    
-    ![Screenshot 2025-06-14 134635](https://github.com/user-attachments/assets/6db021c4-5877-4d3b-a982-3445136b55cb)<br>
-    _Select Add Droplet → Wazuh droplet_
+Take note of both the public and private IP addresses for future reference.
 
+**Figure 23: Create Firewall**
+
+![Screenshot 2025-06-14 133428](https://github.com/user-attachments/assets/0fb68643-0186-4c56-bc8f-5615274de017)<br>
+
+Go to Networking → Firewalls.
+
+Allow only your IP for all TCP and UDP ports.
+
+>-   Protocol: TCP and UDP
+>-   Port Range: All ports
+>-   Sources: Your IP address only
+
+**Figure 24: Allow All TCP and UDP Connections to All Ports for your IP Address**
+
+![Screenshot 2025-06-14 133858](https://github.com/user-attachments/assets/ff3b3635-1adb-4e49-88b6-78135dbacfe0)<br>
+
+**Figure 25: Click on Create Firewall**
+
+![Screenshot 2025-06-14 134204](https://github.com/user-attachments/assets/f0639036-be63-41f0-bbaa-b4a205d9a232)<br>
+
+**Figure 26: Your Private IP**
+
+![Screenshot 2025-06-14 133706](https://github.com/user-attachments/assets/ea4440dc-25f7-4d60-a889-cf945189b282)<br>
+
+To find out what your Public IP is, there are plenty of sites that can help you_
+
+-   Apply a firewall to `wazuh` droplet.
+
+**Figure 27: Firewall Rule**
+
+![Screenshot 2025-06-14 134610](https://github.com/user-attachments/assets/c95c20c1-eff4-47b3-b370-cd4684d9b11e)<br>
+
+**Figure 28: Add Droplet to Role**
+
+![Screenshot 2025-06-14 134635](https://github.com/user-attachments/assets/6db021c4-5877-4d3b-a982-3445136b55cb)<br>
 
 ### 2.3 Deploy TheHive Server (Cloud - DigitalOcean)
 
-#### Step-by-Step:
-
 1.  **Create Droplet**
+
     -   Same settings as Wazuh
-    ![Screenshot 2025-06-14 144407](https://github.com/user-attachments/assets/e0f70066-28e8-4b77-ac94-1cc2969dff04)<br>
-    _Click on create → Droplets and then select location and OS_
 
-    ![Screenshot 2025-06-14 144503](https://github.com/user-attachments/assets/82fcfc50-b6c7-452a-8b04-c6372f32dfde)<br>
-    _Select Shared CPU, Premium Intel, 2 CPUs, 160 GB SSDs and 8 GB memory_
+**Figure 29: TheHive Droplet**
 
-    -   Hostname: `TheHive`
-    ![Screenshot 2025-06-14 144702](https://github.com/user-attachments/assets/b16958e4-518d-43ac-b0e3-b5dde72649f6)<br>
-    _Pick a strong password and select a Hostname_
+![Screenshot 2025-06-14 144407](https://github.com/user-attachments/assets/e0f70066-28e8-4b77-ac94-1cc2969dff04)<br>
 
-    ![Screenshot 2025-06-14 144717](https://github.com/user-attachments/assets/395c6877-5b29-4cff-a7b5-926f950ff2cc)<br>
-    _Click on Create Droplet_
-    
-    -   Attach to the same firewall
-    ![Screenshot 2025-06-14 144900](https://github.com/user-attachments/assets/9e7576d4-77dc-42fb-8468-4d8b816048e7)<br>
-    _Add TheHive droplet to Wazuh-Firewall rule_
+Click on create → Droplets and then select location and OS.
 
-    ![Screenshot 2025-06-14 144912](https://github.com/user-attachments/assets/0e302266-3a04-4ba9-be56-1209ae7fd5ba)<br>
-    _Select TheHive droplet_
+**Figure 30: Droplet Specs**
 
-    ![Screenshot 2025-06-14 145001](https://github.com/user-attachments/assets/2fb0c9f2-6493-4cf4-be89-5a936f025471)<br>
-    _Wazuh-Firewall rue droplets_
-    
-# **Step 3 – Installing and Configuring TheHive and Wazuh Servers**
+![Screenshot 2025-06-14 144503](https://github.com/user-attachments/assets/82fcfc50-b6c7-452a-8b04-c6372f32dfde)<br>
 
-1.  **Install Wazuh**
-    -   SSH into the droplet or use the Launch Droplet Console and run:
-    ![Screenshot 2025-06-14 135355](https://github.com/user-attachments/assets/8e5cbf54-5a36-4838-a7eb-03edafefb438)<br>
-    _From Droplet Console_
-    
-    ![image](https://github.com/user-attachments/assets/3357e801-2d20-4833-924e-cf57d77f9892)<br>
-    _SSH from PowerShell_
-    
-    ```powershell
-    ssh root@Wazuh Public IP
-    ```
-    
-    -   Before Wazuh installation, it is always recommended to update and upgrade the OS
-    ![Screenshot 2025-06-14 141051](https://github.com/user-attachments/assets/f8c31e1c-2f68-4713-89ba-18716fb72052)<br>
-    _Updating OS_
+Select Shared CPU, Premium Intel, 2 CPUs, 160 GB SSDs and 8 GB memory.
 
-    ```bash
-    apt-get update && apt-get upgrade
-    ```
-    
-    -   Install Wazuh using curl command
-    ![Screenshot 2025-06-14 141505](https://github.com/user-attachments/assets/3236032c-a888-45f3-937b-0a2a0da1bf39)<br>
-    _Wazuh installation_
+-   Hostname: `TheHive`
 
-    ```bash
-    curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh bash wazuh-install.sh -a
-    ```
-    
-    ![Screenshot 2025-06-14 141600](https://github.com/user-attachments/assets/c52e532e-babe-4691-83ac-8c934e941051)<br>
-    _Installation process_
-    
-    -   Note the default admin credentials
-    
-    ![Screenshot 2025-06-14 142343](https://github.com/user-attachments/assets/1454e5d4-4815-4926-8c9b-f2f3d4f236aa)<br>
-    _Wazuh credentials_
+**Figure 31: Password & Hostname**
 
-2.  **Login**
-    -   Access the dashboard via `https://<Wazuh public IP>`
-    
-    ![Screenshot 2025-06-14 142425](https://github.com/user-attachments/assets/b7e58ddb-e9fe-4ed4-9e1f-1ccca2dd4b74)<br>
-    _Wazuh login page_
-   
-    -   Use `admin / <generated password>`
-    
-    ![Screenshot 2025-06-14 144001](https://github.com/user-attachments/assets/80c9c512-fe14-4eda-9acc-5badf1401c49)<br>
-    _Wazuh Dashboard page_
+![Screenshot 2025-06-14 144702](https://github.com/user-attachments/assets/b16958e4-518d-43ac-b0e3-b5dde72649f6)<br>
 
-3.  **Install Dependencies**
-    -   SSH into the VM, install:
-        -   Java (OpenJDK)
-        -   Cassandra
-        -   Elasticsearch
-        -   TheHive
+Pick a strong password and select a Hostname.
 
-     ![Screenshot 2025-06-14 145256](https://github.com/user-attachments/assets/a0e48a89-51cf-4577-a2a4-cb715b981dff)<br>
-     _SSH from PowerShell_
-    
-    ```powershell
-    ssh root@TheHive Public IP
-    ```
+**Figure 32: Create Droplet**
 
-4.  **Install Java**
+![Screenshot 2025-06-14 144717](https://github.com/user-attachments/assets/395c6877-5b29-4cff-a7b5-926f950ff2cc)<br>
 
-    -   Before TheHive installation, it is always recommended to update and upgrade the OS
-    ![Screenshot 2025-06-14 145346](https://github.com/user-attachments/assets/361b2f42-5fea-4a44-8c79-9766233f54af)<br><br>
+-   Attach to the same firewall
 
-    ![Screenshot 2025-06-14 145506](https://github.com/user-attachments/assets/40ec915a-df8f-4896-9c0d-5a13b5f03d19)<br><br>
+**Figure 33: Firewall Rule**
 
-    ![Screenshot 2025-06-14 145613](https://github.com/user-attachments/assets/6bc4089e-9899-4896-a510-c7392f368450)<br><br>
-    _Updating OS_
-    
-    ![Screenshot 2025-06-14 150227](https://github.com/user-attachments/assets/7c455fa2-c788-45fa-8da6-cd1fc915e923)<br>
-    _Installing Java (OpenJDK)_
+![Screenshot 2025-06-14 144900](https://github.com/user-attachments/assets/9e7576d4-77dc-42fb-8468-4d8b816048e7)<br>
 
-    ```bash
-    wget -qO- https://apt.corretto.aws/corretto.key | sudo gpg --dearmor  -o /usr/share/keyrings/corretto.gpg
-    echo "deb [signed-by=/usr/share/keyrings/corretto.gpg] https://apt.corretto.aws stable main" |  sudo tee -a /etc/apt/sources.list.d/corretto.sources.list
-    sudo apt update
-    sudo apt install java-common java-11-amazon-corretto-jdk
-    echo JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto" | sudo tee -a /etc/environment 
-    export JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto"
-    ```
-    
-    ![Screenshot 2025-06-14 150318](https://github.com/user-attachments/assets/0ca330e9-c151-4d1a-949a-2d6bfc3f48dc)<br>
-    _Click on OK_
+Add TheHive droplet to Wazuh-Firewall rule.
 
-5.  **Install Cassandra**
+**Figure 34: Adding Droplet to Rule**
 
-    ![Screenshot 2025-06-14 150436](https://github.com/user-attachments/assets/2a366b7c-1135-420a-a3ff-c1b76fdab329)<br>
-    _Installing Cassandra_
+![Screenshot 2025-06-14 144912](https://github.com/user-attachments/assets/0e302266-3a04-4ba9-be56-1209ae7fd5ba)<br>
 
-    ```bash
-    wget -qO -  https://downloads.apache.org/cassandra/KEYS | sudo gpg --dearmor  -o /usr/share/keyrings/cassandra-archive.gpg
-    echo "deb [signed-by=/usr/share/keyrings/cassandra-archive.gpg] https://debian.cassandra.apache.org 40x main" |  sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
-    sudo apt update
-    sudo apt install cassandra
-    ```
-    
-    ![Screenshot 2025-06-14 150448](https://github.com/user-attachments/assets/9563385d-d36d-4a94-88f3-756ca6a0ea4a)<br>
-    _Click on OK_
+Select TheHive droplet and add it to the rule.
 
-6.  **Install Elasticsearch**
-    
-    ![Screenshot 2025-06-14 150623](https://github.com/user-attachments/assets/b688bc28-774f-4124-956a-afbf780a4a00)<br>
-    _Installing Elasticsearch_
+**Figure 35: Droplet Added**
 
-    ```bash
-    wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch |  sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
-    sudo apt-get install apt-transport-https
-    echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main" |  sudo tee /etc/apt/sources.list.d/elastic-7.x.list
-    sudo apt update
-    sudo apt install elasticsearch
-    ```
+![Screenshot 2025-06-14 145001](https://github.com/user-attachments/assets/2fb0c9f2-6493-4cf4-be89-5a936f025471)<br>
 
-    ![Screenshot 2025-06-14 150632](https://github.com/user-attachments/assets/6fa50e78-fd62-4e3b-94e5-fe12e7834b93)<br>
-    _Click on OK_
 
-7.  **Configuring Cassandra**
 
-    ![Screenshot 2025-06-14 154158](https://github.com/user-attachments/assets/dcd0058a-248c-4ab6-b5bc-ec3a072f7c8b)<br>
-    _Configuring Cassandra_
 
-    ```bash
-    nano /etc/cassandra/cassandra.yaml
-    ```
 
-    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
-    _Change `cluster_name` to `'mylab'` and the `listen_address` to your TheHive public IP_
 
-    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
-    _Change the `rpc_address` to your TheHive public IP_
 
-    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
-    _Change the seedaddress `seeds` to your TheHive public IP_
+### Important Firewall Notes
 
-    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
-    _Stop Cassandra service_
-    
-    ```bash
-    systemctl stop cassandra.service
-    ```
+**Security Warning**: Some rules allow "All IPv4, All IPv6" for testing purposes only
+-   Production Environment: Always restrict sources to specific IP ranges
+-   Temporary Rules: The transcript mentions creating temporary rules for testing that should be removed after lab completion
+-   Port 55000: Opened temporarily for Wazuh API access during Shuffle integration
+-   Port 9000: Opened temporarily for The Hive access during testing
 
-    ![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
-    _We need to remove any Cassandra data when setting up Cassandra for the first time and no critical data exists_
 
-    ```bash
-    rm -rf /var/lib/cassandra/*
-    ```
 
-    ![Screenshot 2025-06-14 155159](https://github.com/user-attachments/assets/851fed1b-c039-46a2-9774-c422eacd5881)<br>
-    _Start and check the status of the Cassandra service_
 
-    ```bash
-    systemctl start cassandra.service
-    ```
 
-    ```bash
-    systemctl status cassandra.service
-    ```
 
-8.  **Configuring Elasticsearch**
+# Installing and Configuring Wazuh & TheHive Servers
 
-    ![Screenshot 2025-06-14 154158](https://github.com/user-attachments/assets/dcd0058a-248c-4ab6-b5bc-ec3a072f7c8b)<br>
-    _Configuring Elasticsearch_
+## Installion
 
-    ```bash
-    nano /etc/elasticsearch/elasticsearch.yml
-    ```
+### Wazuh Server Setup
 
-    ![image](https://github.com/user-attachments/assets/861fb4de-2f1b-48f0-aca9-0f66bb5f5c9e)<br>
-    _Remove the comment # and change `cluster.name` to thehive, remove the comment # to `node.name`_
-
-    ![Screenshot 2025-06-14 160110](https://github.com/user-attachments/assets/aa9ad9fa-e501-4b63-b226-5df52aad8d6a)<br>
-    _Remove the comment # and change `network.host` to TheHive public IP, remove the comment # for `http.port`, remove the comment # for `cluster.initial_nodes` and delete `"node-2"`_
-
-    ![Screenshot 2025-06-14 160340](https://github.com/user-attachments/assets/09cf0c0a-45b3-49e6-a638-192944cee988)<br>
-    _Start, enable and check the status of the Elasticsearch service_
-
-    ```bash
-    systemctl start elasticsearch.service
-    ```
-    
-    ```bash
-    systemctl enable elasticsearch.service
-    ```
-
-    ```bash
-    systemctl status elasticsearch.service
-    ```
-
-9.  **Install TheHive**
-
-    ![Screenshot 2025-06-14 230305](https://github.com/user-attachments/assets/47101d45-6434-488d-882f-4f659cb6a55b)<br>
-    _Installing TheHive_
-
-    ```bash
-    wget -O- https://archives.strangebee.com/keys/strangebee.gpg | sudo gpg --dearmor -o /usr/share/keyrings/strangebee-archive-keyring.gpg
-    echo 'deb [signed-by=/usr/share/keyrings/strangebee-archive-keyring.gpg] https://deb.strangebee.com thehive-5.2 main' | sudo tee -a /etc/apt/sources.list.d/strangebee.list
-    sudo apt-get update
-    sudo apt-get install -y thehive
-    ```
-
-    ![Screenshot 2025-06-14 230722](https://github.com/user-attachments/assets/2b477265-57db-4330-8687-6b383f38584d)<br>
-    _Check TheHive directory and change ownership, `-R` to change user and group_
-
-    ```bash
-    ls -la /opt/thp/
-    ```
-    
-    ```bash
-    chown -R thehive:thehive /opt/thp
-    ```
-
-10. **Configuring TheHive**
-
-    ![Screenshot 2025-06-14 230950](https://github.com/user-attachments/assets/e34759bb-6e1b-4ad3-8bd0-16f1bfe29320)<br>
-    _Configuring TheHive_
-
-    ```bash
-    nano /etc/thehive/application.conf
-    ```
-
-    ![image](https://github.com/user-attachments/assets/c9dbd10d-4ecb-4ddc-b7c6-699ad68f75d5)<br>
-    _Change `hostname` and `application.baseUrl` to TheHive public IP, give a name to the `cluster-name`, in this case `'mylab'`_
-
-    ![Screenshot 2025-06-14 231441](https://github.com/user-attachments/assets/04802257-9b15-46af-9389-864f9e255e7c)<br>
-    _Start, enable and check the status of the TheHive service_
-
-    ```bash
-    systemctl start thehive.service
-    ```
-
-    ```bash
-    systemctl enable thehive.service
-    ```
-
-    ```bash
-    systemctl status thehive.service
-    ```
-
-11. **Run TheHive**
-    -   Launch the service
-    -   Access via `http://<TheHive public IP>:9000`
-
-    ![Screenshot 2025-06-14 231655](https://github.com/user-attachments/assets/d3c0a7e1-6299-403e-bc11-8687b3754092)<br>
-    _TheHive login page_
-
-    -   TheHive will fail on the first login attempt
-    -   Check Elasticsearch status
+-   SSH into the droplet or use the Launch Droplet Console and run:
   
-    ![Screenshot 2025-06-14 232242](https://github.com/user-attachments/assets/8140e2ad-07c1-41de-90fa-840a6c90297b)<br>
-    _Activation has failed, we need to create a jvm.options file to address the heap memory issue on ElasticSearch_
+**Figure 36: From Droplet Console**
 
-    ![Screenshot 2025-06-14 232242](https://github.com/user-attachments/assets/a229bd64-fcd0-4593-af51-f5314fcef669)<br>
-    _Navigate to `/etc/elasticsearch/jvm. options.d/` and create the file jvm.options_
+![Screenshot 2025-06-14 135355](https://github.com/user-attachments/assets/8e5cbf54-5a36-4838-a7eb-03edafefb438)<br>
 
-    ```bash
-    nano /etc/elasticsearch/jvm.options.d/jvm. options
-    ```
+**Figure 37: SSH from PowerShell**
 
-    ![Screenshot 2025-06-14 232323](https://github.com/user-attachments/assets/6e0f2081-0426-4a25-9e4a-c2b06aa67f15)<br>
-    _Heap memory allocation, copy and paste the below setup and save_
+![image](https://github.com/user-attachments/assets/3357e801-2d20-4833-924e-cf57d77f9892)<br>
 
-    ```bash
-    -Dlog4j2. formatMsgNoLookups=true
-    -Xms2g
-    -Xmx2g
-    ```
+```powershell
+ssh root@YOUR_WAZUH_PUBLIC_IP
+```
 
-    ```bash
-    systemctl stop elasticsearch.service
-    ```
+-   Before Wazuh installation, it is always recommended to update and upgrade the OS
 
-    ```bash
-    systemctl start elasticsearch.service
-    ```
-    
-    **Note:**
-    >The `jvm.options` file serves as a critical configuration point for Java applications, particularly for controlling the Java Virtual Machine's (JVM) behaviour and resource allocation. Within this file, lines such as `-    Dlog4j2.formatMsgNoLookups=true`, `-Xms2g`, and `-Xmx2g` instruct the JVM on how to operate. The `-Dlog4j2.formatMsgNoLookups=true` option is a vital security measure, specifically disabling dangerous message lookup features in the Log4j2 logging framework to mitigate the Log4Shell vulnerability and prevent remote code execution. Concurrently, `-Xms2g` and `-Xmx2g` are used to manage the JVM's memory heap: precisely `-Xms2g` sets the initial heap size to 2 gigabytes, ensuring the application has sufficient memory from the moment it starts, while `-Xmx2g` defines the maximum heap size also as 2 gigabytes, preventing the application from consuming excessive system resources. Together, these settings optimise application performance by preventing dynamic heap resizing and enhancing security, making them fundamental for stable and secure Java deployments.
+**Figure 38: Updating**
 
-    -   Launch TheHive
-    ![Screenshot 2025-06-14 232510](https://github.com/user-attachments/assets/2787b884-13f5-4855-8b70-3f37fa9e7c86)<br>
-    _TheHive Dashboard_
+![Screenshot 2025-06-14 141051](https://github.com/user-attachments/assets/f8c31e1c-2f68-4713-89ba-18716fb72052)<br>
 
-12. **Configure Wazuh and Connect Windows Client**
+```bash
+apt-get update && apt-get upgrade
+```
+
+-   Install Wazuh
+
+**Figure 39: Wazuh Installation**
+
+![Screenshot 2025-06-14 141505](https://github.com/user-attachments/assets/3236032c-a888-45f3-937b-0a2a0da1bf39)<br>
+
+```bash
+curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh
+chmod +x wazuh-install.sh
+sudo ./wazuh-install.sh -a
+```
+
+**Figure 40: Installation Process**
+
+![Screenshot 2025-06-14 141600](https://github.com/user-attachments/assets/c52e532e-babe-4691-83ac-8c934e941051)<br>
+
+-   Note the default admin credentials
+
+**Figure 41: Wazuh credentials**
+
+![Screenshot 2025-06-14 142343](https://github.com/user-attachments/assets/1454e5d4-4815-4926-8c9b-f2f3d4f236aa)<br>
+
+```bash
+tar -xvf wazuh-install-files.tar
+cat wazuh-install-files/wazuh-passwords.txt
+```
+Save admin password and API user credentials and keep these credentials secure for dashboard access.
+
+### Verify Installation
+
+-   Access the dashboard via `https://YOUR_WAZUH_IP`
+
+**Figure 42: Wazuh Login Page**
+
+![Screenshot 2025-06-14 142425](https://github.com/user-attachments/assets/b7e58ddb-e9fe-4ed4-9e1f-1ccca2dd4b74)<br>
+
+-   Use `admin / <generated password>`
+
+**Figure 42: Wazuh Dashboard**
+
+![Screenshot 2025-06-14 144001](https://github.com/user-attachments/assets/80c9c512-fe14-4eda-9acc-5badf1401c49)<br>
+
+
+### The Hive Server Setup
+
+SSH into The Hive Droplet.
+
+```BASH
+ssh root@YOUR_HIVE_PUBLIC_IP
+```
+
+**Figure 43: SSH from PowerShell**
+
+![Screenshot 2025-06-14 145256](https://github.com/user-attachments/assets/a0e48a89-51cf-4577-a2a4-cb715b981dff)<br>
+
+Update System
+```bash
+bashapt update && apt upgrade -y
+```
+
+**Figure 44: Updating OS**
+
+![Screenshot 2025-06-14 145346](https://github.com/user-attachments/assets/361b2f42-5fea-4a44-8c79-9766233f54af)<br>
+
+![Screenshot 2025-06-14 145506](https://github.com/user-attachments/assets/40ec915a-df8f-4896-9c0d-5a13b5f03d19)<br>
+
+![Screenshot 2025-06-14 145613](https://github.com/user-attachments/assets/6bc4089e-9899-4896-a510-c7392f368450)<br>
+
+
+### Install Dependencies
+
+-   SSH into the VM, install:
+-   Java (OpenJDK)
+-   Cassandra
+-   Elasticsearch
+-   TheHive
+
+
+### Install Java
+
+**Figure 45: Installing Java (OpenJDK)**
+
+![Screenshot 2025-06-14 150227](https://github.com/user-attachments/assets/7c455fa2-c788-45fa-8da6-cd1fc915e923)<br>
+
+```bash
+# Install Java
+wget -qO- https://apt.corretto.aws/corretto.key | sudo gpg --dearmor  -o /usr/share/keyrings/corretto.gpg
+echo "deb [signed-by=/usr/share/keyrings/corretto.gpg] https://apt.corretto.aws stable main" |  sudo tee -a /etc/apt/sources.list.d/corretto.sources.list
+sudo apt update
+sudo apt install java-common java-11-amazon-corretto-jdk
+echo JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto" | sudo tee -a /etc/environment 
+export JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto"
+```
+
+![Screenshot 2025-06-14 150318](https://github.com/user-attachments/assets/0ca330e9-c151-4d1a-949a-2d6bfc3f48dc)<br>
+
+### Install Cassandra
+
+**Figure 46: Installing Cassandra**
+
+![Screenshot 2025-06-14 150436](https://github.com/user-attachments/assets/2a366b7c-1135-420a-a3ff-c1b76fdab329)<br>
+
+
+```bash
+# Install Cassandra
+wget -qO -  https://downloads.apache.org/cassandra/KEYS | sudo gpg --dearmor  -o /usr/share/keyrings/cassandra-archive.gpg
+echo "deb [signed-by=/usr/share/keyrings/cassandra-archive.gpg] https://debian.cassandra.apache.org 40x main" |  sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+sudo apt update
+sudo apt install cassandra
+```
+
+![Screenshot 2025-06-14 150448](https://github.com/user-attachments/assets/9563385d-d36d-4a94-88f3-756ca6a0ea4a)<br>
+
+### Install Elasticsearch
+
+**Figure 47: Installing Elasticsearch**
+
+![Screenshot 2025-06-14 150623](https://github.com/user-attachments/assets/b688bc28-774f-4124-956a-afbf780a4a00)<br>
+
+```bash
+# Install Elasticsearch
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch |  sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
+sudo apt-get install apt-transport-https
+echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main" |  sudo tee /etc/apt/sources.list.d/elastic-7.x.list
+sudo apt update
+sudo apt install elasticsearch
+```
+
+![Screenshot 2025-06-14 150632](https://github.com/user-attachments/assets/6fa50e78-fd62-4e3b-94e5-fe12e7834b93)<br>
+_Click on OK_
+
+### Install TheHive
+
+**Figure 48: Installing TheHive**
+
+![Screenshot 2025-06-14 230305](https://github.com/user-attachments/assets/47101d45-6434-488d-882f-4f659cb6a55b)<br>
+
+
+```bash
+# Install The Hive
+wget -O- https://archives.strangebee.com/keys/strangebee.gpg | sudo gpg --dearmor -o /usr/share/keyrings/strangebee-archive-keyring.gpg
+echo 'deb [signed-by=/usr/share/keyrings/strangebee-archive-keyring.gpg] https://deb.strangebee.com thehive-5.2 main' | sudo tee -a /etc/apt/sources.list.d/strangebee.list
+sudo apt-get update
+sudo apt-get install -y thehive
+```
+
+***Important:*** Do NOT start services yet - configuration must be done first
+
+## Configuration
+
+### Configuring Cassandra
+
+**Figure 49: Configuring Cassandra**
+
+![Screenshot 2025-06-14 154158](https://github.com/user-attachments/assets/dcd0058a-248c-4ab6-b5bc-ec3a072f7c8b)<br>
+
+
+```bash
+nano /etc/cassandra/cassandra.yaml
+```
+
+-   Change `cluster_name` to "mydfir"
+-   Change `listen_address` to your Hive public IP
+-   Change `rpc_address` to your Hive public IP
+-   Change seed address in `seed_provider` to your Hive public IP
+
+**Figure 50: Change Cluster Name**
+
+![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
+
+Change `cluster_name` to `'mylab'` and the `listen_address` to your TheHive public IP.
+
+**Figure 51: Change the rpc_address**
+
+![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
+
+Change the `rpc_address` to your TheHive public IP.
+
+**Figure 52: Change the seedaddress seeds**
+
+![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
+
+Change the seedaddress `seeds` to your TheHive public IP.
+
+**Figure 53: Stop Service**
+
+![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
+
+Stop Cassandra service.
+
+```bash
+systemctl stop cassandra.service
+```
+
+**Figure 54: Configuring**
+
+![Screenshot 2025-06-14 154421](https://github.com/user-attachments/assets/12c35f11-9342-40e7-8242-6cc524d5ee88)<br>
+
+We need to remove any Cassandra data when setting up Cassandra for the first time and no critical data exists.
+
+```bash
+rm -rf /var/lib/cassandra/*
+```
+
+**Figure 55: Start Service**
+
+![Screenshot 2025-06-14 155159](https://github.com/user-attachments/assets/851fed1b-c039-46a2-9774-c422eacd5881)<br>
+
+Start and check the status of the Cassandra service.
+
+```bash
+systemctl start cassandra.service
+```
+
+```bash
+systemctl status cassandra.service
+```
+
+### Configuring Elasticsearch
+
+**Figure 56: Editing YML**
+
+![Screenshot 2025-06-14 154158](https://github.com/user-attachments/assets/dcd0058a-248c-4ab6-b5bc-ec3a072f7c8b)<br>
+_Configuring Elasticsearch_
+
+```bash
+nano /etc/elasticsearch/elasticsearch.yml
+```
+
+-   Uncomment and change `cluster.name` to "thehive"
+-   Uncomment and change `node.name` to "node-1"
+-   Uncomment and change `network.host` to your Hive public IP
+-   Uncomment `http.port: 9200`
+-   Uncomment and modify `cluster.initial_master_nodes: ["node-1"]`
+
+**Figure 56: cluster.name & node.name**
+
+![image](https://github.com/user-attachments/assets/861fb4de-2f1b-48f0-aca9-0f66bb5f5c9e)<br>
+
+Remove the comment # and change `cluster.name` to thehive, remove the comment # to `node.name`.
+
+**Figure 56: network.host, http.port & cluster.initial_nodes**
+
+![Screenshot 2025-06-14 160110](https://github.com/user-attachments/assets/aa9ad9fa-e501-4b63-b226-5df52aad8d6a)<br>
+
+Remove the comment # and change `network.host` to TheHive public IP, remove the comment # for `http.port`, remove the comment # for `cluster.initial_nodes` and delete `"node-2"`.
+
+**Figure 56: Start Service**
+
+![Screenshot 2025-06-14 160340](https://github.com/user-attachments/assets/09cf0c0a-45b3-49e6-a638-192944cee988)<br>
+_Start, enable and check the status of the Elasticsearch service_
+
+```bash
+systemctl start elasticsearch.service
+```
+
+```bash
+systemctl enable elasticsearch.service
+```
+
+```bash
+systemctl status elasticsearch.service
+```
+
+### Configuring TheHive
+
+**Figure 57: Change Ownership**
+
+![Screenshot 2025-06-14 230722](https://github.com/user-attachments/assets/2b477265-57db-4330-8687-6b383f38584d)<br>
+
+Check TheHive directory and change ownership, `-R` to change user and group.
+
+```bash
+ls -la /opt/thp/
+```
+
+```bash
+chown -R thehive:thehive /opt/thp
+```
+
+```bash
+nano /etc/thehive/application.conf
+```
+
+-   Change database hostname to your Hive public IP
+-   Change Cassandra cluster name to "mydfir"
+-   Change Elasticsearch hostname to your Hive public IP
+-   Change `application.baseUrl` to your Hive public IP
+
+**Figure 58: Configuring TheHive**
+
+![Screenshot 2025-06-14 230950](https://github.com/user-attachments/assets/e34759bb-6e1b-4ad3-8bd0-16f1bfe29320)<br>
+
+
+**Figure 59: hostname & application.baseUrl**
+
+![image](https://github.com/user-attachments/assets/c9dbd10d-4ecb-4ddc-b7c6-699ad68f75d5)<br>
+_Change `hostname` and `application.baseUrl` to TheHive public IP, give a name to the `cluster-name`, in this case `'mylab'`_
+
+**Figure 60: Start Service**
+
+![Screenshot 2025-06-14 231441](https://github.com/user-attachments/assets/04802257-9b15-46af-9389-864f9e255e7c)<br>
+
+Start, enable and check the status of the TheHive service
+
+```bash
+systemctl start thehive.service
+```
+
+```bash
+systemctl enable thehive.service
+```
+
+```bash
+systemctl status thehive.service
+```
+
+### Run TheHive
+
+**Access The Hive**
+
+-   Navigate to `http://YOUR_HIVE_IP:9000`
+-   Login: `admin@thehive.local`
+-   Password: `secret`
+
+**Figure 61: TheHive Login Page**
+
+![Screenshot 2025-06-14 231655](https://github.com/user-attachments/assets/d3c0a7e1-6299-403e-bc11-8687b3754092)<br>
+
+-   TheHive will fail on the first login attempt
+-   Check Elasticsearch status
+
+**Figure 62: Activation has Failed**
+
+![Screenshot 2025-06-14 232242](https://github.com/user-attachments/assets/8140e2ad-07c1-41de-90fa-840a6c90297b)<br>
+
+> Activation has failed, we need to create a jvm.options file to address the heap memory issue on ElasticSearch.
+
+**Figure 63: jvm.options**
+
+![Screenshot 2025-06-14 232242](https://github.com/user-attachments/assets/a229bd64-fcd0-4593-af51-f5314fcef669)<br>
+
+Navigate to `/etc/elasticsearch/jvm. options.d/` and create the file jvm.options.
+
+```bash
+nano /etc/elasticsearch/jvm.options.d/jvm.options
+```
+
+**Figure 64: Heap Memory**
+
+![Screenshot 2025-06-14 232323](https://github.com/user-attachments/assets/6e0f2081-0426-4a25-9e4a-c2b06aa67f15)<br>
+
+Under heap memory allocation, copy and paste the below setup and save
+
+```bash
+-Dlog4j2. formatMsgNoLookups=true
+-Xms2g
+-Xmx2g
+```
+
+Then restart Elasticsearch.
+
+```bash
+systemctl stop elasticsearch.service
+```
+
+```bash
+systemctl start elasticsearch.service
+```
+
+Try to access The Hive again.
+
+-   Navigate to `http://YOUR_HIVE_IP:9000`
+-   Login: `admin@thehive.local`
+-   Password: `secret`
+
+**Note:**
+>The `jvm.options` file serves as a critical configuration point for Java applications, particularly for controlling the Java Virtual Machine's (JVM) behaviour and resource allocation. Within this file, lines such as `-    Dlog4j2.formatMsgNoLookups=true`, `-Xms2g`, and `-Xmx2g` instruct the JVM on how to operate. The `-Dlog4j2.formatMsgNoLookups=true` option is a vital security measure, specifically disabling dangerous message lookup features in the Log4j2 logging framework to mitigate the Log4Shell vulnerability and prevent remote code execution. Concurrently, `-Xms2g` and `-Xmx2g` are used to manage the JVM's memory heap: precisely `-Xms2g` sets the initial heap size to 2 gigabytes, ensuring the application has sufficient memory from the moment it starts, while `-Xmx2g` defines the maximum heap size also as 2 gigabytes, preventing the application from consuming excessive system resources. Together, these settings optimise application performance by preventing dynamic heap resizing and enhancing security, making them fundamental for stable and secure Java deployments.
+
+**Figure 65: TheHive Dashboard**
+
+![Screenshot 2025-06-14 232510](https://github.com/user-attachments/assets/2787b884-13f5-4855-8b70-3f37fa9e7c86)<br>
+
+### Configure Wazuh
 
 **Access Wazuh Dashboard**
 
--   Login using admin credentials from Step 2
--   URL: `https://<WAZUH_PUBLIC_IP>`
+-   Navigate to `https://YOUR_WAZUH_IP`
+-   Use admin credentials from password file
+
+**Figure 66: Wazuh Dashboard**
 
 ![image](https://github.com/user-attachments/assets/030479e0-1cfb-47b3-b3fe-bb10184a4b98)<br>
-_Wazuh Dashboard_
 
 **Find API Credentials (if lost)**
 
 ```bash
-tar -xvf wazuh-install.tar cd wazuh-install-files cat wazuh-passwords.txt
+tar -xvf wazuh-install.tar
+cd wazuh-install-files
+cat wazuh-passwords.txt
 ```
 
-**Add Windows Agent**
+### Add Windows Agent
 
--   On Wazuh dashboard:
-    `Agents > Add Agent > Platform: Windows`
+-   On Wazuh dashboard: `Agents > Add Agent > Platform: Windows`
+
+**Figure 67: Adding agent**
 
 ![Screenshot 2025-06-14 234041](https://github.com/user-attachments/assets/be97cb46-6cf7-4e31-ae19-c5e3730c0c4d)<br>
--Adding agent_
 
--   Use Wazuh public IP as the manager address
+Use Wazuh public IP as the manager address.
+
+**Figure 68: Selecting the Platform**
 
 ![image](https://github.com/user-attachments/assets/99ad8269-6b94-43c3-8e2c-8da8103a7a05)<br>
-_Selecting the platform_
 
--   Copy the generated install command
+Copy the generated install command.
+
+**Figure 69: Copy PowerShell Command**
 
 ![Screenshot 2025-06-14 234309](https://github.com/user-attachments/assets/9777b528-0ca0-4aab-8848-2fc0dec7640f)<br>
--PowerShell command for agent installation_
 
-**Install on Windows Client**
+### Install Agent on Windows Client
 
--   Open **PowerShell as Administrator**
+Open **PowerShell as Administrator**.
+
+**Figure 70: Admin PowerShell**
 
 ![image](https://github.com/user-attachments/assets/2b38dab5-21c0-447a-81f4-09a3ff7f0c40)<br>
-_PowerShell running as administrator_
 
--   Paste and run the command
+Paste and run the command.
+
+**Figure 71: Installing**
 
 ![image](https://github.com/user-attachments/assets/5d5ab1e6-872b-4989-b439-d325ca7fee9b)<br>
-_PowerShell command_
  
--   Then start the service:
+Then start the Wazuh client service.
+
+**Figure 72: Starting Wazuh Service**
 
 ![image](https://github.com/user-attachments/assets/9cb8f941-e637-4d9c-9b8d-c47db5c03ae6)<br>
-_Starting Wazuh service from PowerShell_
-
 
 ```bash
 net start WazuhSvc
 ```
 
+**Figure 72: Service Running**
 ![Screenshot 2025-06-14 235441](https://github.com/user-attachments/assets/107913db-02ea-4cc5-b662-90d8e09d2834)<br>
-_Check Wazuh service is running_
 
-**Verify Agent Connectivity**
+### Verify Agent Connectivity
 
 -   Wazuh dashboard → Agents tab → Confirm agent shows as "Active"
 -   Navigate to **Security Events** to confirm telemetry ingestion
 
+**Figure 73: Agent Active**
+
 ![image](https://github.com/user-attachments/assets/980f0354-686e-46d3-b2b6-b2cfca7970d8)<br>
-_Agent appears in Wazuh Dashboard_
 
 ![Screenshot 2025-06-14 235719](https://github.com/user-attachments/assets/65c68e8d-1f68-418c-a2fb-b0d5642b5e5f)<br>
-_Agent appears in Wazuh Dashboard_
+
+**Figure 74: Events Records**
 
 ![Screenshot 2025-06-14 235756](https://github.com/user-attachments/assets/711b48e6-ac6e-4309-8dd2-4abda5b177b9)<br>
-_Events being recorded_
-
-**End of Step 3 – Expected Outcome**
 
 By completing this step, you now have:
 
@@ -817,37 +1028,49 @@ By completing this step, you now have:
 -   Wazuh ingesting Sysmon telemetry from Windows 10 client
 -   All components verified and communicating
 
-# **Step 4: Generating Telemetry and Creating Custom Alerts in Wazuh**
+## Generate Telemetry and Create Alerts
 
 > _Objective: Ingest telemetry from the Windows 10 client using Sysmon, configure Wazuh to receive and log all events, and create a custom detection rule for Mimikatz based on the original binary name._
 
-## **Configure Wazuh Agent to Ingest Sysmon Logs**
+## Configure Windows Client for Sysmon Ingestion
 
-### 1\. **Modify Agent Config (Windows 10 Client)**
+### Modify Agent Config (Windows 10 Client)
 
 -   Navigate to:
 
 `C:\Program Files (x86)\ossec-agent`
 
-![Screenshot 2025-06-15 000304](https://github.com/user-attachments/assets/7b5d46c9-8c8e-4346-a88f-cf43150efd84)<br>
-_Wazuh agent configuration files location_
+**Figure 75: Wazuh Agent Configuration**
 
--   Backup the file (e.g., rename to `ossec-backup.conf`).
+![Screenshot 2025-06-15 000304](https://github.com/user-attachments/assets/7b5d46c9-8c8e-4346-a88f-cf43150efd84)<br>
+
+Backup the file (e.g., rename to `ossec-backup.conf`).
+
+```cmd
+copy ossec.conf as ossec-backup.conf
+```
+
+**Figure 76: Backup ossec.conf**
 
 ![Screenshot 2025-06-15 000613](https://github.com/user-attachments/assets/18e3ee10-cc94-48f5-8037-c1d220aaf43b)<br>
-_Backup `ossec.conf` is recommended in case we need to restore the system_
 
--   Open `ossec.conf` with admin rights via Notepad.
+Backup `ossec.conf` is recommended in case we need to restore the system.
+
+Open `ossec.conf` with admin rights via Notepad.
+
+**Figure 77: ossec.conf**
 
 ![Screenshot 2025-06-15 000505](https://github.com/user-attachments/assets/3393db7f-b8c4-4150-9620-ce791df69660)<br>
-_`ossec.conf`_
 
--   Copy one of the `<localfile>` parameters to use for our Sysmon parameters
+Find `<log_analysis>` section, remove application, security, and system log entries and add Sysmon configuration.
+
+**Figure 78: Parameters**
 
 ![Screenshot 2025-06-15 000803](https://github.com/user-attachments/assets/331282fb-df1d-43fa-a8a2-566680eba680)<br>
-_Copying application parameters_
 
 -   Under `<localfile>` entries, add:
+
+**Figure 78: Sysmon parameter**
 
 ![Screenshot 2025-06-15 001037](https://github.com/user-attachments/assets/384b20c0-f2ad-4f74-9312-b0c581c0a6a0)<br>
 _Sysmon parameter, for this project, we will just be using the Sysmon events, but we can ingest other logs like PowerShell, System, etc_
@@ -859,93 +1082,57 @@ _Sysmon parameter, for this project, we will just be using the Sysmon events, bu
 </localfile>
 ```
 
--   To find out the channel name
+To find out the channel name go to.
+
+**Figure 79: Channel Name**
 
 ![image](https://github.com/user-attachments/assets/5d55dfec-21b1-4088-b65d-7db0045b5072)<br>
-_Sysmon channel name_
 
 -   Optional: Remove other logs like Application, Security and System for focused testing.
 
-### 2\. **Restart Wazuh Agent Service**
+```xml
+<localfile>
+  <location>Application</location>
+  <log_format>eventchannel</log_format>
+</localfile>
+
+<localfile>
+  <location>Security</location>
+  <log_format>eventchannel</log_format>
+</localfile>
+
+<localfile>
+  <location>System</location>
+  <log_format>eventchannel</log_format>
+</localfile>
+```
+
+### Restart Wazuh Agent Service
 
 -   Open Services → Restart **Wazuh Agent**
 
+**Figure 80: Restart Service**
+
 ![image](https://github.com/user-attachments/assets/dcc400f0-547b-49f3-ab75-fdee1d8c20b0)<br>
-_Services window_
 
 -   Or run in PowerShell (Admin):
 
 ```bash
-net stop wazuhsvc net start wazuhsvc
+net stop wazuhsvc
+net start wazuhsvc
 ```
 
 -   Check that we are getting Sysmon telemetry on Wazuh
 
+**Figure 81: Telemetry**
+
 ![Screenshot 2025-06-15 001855](https://github.com/user-attachments/assets/6493b5b8-7de4-4d3c-b930-ef7ed26312e0)<br>
-_Sysmon telemetry on Wazuh_
 
-## **Generate Mimikatz Telemetry**
+## Configure Wazuh Manager for Full Logging
 
-### 1\. **Exclude Defender Protection**
+### Edit Wazuh Manager Config (Ubuntu Server)
 
--   Windows Security → Virus & Threat Protection → Manage Settings → Add Exclusion (Downloads folder)
-
-![image](https://github.com/user-attachments/assets/63d3f875-5a95-400c-bb84-dd8946e69830)<br>
-
-![Screenshot 2025-06-15 002112](https://github.com/user-attachments/assets/d833c107-423e-4f0d-9ec7-e7fc43b14fef)<br>
-
-![Screenshot 2025-06-15 002142](https://github.com/user-attachments/assets/b9aa9360-93e6-41f6-ad3b-9c92776f343e)<br>
-_Disabling Defender_
-
-### 2\. **Download and Execute Mimikatz**
-
-![Screenshot 2025-06-15 002204](https://github.com/user-attachments/assets/bdfd0222-8e77-464c-ac54-5bf923fb1c5e)<br>
-
-![image](https://github.com/user-attachments/assets/a1389b62-29d2-46e2-8e3f-ffcca497ffb4)<br>
-
-![image](https://github.com/user-attachments/assets/36592c33-82fb-4460-b45f-b82171edb662)<br>
-_Exclude Downloads from Defender_
-
--   Download Mimikatz ZIP
-
-Go to the link github.com/gentilkiwi/mimikatz/releases
-
-![image](https://github.com/user-attachments/assets/1fac7816-29ee-4bbc-89f0-7598d1d29969)<br>
-_Mimikatz installer_
-
-- Disable browsing protection for downloading Mimikatz; otherwise, the browser will stop the transfer.
-
-![Screenshot 2025-06-15 002657](https://github.com/user-attachments/assets/8f64d7f0-d43e-4da6-b0a8-c3b1c7c2c0bd)<br>
-_Disable browsing protection_
-
--   Extract to the Downloads folder
-
-![Screenshot 2025-06-15 002759](https://github.com/user-attachments/assets/13bd51cd-16b8-409a-a4d9-55c2d050c16b)<br>
-
-![Screenshot 2025-06-15 002858](https://github.com/user-attachments/assets/31c232b1-3c44-4833-b845-c18b40be5357)<br>
-_Extracting Mimikatz_
-
-- Using PowerShell as an Admin, navigate to the Mimikatz folder. Run the binary.
-
-```powershell
-cd C:\Users\Jhon\Downloads\mimikatz_trunk\x64
-```
-
-```powershell
-cd Downloads\mimikatz .\mimikatz.exe
-```
-
-![Screenshot 2025-06-15 003018](https://github.com/user-attachments/assets/1bd72f3b-a126-4214-8a48-50f837e9dc03)<br>
-_Mimikatz running in PowerShell_
-
-
-## Configure Wazuh manager to Archive All Logs**
-
-### 1\. **Edit Wazuh Manager Config (Ubuntu Server)**
-
-SSH on the Wazuh server and edit the `ossec.conf` file.
-
-First, make a copy of the file for safety.
+SSH on the Wazuh server, backup Manager Configuration `ossec.conf` and then edit the `ossec.conf` file.
 
 ```bash
 sudo cp /var/ossec/etc/ossec.conf ~/ossec-backup.conf
@@ -955,18 +1142,19 @@ sudo cp /var/ossec/etc/ossec.conf ~/ossec-backup.conf
 nano /var/ossec/etc/ossec.conf
 ```
 
-Change the following:
+Enable Full Logging by change the following:
 
-```xml
-<logall>yes</logall>
-<logall_json>yesk/logall_json>
-```
+-   Scroll to bottom and find `<alerts>` section
+-   Change `<log_all>no</log_all>` to `<log_all>yes</log_all>`
+-   Change `<log_all_json>no</log_all_json>` to `<log_all_json>yes</log_all_json>`
+
+**Figure 82: Initial Logs Settings**
 
 ![image](https://github.com/user-attachments/assets/01cf85aa-8c2c-4851-897b-aa3c5ed2aa7c)<br>
-_Initial setup_
+
+**Figure 83: Full Logs Settings**
 
 ![Screenshot 2025-06-15 005127](https://github.com/user-attachments/assets/f8330c30-bfaf-461c-85a6-5c359423e431)<br>
-_Wazuh `ossec.conf` logall settings_
 
 Checking if Wazuh is ingesting JSON logs.
 
@@ -974,124 +1162,266 @@ Checking if Wazuh is ingesting JSON logs.
 ls /var/ossec/logs/archives/
 ``
 
-![Screenshot 2025-06-15 005350](https://github.com/user-attachments/assets/b10bd74e-a9bd-4d04-a73d-e27bf5c76082)<br>
-_Archives logs_
+**Figure 84: Archives logs**
 
-### 2\. **Enable Filebeat to Ingest Archive Logs**
+![Screenshot 2025-06-15 005350](https://github.com/user-attachments/assets/b10bd74e-a9bd-4d04-a73d-e27bf5c76082)<br>
+
+### Enable Filebeat to Ingest Archive Logs
 
 ```bash
 sudo nano /etc/filebeat/filebeat.yml`
 ````
 
+**Figure 84: Edit filebeat**
+
 ![image](https://github.com/user-attachments/assets/7824ce97-520c-4ddb-94b2-fc884277461b)<br>
-_Edit filebeat_
 
--   Change:
+-   Find `archives.enabled: false`
+-   Change to `archives.enabled: true`
 
-`archives: enabled: true`
+**Figure 85: Filebeat Archives Enabled**
 
 ![Screenshot 2025-06-15 005628](https://github.com/user-attachments/assets/4e7fb64a-a5f4-4bd8-8410-ad4c0bc19cef)<br>
-_Filebeat archives enabled_
 
-Then restart the Filebeat service
+Restart the Filebeat and Wazuh services.
 
 ```bash
-systemctl restart filebeat. service
+systemctl restart wazuh-manager
+systemctl restart filebeat
 ```
 
-## **Create Custom Index for Archive Logs**
+### Create Archives Index in Wazuh
 
-1.  **Wazuh Dashboard → Stack Management → Index Patterns**
+-   Go to Wazuh dashboard
+-   Click hamburger menu (≡) → Stack Management
+-   Click "Index Patterns"
+
+**Figure 86: Stack Management**
 
 ![Screenshot 2025-06-15 010100](https://github.com/user-attachments/assets/3b30c83e-17ec-4691-842d-0092be280f40)<br>
-_Stack Management_
+
+**Figure 87: Index Patterns**
 
 ![Screenshot 2025-06-15 010225](https://github.com/user-attachments/assets/98a4851b-3bf2-4d5a-a351-bf53c7d6eace)<br>
-_Index Patterns_
 
-2.  **Create New Index**:
+-   Click "Create index pattern"
+
+**Figure 88: Index Pattern**
 
 ![image](https://github.com/user-attachments/assets/a5509989-6e59-4cb6-a79b-894332c6d3a9)<br>
-_Create index pattern_
 
--   Pattern: `wazuh-archives-*`
+
+-   Index pattern name: `wazuh-archives-*`
+
+**Figure 89: Index Pattern Name**
 
 ![Screenshot 2025-06-15 010500](https://github.com/user-attachments/assets/9d7c5317-c6aa-4692-b004-c56348625ce2)<br>
-_Index pattern name_
 
--   Select time field: `@timestamp` and then click on Create index pattern.
+
+-   Click "Next step"
+-   Time field: Select `@timestamp`
+-   Click "Create index pattern"
+
+**Figure 90: Time Field**
 
 ![Screenshot 2025-06-15 010537](https://github.com/user-attachments/assets/e8ff09e7-2f92-4065-b4c0-22a2a31e8ce5)<br>
-_Time field_
+
+**Figure 91: New Index Pattern**
 
 ![Screenshot 2025-06-15 011019](https://github.com/user-attachments/assets/cb3068c7-947b-4f90-adc3-563242d2c52c)<br>
-_New Index Pattern for archives_
 
-## **Create Custom Detection Rule for Mimikatz**
+**Access Archives**
 
-### 1\. **Find Sysmon Event Data**
+-   Click hamburger menu (≡) → Discover
+-   Select index dropdown → Choose `wazuh-archives-*`
 
--   Generate Mimikatz events by running it again
+
+## Download and Test Mimikatz
+
+### Disable Windows Defender
+
+-   Type "Windows Security" in search
+-   Open Windows Security
+-   Go to "Virus & threat protection"
+-   Click "Manage settings" under "Virus & threat protection settings"
+-   Click on disbale
+
+**Figure 92: Access Windows Defender**
+
+![image](https://github.com/user-attachments/assets/63d3f875-5a95-400c-bb84-dd8946e69830)<br>
+
+**Figure 93: Virus & Therat Protection**
+
+![Screenshot 2025-06-15 002112](https://github.com/user-attachments/assets/d833c107-423e-4f0d-9ec7-e7fc43b14fef)<br>
+
+**Figure 94: Disable Virus & Threat Protection**
+
+![Screenshot 2025-06-15 002142](https://github.com/user-attachments/assets/b9aa9360-93e6-41f6-ad3b-9c92776f343e)<br>
+
+**Figure 94: Disable**
+![image](https://github.com/user-attachments/assets/7465952f-5cab-4fa3-8518-e79441b85883)
+
+### Download and Execute Mimikatz*
+
+-   Scroll down to "Exclusions"
+-   Click "Add or remove exclusions"
+-   Click "Add an exclusion" → "Folder"
+-   Select your Downloads folder
+-   Click "Select Folder"
+
+**Figure 95: Add or Remove Exclusions**
+
+![Screenshot 2025-06-15 002204](https://github.com/user-attachments/assets/bdfd0222-8e77-464c-ac54-5bf923fb1c5e)<br>
+
+**Figure 96: Add an Exclusion**
+
+![image](https://github.com/user-attachments/assets/a1389b62-29d2-46e2-8e3f-ffcca497ffb4)<br>
+
+**Figure 97: Downloads folder**
+
+![image](https://github.com/user-attachments/assets/36592c33-82fb-4460-b45f-b82171edb662)<br>
+
+### Disable Chrome Protection (if needed)
+
+Disable browsing protection for downloading Mimikatz; otherwise, the browser will stop the transfer.
+
+-   Open Chrome → Settings
+-   Privacy and security → Security
+-   Scroll down → "No protection (not recommended)"
+-   Turn off protection temporarily
+
+**Figure 98: Disable Browsing Protection**
+
+![Screenshot 2025-06-15 002657](https://github.com/user-attachments/assets/8f64d7f0-d43e-4da6-b0a8-c3b1c7c2c0bd)<br>
+
+#### Download Mimikatz
+
+-   Go to official [Mimikatz GitHub repository](github.com/gentilkiwi/mimikatz/releases)
+-   Download the latest release
+-   Extract to Downloads folder
+-   Browser may warn about malicious file - proceed anyway
+
+**Figure 99: Mimikatz ZIP**
+
+![image](https://github.com/user-attachments/assets/1fac7816-29ee-4bbc-89f0-7598d1d29969)<br>
+
+**Figure 99: Extracting Mimikatz**
+
+![Screenshot 2025-06-15 002759](https://github.com/user-attachments/assets/13bd51cd-16b8-409a-a4d9-55c2d050c16b)<br>
+
+![Screenshot 2025-06-15 002858](https://github.com/user-attachments/assets/31c232b1-3c44-4833-b845-c18b40be5357)<br>
+
+### Run Mimikatz
+
+powershell
+
+```powershell
+# Open PowerShell as Administrator
+cd Downloads\mimikatz_trunk\x64
+.\mimikatz.exe
+```
+
+**Figure 100: Mimikatz running in PowerShell**
+
+![Screenshot 2025-06-15 003018](https://github.com/user-attachments/assets/1bd72f3b-a126-4214-8a48-50f837e9dc03)<br>
 
 ![Screenshot 2025-06-15 011356](https://github.com/user-attachments/assets/195b1991-e7e5-41dd-97a4-4ab60655cd0d)<br>
-_Run Mimikatz_
 
--   Search in Archive Index: `event_id:1` and `original_file_name:mimikatz`
+### Verify Events in Wazuh
 
-On Windows Event Viewer, go to Event Viewer (Local) → Applications and Services Logs → Microsoft → Windows → Sysmon → Operational, and filter the events 1
+Go to Wazuh dashboard → Discover
+Select wazuh-archives-* index
+Search for: mimikatz
+Look for Sysmon Event ID 1 (Process Creation)
+Expand an event and find: data.win.eventdata.originalFileName
+
+**Figure 101: Wazuh Mimikatz Log**
+
+![Screenshot 2025-06-15 011837](https://github.com/user-attachments/assets/eb7af982-76d5-4bb7-bcfc-d79bc380c97a)<br>
+
+**Figure 102: Wazuh Mimikatz Log Expanded**
+
+![Screenshot 2025-06-15 011952](https://github.com/user-attachments/assets/d6559200-f702-4f29-a2fe-1321bc640425)<br>
+
+Wazuh Mimikatz logs on the web interface, we will use the original filename to build our rule as it will always be the same even if someone changes the name of the file.
+
+#### Verify in Event Viewer
+
+Open Windows Event Viewer
+Go to Applications and Services Logs → Microsoft → Windows → Sysmon → Operational
+Look for Event ID 1
+Should see mimikatz.exe in the events
+
+**Figure 103: Events 1**
 
 ![Screenshot 2025-06-15 011449](https://github.com/user-attachments/assets/98d704b9-75ed-4320-b999-ba84ce51de96)<br>
-_Events 1_
+
+**Figure 104: Mimikazt event being logged by Sysmon**
 
 ![Screenshot 2025-06-15 011601](https://github.com/user-attachments/assets/76389baf-a2a8-47b3-bd0d-1fbf23ce2545)<br>
-_Mimikazt event being logged by Sysmon_
 
-- Check whether Wazuh manager is logging the Mimikatz logs gathered by Sysmon_
+### Check Archive Files on Manager
 
 ```bash
-cat archives.json | grep -i mimikatz
+ls /var/ossec/logs/archives/
+cat /var/ossec/logs/archives/archives.json | grep -i mimikatz
 ```
- 
+
+**Figure 105: Wazuh Mimikatz Logs**
+
 ![Screenshot 2025-06-15 011744](https://github.com/user-attachments/assets/736d78b6-d582-459d-b07e-fa102ed99737)<br>
 _Wazuh Mimikatz logs_
 
-![Screenshot 2025-06-15 011837](https://github.com/user-attachments/assets/eb7af982-76d5-4bb7-bcfc-d79bc380c97a)<br>
-_Wazuh Mimikatz logs on the web interface_
 
-![Screenshot 2025-06-15 011952](https://github.com/user-attachments/assets/d6559200-f702-4f29-a2fe-1321bc640425)<br>
-_Wazuh Mimikatz logs on the web interface, we will use the original filename to build our rule as it will always be the same even if someone changes the name of the file_
+## Create Custom Detection Rule for Mimikatz
 
-### 2\. **Write Custom Rule via Dashboard**
+### Access Wazuh Rules
 
--   Go to: **Rules → Custom Rules → Edit Local Rules**
+-   Go to Management → Rules
+-   Click "Manage rule files"
+-   Search for "sysmon" to see existing rules
+-   Click info icon on "0800-sysmon\_id\_1.xml" to see examples
+
+**Figure 106: Accessing Rules**
 
 ![Screenshot 2025-06-15 012137](https://github.com/user-attachments/assets/d3b19cd2-bea4-45c6-b69a-cbe99ee518ce)<br>
-_Add a rule_
+
+**Figure 107: Manage Rules Files**
 
 ![Screenshot 2025-06-15 012322](https://github.com/user-attachments/assets/ae2c5d77-e608-4a27-af42-fded4e8d3735)<br>
-_Manage rules files_
 
-As we are interested on Sysmon event ID 1, we will have a look at the XML file.
+As we are interested in Sysmon event ID 1, we will have a look at the XML file.
 
+**Figure 108: Sysmon ID 1 XML Rule**
 ![Screenshot 2025-06-15 012409](https://github.com/user-attachments/assets/22c2ab4f-6abc-460c-b9c2-80b2ac05592f)<br>
-_Sysmon ID 1 XML rule_
 
 Then, copy one of the rules to use as an example for our custom rule.
-![Screenshot 2025-06-15 012720](https://github.com/user-attachments/assets/515e73ca-1b82-4a1d-926a-68ae99961614)<br>
-_Copy rule_
 
--   Go to custom rules
+**Figure 109: Copy Rule**
+
+![Screenshot 2025-06-15 012720](https://github.com/user-attachments/assets/515e73ca-1b82-4a1d-926a-68ae99961614)<br>
+
+### Create Custom Rule
+
+-   Go to "Custom rules"
+-   Click the pencil icon to edit local rules
+-   Below the existing rule (after the `</rule>` tag), add:
+
+**Figure 110: Click on Custom Rules**
 
 ![Screenshot 2025-06-15 012802](https://github.com/user-attachments/assets/23019364-fdc8-40a5-a195-5f2d01ff5323)<br>
 _Click on custom rules_
+
+**Figure 111: Edit Custom Rules**
 
 ![Screenshot 2025-06-15 012926](https://github.com/user-attachments/assets/28d5f8e0-744a-49fe-94a6-2df43030a9ba)<br>
 _Edit custom rules_
 
 -   Paste and modify the rule we copied from the Sysmon XML file:
 
+**Figure 112: Rule 100002**
+
 ![image](https://github.com/user-attachments/assets/bd69c55f-b7dc-43cf-a672-ec1db8be8817)<br>
-_Our custom rule to alert about Mimikatz usage_
 
 Note: custom rules start from `100000`.
 
@@ -1106,12 +1436,21 @@ Note: custom rules start from `100000`.
 </rule>
 ```
 
-### 3\. **Restart Wazuh Manager**
+-   **Important**: Use spaces for indentation, not tabs
+-   Match the indentation of the rule above
+-   Field name is case-sensitive: `win.eventdata.originalFileName`
 
--   Use the Dashboard restart option.
+### Save and Restart Manager
+
+-   Click "Save"
+-   Click "Confirm" to restart manager
+
+**Figure 113: Restart From Dashboard**
 
 ![image](https://github.com/user-attachments/assets/92b02a75-37b5-497a-8e64-b92e4aa8e0ab)<br>
 _Restart from dashboard_
+
+**Figure 114: Confirm**
 
 ![image](https://github.com/user-attachments/assets/a98527d2-15f8-4f15-a144-79a2a2f05fcf)<br>
 _Confirm_
@@ -1122,12 +1461,14 @@ _Confirm_
 sudo systemctl restart wazuh-manager
 ```
 
-## **Final Test: Bypass Filename and Trigger Alert**
+## Final Test: Bypass Filename and Trigger Alert
 
--   Rename Mimikatz executable to a decoy name (e.g., `ztakimim.exe`)
+-   Rename `mimikatz.exe` to a decoy name (e.g., `ztakimim.exe`)
+-   Run the renamed executable.
+
+**Figure 115: Renamed File**
 
 ![Screenshot 2025-06-15 013827](https://github.com/user-attachments/assets/2fc5c5a0-5f73-44dc-b20b-a886dd0660d0)<br>
-_Rename file_
 
 -   Execute it via PowerShell:
 
@@ -1135,22 +1476,49 @@ _Rename file_
 .\ztakimim.exe`
 ```
 
--   Confirm alert is triggered in Wazuh using `originalFileName`
+-   Go to Security Events in Wazuh dashboard
+-   Search for "mimikatz"
+-   Should see alert with description "Mimikatz usage detected"
+-   Note: Detection works despite renamed file because it uses `originalFileName`
+
+**Figure 115: Mimikatz Alert Triggered**
 
 ![Screenshot 2025-06-15 015503](https://github.com/user-attachments/assets/1f7a7f51-ff37-479b-a4d8-d60db5a4e7db)<br>
-_Mimikatz alert triggered_
+
+**Figure 115: original Name Detected**
 
 ![Screenshot 2025-06-15 195607](https://github.com/user-attachments/assets/3be90d65-af26-42ec-9b56-04ebda4d9141)<br>
-_Wazuh alert for renamed Mimikatz_
 
-## **End of Step 4 – Expected Outcome**
-
-You have now:
+We have now:
 
 -   Configured Wazuh Agent to ingest **Sysmon logs**
 -   Tuned **Wazuh Manager** to log and archive everything
 -   Created a **custom detection rule** for Mimikatz that resists binary renaming
 -   Verified that alerts are triggered based on **original file name**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # **Step 5 – Automation Integration with Shuffle, Wazuh, and TheHive**
 
