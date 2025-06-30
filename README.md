@@ -1,6 +1,18 @@
 # SOC Automation Project (Wazuh, TheHive and Shuffle)
 
-## **Project Overview**
+This project documents the full design, deployment, and automation of a cloud-based Security Operations Centre (SOC) using open-source tools:
+
+- **Wazuh**: Security Information and Event Management (SIEM)
+- **TheHive**: Case management and investigation platform
+- **Shuffle**: Orchestration and automation (SOAR)
+
+The guide is based on hands-on implementation with cloud and local VMs. It includes all setup steps, diagrams, configurations, and integration examples.
+
+---
+
+## Part 1: Overview and Goals
+
+### Project Overview
 
 This project focuses on the design, deployment, and automation of a cloud-based Security Operations Centre (SOC) using open-source tools: **Wazuh** for Security Information and Event Management (SIEM), **TheHive** for case management, and **Shuffle** for orchestration and automation (SOAR). The primary objective is to simulate and streamline Tier 1 SOC analyst workflows in a lab environment.
 
@@ -8,28 +20,28 @@ The project is structured in modular sections, each dedicated to a specific comp
 
 This project was inspired and guided by the work of **Steven (@MyDFIR on YouTube)**, whose free educational content has been invaluable in building real-world cybersecurity skills.
 
-## Objectives
+### Objectives
 
-### Primary Objectives:
+***Primary Objectives:****
 
 -   **Establish a Functional SOC Environment**: Deploy and configure a complete SOC infrastructure using Wazuh (SIEM), Shuffle (SOAR), and TheHive (Case Management) on cloud-based virtual machines
 -   **Implement Multi-Platform Integration**: Successfully integrate three distinct security platforms through APIs and custom configurations to create a unified security ecosystem
 -   **Automate Incident Response Workflows**: Develop automated playbooks that can detect, analyse, and respond to security incidents with minimal manual intervention
 -   **Demonstrate SOC Tier 1 Competencies**: Showcase proficiency in tools and processes essential for entry-level SOC analyst roles
 
-### Secondary Objectives:
+***Secondary Objectives:***
 
 -   **Cloud Infrastructure Management**: Gain hands-on experience with cloud service deployment and network security configuration using DigitalOcean
 -   **Security Tool Orchestration**: Master the configuration and management of enterprise-grade security tools in a distributed environment
 -   **Documentation and Knowledge Transfer**: Create comprehensive documentation that can serve as a reference for similar implementations
 
-## Acknowledgments
+### Acknowledgments
 
 This project was inspired and guided by Steven from @MyDFIR on YouTube. His comprehensive tutorials and free educational content provided the foundational knowledge necessary to complete this implementation. Special thanks to the cybersecurity community for their continuous knowledge sharing and support in building practical security skills.
 
-## Skills Learned
+### Skills Learned
 
-### **Technical Skills:**
+***Technical Skills:***
 
 -   **SIEM Configuration and Management**: Deployed and configured Wazuh for log collection, analysis, and threat detection across multiple systems
 -   **SOAR Platform Implementation**: Set up Shuffle workflows for automated incident response and security orchestration
@@ -39,22 +51,22 @@ This project was inspired and guided by Steven from @MyDFIR on YouTube. His comp
 -   **API Integration and Management**: Established secure API connections between disparate security platforms for seamless data flow
 -   **Linux System Administration**: Managed Ubuntu-based systems, including service configuration, user management, and system monitoring
 
-### **Analytical and Operational Skills:**
+***Analytical and Operational Skills:***
 
 -   **Security Incident Workflow Design**: Developed end-to-end processes for incident detection, analysis, and response
 -   **Multi-Platform Security Operations**: Coordinated security activities across integrated SIEM, SOAR, and case management platforms
 -   **Threat Detection and Response**: Implemented detection rules and automated response mechanisms for common security threats
 -   **Documentation and Standard Operating Procedures**: Created detailed technical documentation and operational procedures
 
-## Tools Used
+### Tools Used
 
-### **Primary Security Platforms:**
+***Primary Security Platforms:***
 
 -   **Wazuh**: Open-source SIEM platform for log analysis, intrusion detection, and compliance monitoring
 -   **Shuffle**: Open source security orchestration, automation and response (SOAR) platform for workflow automation
 -   **TheHive**: Scalable, open-source security incident response platform for case management and collaborative investigations
 
-### **Infrastructure and Supporting Technologies:**
+***Infrastructure and Supporting Technologies:***
 
 -   **DigitalOcean**: Cloud service provider used to host virtual machines and manage the lab’s network infrastructure.
 -   **Ubuntu Linux (20.04/22.04 LTS)**: Operating system for the Wazuh server, TheHive instance, and Client 2 VM, providing stability and compatibility with open-source SOC tools.
@@ -64,53 +76,43 @@ This project was inspired and guided by Steven from @MyDFIR on YouTube. His comp
 -   **Virtual Machines (VMs)**: Isolated environments used to simulate endpoints, threat activity, and SOC operations in a controlled setting.
 -   **Draw.io**: Used to design network architecture diagrams, workflows, and automation logic for better visualisation and planning.
 
-## **System Specifications:**
+### System Specifications:
 
-### Cloud-Based VMs (DigitalOcean)
+***Cloud-Based VMs (DigitalOcean)***
 
 -   **Wazuh Server**: Ubuntu, 2 CPUs, 8 GB RAM, 160 GB disk
 -   **TheHive Server**: Ubuntu, 2 CPUs, 8 GB RAM, 160 GB disk
 -   **Client 2**: Ubuntu, 1 CPU, 4 GB RAM, 80 GB disk
 
-### Local Infrastructure (Home Lab)
+***Local Infrastructure (Home Lab)***
 
 -   **Client 1**: Windows 10, 2 CPUs, 4 GB RAM, 40 GB disk
 
-## Network Architecture and Data Flow
+---
 
-This diagram shows how the different components communicate in your cloud-based SOC lab.
+## Part 2: Architecture and Data Flow
 
-**![SOC Automation drawio (4)](https://github.com/user-attachments/assets/3b02cd01-7ac2-429c-811e-ca00e65ab7c2)<br>
- _Network diagram showing the integration of Wazuh SIEM, Shuffle SOAR, and TheHive case management platforms with a hybrid client infrastructure_
- 
-### Network Components:
+### Network Diagram
 
--   **VMs with Wazuh Agents**:
-    -   Windows 10 and Ubuntu clients send events to the **Wazuh Manager** via the **Router**.
--   **Wazuh Manager**:
-    -   Receives logs/events → sends alerts to **Shuffle**.
-    -   Also sends alerts to the internet or internal components.
--   **Shuffle (SOAR)**:
-    -   Receives alerts from Wazuh → performs playbook actions.
-    -   Interacts with **TheHive** for case creation and **Internet APIs** for enrichment (like VirusTotal).
-    -   Sends emails or response tasks as needed.
--   **TheHive (Case Management)**:
-    -   Receives enriched IOC data from Shuffle.
-    -   Enables analyst investigation and tracking.
--   **SOC Analyst**:
-    -   Monitors email alerts and cases.
-    -   Can manually trigger response actions if needed.
--   **Internet**:
-    -   Used for enrichment (VirusTotal), email delivery, or external communication.
+This diagram illustrates how the components of the SOC lab communicate:
 
-## Automation Workflow (Playbook Logic)
+**Figure 1: SOC Network Architecture**
+![SOC Automation drawio (4)](https://github.com/user-attachments/assets/3b02cd01-7ac2-429c-811e-ca00e65ab7c2)
 
-This flowchart illustrates the logic behind your automated incident response process using **Wazuh (SIEM)**, **Shuffle (SOAR)**, and **TheHive (Case Management)**.
+- Windows and Ubuntu clients send telemetry to the **Wazuh Manager**.
+- Wazuh forwards relevant alerts to **Shuffle**.
+- **Shuffle** performs enrichment and forwards cases to **TheHive**.
+- **TheHive** allows analysts to investigate and track incidents.
+- Internet connectivity is used for threat enrichment (e.g., VirusTotal) and alert notification via email.
 
-![SOC drawio (2)](https://github.com/user-attachments/assets/083230f1-172f-43fc-a91a-6130894e3ecb)<br>
- _Automated alert triage and response flow using Wazuh, Shuffle, and TheHive._
+### Automation Workflow
 
-### Workflow Summary:
+The following playbook describes the alert triage and response process:
+
+**Figure 2: SOC Automation Playbook Logic**
+![SOC drawio (2)](https://github.com/user-attachments/assets/083230f1-172f-43fc-a91a-6130894e3ecb)
+
+***Workflow Summary***
 
 1.  **Clients Sending Events**:
     -   Wazuh agents on client machines (Windows and Ubuntu) send logs and events to the **Wazuh Manager**.
@@ -138,7 +140,7 @@ This flowchart illustrates the logic behind your automated incident response pro
 5.  **Human Interaction Points**:
     -   Decisions like blocking an IP or disabling a user are interactive and can be escalated to an analyst.
 
-### SOC Automation Playbook Table
+***SOC Automation Playbook Table***
 
 | **Step** | **Trigger Condition** | **Rule ID** | **Enrichment** | **Action(s)** |
 | --- | --- | --- | --- | --- |
@@ -149,7 +151,7 @@ This flowchart illustrates the logic behind your automated incident response pro
 | 5 | Match on specific rule | `100006` | VirusTotal | Create TheHive case, send email, ask: "Block IP & Disable User?", If Yes → Block IP and Disable User, send email notification |
 | 6 | No rule match or alert level < 5 | Any | None | Do nothing |
 
-### Response Action Mapping
+***Response Action Mapping***
 
 | **Decision Point** | **If Yes** | **If No** |
 | --- | --- | --- |
@@ -157,9 +159,8 @@ This flowchart illustrates the logic behind your automated incident response pro
 | Block IP? (Rules `100003/100004`) | Block IP → Notify via email | Do nothing |
 | Block IP & Disable User? (Rules `100006`) | Block IP → Disable User → Notify via email | Do nothing |
 
-## Implementation Steps
 
-## Step 1: Architecture Planning and Diagram Creation
+### Architecture Planning and Diagram Creation
 
 **Objective**: Create a comprehensive visual representation of the SOC automation lab to understand data flow and identify required components.
 
@@ -206,117 +207,147 @@ This flowchart illustrates the logic behind your automated incident response pro
 
 **Outcome**: A comprehensive network diagram that serves as the blueprint for the entire SOC automation project, ensuring all components work together cohesively.
 
-## Step 2: Deploying the SOC Lab Infrastructure
+---
 
-> **Goal:** Install and configure four core virtual machines:
+## Part 3: Infrastructure Deployment
 
--   A **Windows 10 client** with Sysmon
--   A **Linux Ubuntu cleint** for Linux enviroment testing  
--   A **Wazuh server** for SIEM
--   A **TheHive server** for case management
+In this phase, we build out the virtual environment that powers the SOC lab. It consists of:
+
+- A Windows 10 client (local VM)
+- An Ubuntu client (cloud VM)
+- A Wazuh server (cloud VM)
+- A TheHive server (cloud VM)
+
+Both local and cloud-based deployment methods are demonstrated.
 
 > _This step has been adapted from @MyDFIR’s original project, with added enhancements and modified configuration steps._
 
-### **2.1 Set Up Windows 10 Virtual Machine with Sysmon**
+### Windows 10 Virtual Machine Deployment With Sysmon
 
 > **Note:**
 > In this project, I used a preconfigured **Windows 10 Pro template** hosted on **Proxmox** and cloned it to deploy the client machine quickly.
 > If you're using **Proxmox**, you can skip the VirtualBox setup steps below and refer to the \[Proxmox screenshots\] for guidance.
 > For general users, the following instructions detail how to deploy Windows 10 using **VirtualBox**.
 
-#### **Option A: Using VirtualBox (for general users)**
+#### Option A: VirtualBox (Cross-platform)
 
 1.  **Install VirtualBox**
+
     -   Visit [virtualbox.org](https://www.virtualbox.org/) and download the installer for your OS.
     -   (Optional) Verify SHA-256 checksum using PowerShell:
 
-        ```powershell
-        Get-FileHash .\VirtualBox-*.exe -Algorithm SHA256
-        ```
-    ![image](https://github.com/user-attachments/assets/d2f7013a-fbca-4d09-94ca-3f2ddea36f8e)<br>
-    _VirtualBox download_
+```powershell
+Get-FileHash .\VirtualBox-*.exe -Algorithm SHA256
+```
+
+**Figure 3: VirtualBox download**
+![image](https://github.com/user-attachments/assets/d2f7013a-fbca-4d09-94ca-3f2ddea36f8e)<br>
 
 2.  **Download Windows ISO**
+
     -   Use Microsoft’s [Media Creation Tool](https://www.microsoft.com/en-us/software-download/windows10)
     -   Select “Create installation media” → Choose **ISO file** → Save locally
-    
-    ![image](https://github.com/user-attachments/assets/64437e1d-0643-45a9-bfed-fc55700a8f48)<br>
-    _Binary download_
 
-    ![image](https://github.com/user-attachments/assets/4d9c6c44-0bb2-4b06-9927-cf14facafaca)<br>
-    _ISO creation screen_
+**Figure 4: Download Media Creation Tool**
+![image](https://github.com/user-attachments/assets/64437e1d-0643-45a9-bfed-fc55700a8f48)<br>
 
-    ![image](https://github.com/user-attachments/assets/f4bcbc24-3d60-4798-887d-48f9f4940e02)<br>
-    _ISO Creation_
+**Figure 5: ISO Creation Screen**
+![image](https://github.com/user-attachments/assets/4d9c6c44-0bb2-4b06-9927-cf14facafaca)<br>
 
-    ![image](https://github.com/user-attachments/assets/36d58126-da55-4403-83fb-62eb718c8ac0)<br>
-    _ISO Creation_
+![image](https://github.com/user-attachments/assets/f4bcbc24-3d60-4798-887d-48f9f4940e02)<br>
 
-    ![image](https://github.com/user-attachments/assets/cd5162ba-40e1-482b-a970-f109bb36e297)<br>
-    _ISO Creation_
+![image](https://github.com/user-attachments/assets/36d58126-da55-4403-83fb-62eb718c8ac0)<br>
 
-    ![image](https://github.com/user-attachments/assets/54fa1f0d-0e5a-4948-97ed-4dec093d38c8)<br>
-    _ISO dile location_
+![image](https://github.com/user-attachments/assets/cd5162ba-40e1-482b-a970-f109bb36e297)<br>
 
-    ![image](https://github.com/user-attachments/assets/36934d57-ec43-4b14-93eb-c21f9028456f)<br>
-    _ISO downloading_
+![image](https://github.com/user-attachments/assets/54fa1f0d-0e5a-4948-97ed-4dec093d38c8)<br>
+
+![image](https://github.com/user-attachments/assets/36934d57-ec43-4b14-93eb-c21f9028456f)<br>
 
 3.  **Create Windows 10 VM in VirtualBox**
+
     -   VM Name: `Win10-Sysmon`
     -   RAM: 4GB, Disk: 50GB
     -   Load the Windows ISO during creation
     -   Check "Skip unattended installation" to do a manual setup
 
-    ![image](https://github.com/user-attachments/assets/8d7be4d8-26f0-4679-9b14-ba2c8cb68c6f)<br>
-    _VirtualBox VM creation settings_
+**Figure 6: VirtualBox VM Creation & Settings**
+![image](https://github.com/user-attachments/assets/8d7be4d8-26f0-4679-9b14-ba2c8cb68c6f)<br>
 
 4.  **Install Windows 10 OS**
+
+There are numerous guides available online for this process.
+
 5.  **Download and Install Sysmon**
     -   Download Sysmon from Microsoft Sysinternals
-    ![Screenshot 2025-06-14 123115](https://github.com/user-attachments/assets/93e6de2c-63e7-4ddc-aaa6-e7efe236f134)<br>
-    _Sysmon download_
-    
-    ![Screenshot 2025-06-14 123238](https://github.com/user-attachments/assets/78689806-ce78-47c1-a966-85aca8fad6e3)<br>
-    _Sysmon download location_
-    
-    ![Screenshot 2025-06-14 123256](https://github.com/user-attachments/assets/35013eb6-f707-4670-aa64-cc42da116f01)<br>
-    _Decompress Sysmon_   
-    -   Download the config from [SwiftOnSecurity](https://github.com/SwiftOnSecurity/sysmon-config)
-    
-    ![Screenshot 2025-06-14 123608](https://github.com/user-attachments/assets/3491ff17-b83d-4578-82f2-c21c7d26a9fa)<br>
-    _Navigate to the Sysmon binary location_
-    
-    ![Screenshot 2025-06-14 124020](https://github.com/user-attachments/assets/eac27bf6-71dc-4621-b09c-5ea5334a1d4e)<br>
-    
-    ![Screenshot 2025-06-14 124308](https://github.com/user-attachments/assets/ac00b60e-44fc-4125-b484-dfc7de1f9bbb)<br>
-    
-    ![Screenshot 2025-06-14 124342](https://github.com/user-attachments/assets/c2a65b1a-b433-41df-aa98-fb3c51d68e3a)<br>
-    _Download Sysmon configuration files_
-    
-    ![Screenshot 2025-06-14 124416](https://github.com/user-attachments/assets/e8dae915-1516-4cd3-9422-2a0400fec3cc)<br>
-    _Move the configuration file to Sysmon folder_
-    -   Open PowerShell as Admin:
-    
-    ![Screenshot 2025-06-14 123401](https://github.com/user-attachments/assets/27ed729b-50d3-4921-9e46-349a51a8b006)<br>
-    _Run PowerShell as Administrator_
-    
-    ![Screenshot 2025-06-14 124836](https://github.com/user-attachments/assets/96c04dbb-3a17-479b-baf7-0abf4490f707)<br>
-    _PowerShell admin command execution_
 
-   ```powershell
-   .\Sysmon64.exe -i sysmonconfig.xml
-   ```
-   
-   ![Screenshot 2025-06-14 124907](https://github.com/user-attachments/assets/7860d7b1-f8e2-42aa-8b87-1dc740d12d16)<br>
-    _Accept EULA_
+**Figure 7: Sysmon Download & Installation**
+![Screenshot 2025-06-14 123115](https://github.com/user-attachments/assets/93e6de2c-63e7-4ddc-aaa6-e7efe236f134)<br>
 
-   ![Screenshot 2025-06-14 124931](https://github.com/user-attachments/assets/029fa419-ae00-4fe1-bad8-9c88878cba33)<br>
-    _Sysmon Installed_
+Download the ZIP file and uncompress it.
 
-   ![Screenshot 2025-06-14 125022](https://github.com/user-attachments/assets/a1a3d8a4-1407-45b4-8f40-ca0a2daeef57)<br>
+![Screenshot 2025-06-14 123238](https://github.com/user-attachments/assets/78689806-ce78-47c1-a966-85aca8fad6e3)<br>
 
-   ![Screenshot 2025-06-14 125255](https://github.com/user-attachments/assets/0081d901-fb04-4b5f-b154-a6f5f4656e60)<br>
-    _Sysmon running in Event Viewer & Services_
+Our Windows 10 installation is 64-bit, so we will install that version of Sysmon. 
+
+![Screenshot 2025-06-14 123256](https://github.com/user-attachments/assets/35013eb6-f707-4670-aa64-cc42da116f01)<br>
+
+Navigate to the Sysmon binary location.
+
+![Screenshot 2025-06-14 123608](https://github.com/user-attachments/assets/3491ff17-b83d-4578-82f2-c21c7d26a9fa)<br>
+
+   -   Download the config from [SwiftOnSecurity](https://github.com/SwiftOnSecurity/sysmon-config)
+
+**Figure 8: Sysmon Download & Installation**
+
+![Screenshot 2025-06-14 124020](https://github.com/user-attachments/assets/eac27bf6-71dc-4621-b09c-5ea5334a1d4e)<br>
+
+![Screenshot 2025-06-14 124308](https://github.com/user-attachments/assets/ac00b60e-44fc-4125-b484-dfc7de1f9bbb)<br>
+
+**Figure 9: Sysmon Configuration File**
+![Screenshot 2025-06-14 124342](https://github.com/user-attachments/assets/c2a65b1a-b433-41df-aa98-fb3c51d68e3a)<br>
+
+![Screenshot 2025-06-14 124416](https://github.com/user-attachments/assets/e8dae915-1516-4cd3-9422-2a0400fec3cc)<br>
+
+Move the configuration file to the Sysmon main folder.
+
+-   Open PowerShell as Admin:
+
+**Figure 9: Sysmon Installation**
+![Screenshot 2025-06-14 123401](https://github.com/user-attachments/assets/27ed729b-50d3-4921-9e46-349a51a8b006)<br>
+
+Run PowerShell as Administrator.
+
+![Screenshot 2025-06-14 124836](https://github.com/user-attachments/assets/96c04dbb-3a17-479b-baf7-0abf4490f707)<br>
+
+Run the following command in PowerShell to start the installation of Sysmon.
+
+```powershell
+.\Sysmon64.exe -i sysmonconfig.xml
+```
+
+**Figure 10: Sysmon Installation Process**
+![Screenshot 2025-06-14 124907](https://github.com/user-attachments/assets/7860d7b1-f8e2-42aa-8b87-1dc740d12d16)<br>
+ _Accept EULA_
+
+![Screenshot 2025-06-14 124931](https://github.com/user-attachments/assets/029fa419-ae00-4fe1-bad8-9c88878cba33)<br>
+ _Sysmon Installed_
+
+**Figure 11: Sysmon running in Event Viewer & Services**
+![Screenshot 2025-06-14 125022](https://github.com/user-attachments/assets/a1a3d8a4-1407-45b4-8f40-ca0a2daeef57)<br>
+
+![Screenshot 2025-06-14 125255](https://github.com/user-attachments/assets/0081d901-fb04-4b5f-b154-a6f5f4656e60)<br>
+
+
+
+
+
+
+
+
+
+
+
 
 #### **Option B: Using Proxmox (Project-specific setup)**
 
