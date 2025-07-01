@@ -2228,7 +2228,7 @@ iptables -L   # Should show drop rule
 
 Verify that the IP address was successfully blocked. On the Ubuntu client, `iptables -- list`.
 
-**Figure 190: IPTables**
+**Figure 190: IPTables - IP 8.8.8.8 Blocked**
 
 ![image](https://github.com/user-attachments/assets/3ae116af-9e52-4435-bdc5-84919b9837cb)
 
@@ -2249,76 +2249,55 @@ cat active-responses. log
 
 ![Screenshot 2025-06-16 133440](https://github.com/user-attachments/assets/67c75b3b-f39a-4ffb-b868-f1ec1c249070)
 
-
-
-
-
-
-
-
------------------------------------------------------
-
-- Log in to the `mylab@test.com` account
-
-![Screenshot 2025-06-15 211936](https://github.com/user-attachments/assets/dccb6c3f-cbcd-4861-9e53-dab51f004caa)<br>
-_`mylab@test.com` account_
-
-------------------------------------------------------
-
-
-
-### 3\. **Add Wazuh App – Run Command**
-
--   Add Wazuh App
-
-![Screenshot 2025-06-16 115551](https://github.com/user-attachments/assets/d47f9962-94ab-4127-966e-5646120ca702)
-_Drag Wazuh App_
-
-
-
-
-
-
-
-
-
-
-
-
-## **Modifications to the Original Project**
+## Project Modifications
 
 Before we proceed with the project proposed by @MyDFIR, I decided to take it a step further and add some extra features. He suggests blocking IP addresses based on ID 5710, which is SSH failed login attempts using a non-existent user. However, I decided to add failed authentication attempts for known users, ID 5760, which can send us alerts of brute force on root or any specific existing account, and also send the alert to TheHive. So the aim is the following.
 
+**Figure 192: Modified Project Workflow**
+
 ![Screenshot 2025-06-17 131746](https://github.com/user-attachments/assets/5d7ce409-4328-44b0-b3b0-82193311367a)
-_Modified Workflow_
 
 Now that we have identified the parameters to be passed to the Wazuh App, let's add a VirusTotal App to enrich the data collected and determine whether the source IP of the attack is blacklisted on the portal.
 
--   Add a VirusTotal App for IP enrichment
+### Add a VirusTotal App for IP Enrichment
+
+**Figure 192: VirusTotal App**
 
 ![image](https://github.com/user-attachments/assets/2fb80e57-81b0-4a1d-96aa-a9d71db86b6b)
-_VirusTotal App_
 
--   Add TheHive App for Notifications
+### Add TheHive App for Notifications
+
+**Figure 193: TheHive App**
 
 ![image](https://github.com/user-attachments/assets/516f3295-f705-41c2-9be9-a2e3c209046d)
 
+### Add User Input App for Manual Responses
 
--   Add User Input App for manual reponses
+**Figure 193: User Input App**
 
 ![image](https://github.com/user-attachments/assets/f2b645d9-8711-4ed1-9c2c-dcbcc4781d45)
 
+### Add Wazuh Tools
 
--   Add a Shuffle Tool App, we will use this to get to branches for some condictions. I could not find another way for this (change it to Execute Python).
+Add a Shuffle Tool App; we will use this to access branches for specific conditions. I could not find an alternative approach for this (change it to Execute Python).
+
+**Figure 194: Wazuh Tools**
 
 ![image](https://github.com/user-attachments/assets/dd54e239-1947-412f-8dee-eed5eb62fd1f)
 
-- Connect all the Apps, see the connections below.
+### Add Wazuh App
+
+**Figure 195: Wazuh App**
+
+![Screenshot 2025-06-16 115551](https://github.com/user-attachments/assets/d47f9962-94ab-4127-966e-5646120ca702)
+
+### Connect All Apps
+
+**Figure 196: Wazuh App**
 
 ![Screenshot 2025-06-17 131746](https://github.com/user-attachments/assets/6e4b087f-514b-43a3-a191-af77e47f5bda)
 
-
--   Add the rules on our local rules XML to capture the events.
+### Wazuh Custom Rules.
 
 We create two rules: one to capture non-existent account attempts (ID 100003, targeting 5710 events) and the other for existing accounts (ID 100004, targeting 5760 events). We do this to reduce the number of API calls.
 
@@ -2344,19 +2323,27 @@ The rule will only be triggered if the attempt fails three times within 60 secon
   </rule>
 ```
 
+**Figure 197: Wazuh Custom Rule**
+
 ![image](https://github.com/user-attachments/assets/4e836125-b661-4a00-876a-923cd0e2d98e)
 
+## Conditions 
 
--   Branch conditions and Python setup.
+### Branch Condition Rule 100004
+
+**Figure 198: Condition 100004**
 
 ![image](https://github.com/user-attachments/assets/5feea2ad-8a7a-4933-8b42-1078aa5b17c1)
-_Conditions and Python setup_
 
--  Brach connecting Get Api and VirusTotal App
+### Branch Condition Rule 100003
+
+**Figure 199: Condition 100003**
 
 ![image](https://github.com/user-attachments/assets/ddf76564-aae3-4790-94ee-547246fd6518)
 
 We need to let Rule ID `100003` pass through.
+
+**Figure 200: Wazuh**
 
 ![image](https://github.com/user-attachments/assets/802071ad-23d4-4d86-8004-bda01ca91cb2)
 _Rule 100003 condition_
@@ -2366,6 +2353,58 @@ _Rule 100003 condition_
 I will use this App as a bridge to allow me to get an extra branch for the other condition. It should be a better way, but for the purpose os the project, this works just fine.
 
 ![image](https://github.com/user-attachments/assets/83669112-fea9-4186-ac83-6efecd129ff7)
+
+
+
+
+
+
+
+
+-----------------------------------------------------
+
+- Log in to the `mylab@test.com` account
+
+![Screenshot 2025-06-15 211936](https://github.com/user-attachments/assets/dccb6c3f-cbcd-4861-9e53-dab51f004caa)<br>
+_`mylab@test.com` account_
+
+------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+### 3\. **Add Wazuh App – Run Command**
+
+-   Add Wazuh App
+
+![Screenshot 2025-06-16 115551](https://github.com/user-attachments/assets/d47f9962-94ab-4127-966e-5646120ca702)
+_Drag Wazuh App_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 -  Brach connecting Python App and VirusTotal App
