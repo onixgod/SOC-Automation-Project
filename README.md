@@ -1924,39 +1924,27 @@ All values have been passed to TheHive dashboard.
 
 We have now completed our flow for executing Mimikatz on the Windows client's Downloads folder. So far, our workflow should look like the one below.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 **Figure 157: Shuffle Workflow Overview**
 
 ![Screenshot 2025-06-16 095202](https://github.com/user-attachments/assets/a5a56ece-6731-4730-90d9-7515a5edf1c7)<br>
 
 
-## **Notify Analyst via Email**
 
-### 1\. **Add Email App in Workflow**
+
+### Email Notification
+
+-   Add "Email" app
+
+**Figure 158: Email App**
 
 ![image](https://github.com/user-attachments/assets/523f5963-cd89-413e-89ce-11d383558c08)<br>
 _Drag the Email App_
 
--   Use a disposable email for testing (I used temp-mail.org, but you can use any other site for that)
-
-![Screenshot 2025-06-16 100135](https://github.com/user-attachments/assets/d6a93ba3-96c9-4c81-a5c3-9f209ec38656)<br>
-_Temp email_ 
+-   Connect VirusTotal to Email
+-   Configure:
+    -   Recipient: Your email address (can use a disposable email from SquareX or [temp-mail.org](temp-mail.org))
+    -   Subject: "Mimikatz detected!"
+    -   Body: Include execution arguments for time, title, and computer name
 
 -   Name: `Email Notification`
 -   Recipients: `email@dispoableemail.com`   
@@ -1971,142 +1959,127 @@ File Original Name: $exec.text.win.eventdata.originalFileName
 Spawned From: $exec.text.win.eventdata.parentImage
 ```
 
+**Figure 159: Temp Email**
+
+![Screenshot 2025-06-16 100135](https://github.com/user-attachments/assets/d6a93ba3-96c9-4c81-a5c3-9f209ec38656)<br>
+
+**Figure 160: Email App Setup**
+
 ![image](https://github.com/user-attachments/assets/66394e83-9469-463c-b872-a3c291478e24)<br>
-_Email App setup_
 
+### Test Complete Workflow
 
+-   Save workflow
+-   Run mimikatz on Windows client
+-   Verify execution in Shuffle
+-   Check The Hive for new alert
+-   Check email for notification
 
-
-
-
-
-
-
-
--   Generate API key for Shuffle
-
-
-
-- Log in to the `mylab@test.com` account
-
-![Screenshot 2025-06-15 211936](https://github.com/user-attachments/assets/dccb6c3f-cbcd-4861-9e53-dab51f004caa)<br>
-_`mylab@test.com` account_
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--   Rerun the flow
+**Figure 161: Email Sent Successfully**
 
 ![Screenshot 2025-06-16 101015](https://github.com/user-attachments/assets/f73177da-c252-4e46-b19b-3e9cb2a86b74)<br>
-_Email sent successfully_
+
+**Figure 162: Email Output**
 
 ![Screenshot 2025-06-16 101419](https://github.com/user-attachments/assets/58098a94-61b0-4a43-9704-ccb5a281e613)<br>
-_Email output_
 
-# **Step 6: Responsive Actions – Wazuh API Integration**
 
-### Deploy Ubuntu Client (Cloud - DigitalOcean)
 
-#### Step-by-Step:
 
-1.  **Create Droplet**
-    -   Same settings as Wazuh
-    ![image](https://github.com/user-attachments/assets/3ea15ac7-4bd6-4dc8-91e8-586c5b009730)<br>
-    _Click on create → Droplets and then select location and OS_
 
-    ![Screenshot 2025-06-16 102353](https://github.com/user-attachments/assets/5af8ddc7-3cd3-408e-84b2-78473d3591f5)<br>
-    _Select Shared CPU Basic, Regular Disk, 2 CPUs, 80 GB SSDs and 4 GB memory_
 
-    -   Hostname: `mylab-ubuntu`
+# Advanced: Response Actions (Ubuntu Machine)
+
+## Create Ubuntu Test Machine
+
+-   Create new Digital Ocean droplet
+-   Ubuntu 20.04, minimum specs (1GB RAM, 25GB storage)
+-   **Important**: Create firewall rule allowing ALL inbound traffic
+-   Install Wazuh agent on Ubuntu machine
+
+**Figure 163: Create Droplet**
+
+![image](https://github.com/user-attachments/assets/3ea15ac7-4bd6-4dc8-91e8-586c5b009730)<br>
+
+**Figure 164: Select Options**
+
+![Screenshot 2025-06-16 102353](https://github.com/user-attachments/assets/5af8ddc7-3cd3-408e-84b2-78473d3591f5)<br>
+
+-   Hostname: `mylab-ubuntu`
+
+**Figure 165: Password**
+
+![Screenshot 2025-06-16 102610](https://github.com/user-attachments/assets/ee066439-6a2c-4ee8-b4a3-66ee481344cf)<br>
+
+**Figure 166: Public IP**
+
+![Screenshot 2025-06-16 103015](https://github.com/user-attachments/assets/2e96fbe1-6776-49be-a70b-514d6ebaac05)<br>
+
+Create a new firewall rule set to accept all TCP connections in all ports.
+
+**Figure 167: New Firewall Rule **
   
-    ![Screenshot 2025-06-16 102610](https://github.com/user-attachments/assets/ee066439-6a2c-4ee8-b4a3-66ee481344cf)<br>
-    _Pick a strong password and select a Hostname_
+![Screenshot 2025-06-16 103657](https://github.com/user-attachments/assets/eb1b0992-47c3-4331-a273-c54033f07eac)<br>
 
-    ![Screenshot 2025-06-16 103015](https://github.com/user-attachments/assets/2e96fbe1-6776-49be-a70b-514d6ebaac05)<br>
-    _Take note of the Public IP_
+Add the newly created Ubuntu client to that firewall rule.
 
-    -   Create a new firewall rule set to accept all TCP connections in all ports 
-      
-    ![Screenshot 2025-06-16 103657](https://github.com/user-attachments/assets/eb1b0992-47c3-4331-a273-c54033f07eac)<br>
-    _New firewall rule set_
+**Figure 168: Add Ubuntu Client**
 
-    -    Add the newly created Ubuntu client to that firewall rule
-  
-    ![Screenshot 2025-06-16 103810](https://github.com/user-attachments/assets/b21ab24a-0126-465f-a783-9ba8c5c9b16c)<br>
-    _Add Ubuntu client droplet to new Firewall rule_
+![Screenshot 2025-06-16 103810](https://github.com/user-attachments/assets/b21ab24a-0126-465f-a783-9ba8c5c9b16c)<br>
 
+## Add Ubuntu Client Agent
 
-**Add Ubuntu Client Agent**
-
--   On Wazuh dashboard:
-    `Agents > Add Agent > Platform: Linux`
+-   On Wazuh dashboard: `Agents > Add Agent > Platform: Linux`
 
 You should follow similar instructions to the Windows agent, but this time you can select Linux DEB amd64 and Wazuh Server public IP.
 
-![Screenshot 2025-06-16 105827](https://github.com/user-attachments/assets/7b80f617-2b3e-445d-8076-7bb01b23f99e)
-_Ubuntu droplet creation_
+**Figure 169: Ubuntu Agent**
 
--   Copy the generated install command
+![Screenshot 2025-06-16 105827](https://github.com/user-attachments/assets/7b80f617-2b3e-445d-8076-7bb01b23f99e)
+
+Copy the generated install command to install the Wazuh agent on the Ubuntu client.
+
+**Figure 170: Command**
 
 ![Screenshot 2025-06-16 104618](https://github.com/user-attachments/assets/1c34d012-2357-4740-8e9a-98cda1230645)<br>
--Copy the bash command for agent installation on Linux_
 
-**Install on Ubuntu Client**
+## Install on Ubuntu Client
 
--   SSH into the Ubuntu client
+SSH into the Ubuntu client.
+
+**Figure 171: SSH**
 
 ![Screenshot 2025-06-16 104821](https://github.com/user-attachments/assets/4f0d7177-2fd2-4450-a23d-c8fe2cd46777)<br>
-_SSH as root on Ubuntu client_
 
--   Update and upgrade the Linux client
+Update and upgrade the Linux client `apt update && apt upgrade`.
+
+**Figure 172: Update**
 
 ![Screenshot 2025-06-16 104905](https://github.com/user-attachments/assets/4526a640-5c82-4d69-b43a-bd7b672100a5)<br>
-_`apt update && apt upgrade`
+
+**Figure 173: Click Ok**
 
 ![Screenshot 2025-06-16 105048](https://github.com/user-attachments/assets/cadd7a1b-cc3a-409d-912c-e3d35e6dc383)<br>
-_Click Ok_
+
+**Figure 174: Click Ok**
 
 ![Screenshot 2025-06-16 105149](https://github.com/user-attachments/assets/49aa2a13-2d46-43c2-9710-480412181d54)<br>
-_Click Ok_
+
+**Figure 175: Click Ok**
 
 ![Screenshot 2025-06-16 105211](https://github.com/user-attachments/assets/e7d737c3-750a-44fa-8c06-170993e446f1)<br>
-_Click Ok_
 
--   Paste and run the command
+Paste the command copied from the Wazuh web interface and execute it.
+
+**Figure 176: Shell Command**
 
 ![Screenshot 2025-06-16 105701](https://github.com/user-attachments/assets/3040b797-7447-49a5-a786-2f8fd06a4c74)<br>
-_Shell command_
- 
--   Then start the service:
+
+Then enable and start the Wazuh service.
+
+**Figure 177: Start Service**
 
 ![image](https://github.com/user-attachments/assets/9cb8f941-e637-4d9c-9b8d-c47db5c03ae6)<br>
-_Starting Wazuh service from Shell_
 
 ```bash
 sudo systemctl daemon-reload
@@ -2114,61 +2087,67 @@ sudo systemctl enable wazuh-agent
 sudo systemctl start wazuh-agent
 ```
 
-**Verify Agent Connectivity**
+### Verify Agent Connectivity
 
--   Check on Wazuh if the Ubuntu client has been added, Wazuh dashboard → Agents tab → Confirm agent shows as "Active"
+Check on Wazuh to ensure the Ubuntu client has been added. Navigate to the Wazuh dashboard → Agents tab → and confirm the agent shows as "Active".
 
-![Screenshot 2025-06-16 114234](https://github.com/user-attachments/assets/baa542dc-3e0c-4fca-a0cf-a8a7124825af)
-_Ubuntu client on Wazuh_
+**Figure 178: Ubuntu Client on Wazuh**
+
+![Screenshot 2025-06-16 114234](https://github.com/user-attachments/assets/baa542dc-3e0c-4fca-a0cf-a8a7124825af)<br>
 
 -   Navigate to **Security Events** to confirm telemetry ingestion
 
+**Figure 179: Events Being Recorded**
+
 ![image](https://github.com/user-attachments/assets/5738895d-b3a9-42cb-94bf-eff9cdd03453)<br>
-_Events being recorded_
 
-### 1\. **Expose Wazuh API Port**
+### Expose Wazuh API Port
 
--   Open DigitalOcean firewall port `55000` for inbound traffic
+Open DigitalOcean firewall port `55000` for inbound traffic.
+
+**Figure 180: Port 55000 Accepting Traffic**
 
 ![image](https://github.com/user-attachments/assets/bab20adb-1b80-4345-b3d1-0511d51326ce)
 _Port 55000 accepting all incoming traffic_
 
-### 2\. **Use HTTP App to Fetch Wazuh Token**
+### Add API Authentication to Shuffle
 
--   Add the HTTP request App
+-   Add "HTTP" app for API authentication
+-   Rename to "Get API"
+
+**Figure 181: Drag HTTP App**
 
 ![Screenshot 2025-06-16 114607](https://github.com/user-attachments/assets/8bb203f5-2466-454e-8262-87d5fab67011)
-_Drag HTTP App_
 
--   POST request with Wazuh API user credentials, we will use the `curl` action to get the Wazuh API.
+-   Action: "Curl"
+-   Configure curl command:
 
-```bash
-curl -u wazuh:<Wazuh user API Key> -k -X GET Http "https://<Wazuh Server Public API>:55000/security/user/authenticate?raw=true"
+```
+curl -u wazuh-wui:WAZUH_API_PASSWORD -k -X GET "https://WAZUH_IP:55000/security/user/authenticate"
 ```
 
+**Figure 182: HTTP Request to Get Wazuh Token**
+
 ![Screenshot 2025-06-16 115247](https://github.com/user-attachments/assets/e4bab1af-dd42-49fe-972f-c5b4b78673c4)
-_HTTP request to get Wazuh token_
 
-### 3\. **Add Wazuh App – Run Command**
+## Configure Active Response in Wazuh
 
--   Add Wazuh App
-
-![Screenshot 2025-06-16 115551](https://github.com/user-attachments/assets/d47f9962-94ab-4127-966e-5646120ca702)
-_Drag Wazuh App_
-
--  Modify `ossec.conf` to set up Active responses `nano /var/ossec/etc/ossec.conf`.
-
-![image](https://github.com/user-attachments/assets/5c3981b2-8b1e-42e5-b103-ad2a93d726eb)
-_Command_
-
--   Navigate to the Active Response section
-
-![image](https://github.com/user-attachments/assets/d288fc7f-0585-49e5-8fe1-90594e378e63)
-_Active Response, we are interested in the `firewall-drop` response command_
-
--   Enable the active response by deleting the comments `<!--` and `-->`, copy and paste the below.
+bash
 
 ```bash
+nano /var/ossec/etc/ossec.conf
+```
+
+**Figure 183: Command**
+
+![image](https://github.com/user-attachments/assets/5c3981b2-8b1e-42e5-b103-ad2a93d726eb)
+
+-   Scroll to the bottom, find the active response section
+-   Add after existing commands:
+
+xml
+
+```xml
 <active-response>
   <command>firewall-drop</command>
   <location>local</location>
@@ -2177,14 +2156,23 @@ _Active Response, we are interested in the `firewall-drop` response command_
 </active-response>
 ```
 
+**Figure 184: Command**
+
 ![image](https://github.com/user-attachments/assets/d2ef9e78-7612-4eb7-a274-08c6562f7d72)
 
--   Change Webhook to accept alerts by Level and not by Rule ID. We will set the level to 5, so all rules five and above will be passed to Shuffle.
+**Figure 185: Active Response**
+
+![image](https://github.com/user-attachments/assets/d288fc7f-0585-49e5-8fe1-90594e378e63)
+
+Change Webhook to accept alerts by Level and not by Rule ID. We will set the level to 5, so all rules five and above will be passed to Shuffle.
+
+**Figure 186: Changing Shuffle Integration**
 
 ![image](https://github.com/user-attachments/assets/45586ed9-df9b-4de4-b234-ba7314e61ef4)
-_Changing Shuffle integration_
 
--   Let's test how active response works manually. To do that, we will navigate to the following directory.
+### Test Active Response Manually 
+
+Let's test how active response works manually. To do that, we will navigate to the following directory.
 
 ```bash
 cd /var/ossec/bin/
@@ -2192,41 +2180,59 @@ cd /var/ossec/bin/
 
 We are interested in the `agent_control`, let's run it and see what available options we have `./agent_control`.
 
+**Figure 187: Agent Control**
+
 ![Screenshot 2025-06-16 131502](https://github.com/user-attachments/assets/7cc0ef34-f363-43b1-a6e9-b4e167948ea6)
-_agent_control_
 
 Use `-L` to list what available responses are activated. 
 
+**Figure 188: firewall-drop**
+
 ![image](https://github.com/user-attachments/assets/7294ef06-d1a7-4e09-9498-f12eb749c223)
-_We can confirm `firewall-drop0` is activated. The `0` is the TimeOut and is appended to the command.
 
--   Let's test by blocking a known public IP `8.8.8.8` on our Ubuntu client.
+We can confirm `firewall-drop0` is activated. The `0` is the TimeOut and is appended to the command.
 
-![Screenshot 2025-06-16 132537](https://github.com/user-attachments/assets/b523a861-78d2-4b13-aa53-5c13f1bc2273)
-_`ping 8.8.8.8` to get responses_
-
--   Now run the `./agent_control` command on the Wazuh server to block IP `8.8.8.8` on the Ubuntu client.
-
-    -   -b block IP address `8.8.8.8`
-    -   -f active response command `firewall-drop0`
-    -   -u client ID  `002` Ubuntu machine
- 
 ```bash
-./agent_control -b 8.8.8.8 -f firewall-drop0 -u 002
+# Check available responses
+/var/ossec/bin/agent_control -L
 ```
 
+Let's test by blocking a known public IP `8.8.8.8` on our Ubuntu client.
+
+**Figure 189: Ping**
+
+![Screenshot 2025-06-16 132537](https://github.com/user-attachments/assets/b523a861-78d2-4b13-aa53-5c13f1bc2273)
+
+Now run the `./agent_control` command on the Wazuh server to block IP `8.8.8.8` on the Ubuntu client.
+
+-   -b block IP address `8.8.8.8`
+-   -f active response command `firewall-drop0`
+-   -u client ID  `002` Ubuntu machine
+
+```bash
+# Test blocking Google DNS
+/var/ossec/bin/agent_control -b 8.8.8.8 -f firewall-drop0 -u 002
+
+# Check if it worked (on Ubuntu machine)
+ping 8.8.8.8  # Should fail
+iptables -L   # Should show drop rule
+```
+
+**Figure 189: Client ID**
+
 ![image](https://github.com/user-attachments/assets/f7366735-3db4-4044-80d5-fbe00cfa8beb)
-_Client ID_
+
+**Figure 189: Command Running**
 
 ![image](https://github.com/user-attachments/assets/338a23b5-2ada-4a11-bca9-2630a9be2206)
-_Command running_
 
--   Verify that the IP address was successfully blocked. On the Ubuntu client, `iptables -- list`.
+Verify that the IP address was successfully blocked. On the Ubuntu client, `iptables -- list`.
+
+**Figure 190: IPTables**
 
 ![image](https://github.com/user-attachments/assets/3ae116af-9e52-4435-bdc5-84919b9837cb)
-_IP `8.8.8.8` blocked_
 
--   Take a look at the Active Response logs to see if the active response was successful
+Take a look at the Active Response logs to see if the active response was successful.
 
 ```bash
 cd /var/ossec/logs/
@@ -2239,8 +2245,45 @@ ls
 cat active-responses. log
 ```
 
+**Figure 191: Active Response Logs**
+
 ![Screenshot 2025-06-16 133440](https://github.com/user-attachments/assets/67c75b3b-f39a-4ffb-b868-f1ec1c249070)
-_Active Response logs, script was run successfully_
+
+
+
+
+
+
+
+
+-----------------------------------------------------
+
+- Log in to the `mylab@test.com` account
+
+![Screenshot 2025-06-15 211936](https://github.com/user-attachments/assets/dccb6c3f-cbcd-4861-9e53-dab51f004caa)<br>
+_`mylab@test.com` account_
+
+------------------------------------------------------
+
+
+
+### 3\. **Add Wazuh App – Run Command**
+
+-   Add Wazuh App
+
+![Screenshot 2025-06-16 115551](https://github.com/user-attachments/assets/d47f9962-94ab-4127-966e-5646120ca702)
+_Drag Wazuh App_
+
+
+
+
+
+
+
+
+
+
+
 
 ## **Modifications to the Original Project**
 
