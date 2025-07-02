@@ -2329,9 +2329,9 @@ The rule will only be triggered if the attempt fails three times within 60 secon
 
 ## Conditions 
 
-### Branch Condition Rule 100004
+### Apps for Conditions
 
-**Figure 198: Condition 100004**
+**Figure 198: Conditions**
 
 ![image](https://github.com/user-attachments/assets/5feea2ad-8a7a-4933-8b42-1078aa5b17c1)
 
@@ -2343,89 +2343,43 @@ The rule will only be triggered if the attempt fails three times within 60 secon
 
 We need to let Rule ID `100003` pass through.
 
-**Figure 200: Wazuh**
+**Figure 200: Condition 100003**
 
 ![image](https://github.com/user-attachments/assets/802071ad-23d4-4d86-8004-bda01ca91cb2)
-_Rule 100003 condition_
 
--   Python App set up.
+### Python App Setup
 
 I will use this App as a bridge to allow me to get an extra branch for the other condition. It should be a better way, but for the purpose os the project, this works just fine.
 
+**Figure 201: Phyton App**
+
 ![image](https://github.com/user-attachments/assets/83669112-fea9-4186-ac83-6efecd129ff7)
 
+### Branch Condition Rule 100004
 
-
-
-
-
-
-
------------------------------------------------------
-
-- Log in to the `mylab@test.com` account
-
-![Screenshot 2025-06-15 211936](https://github.com/user-attachments/assets/dccb6c3f-cbcd-4861-9e53-dab51f004caa)<br>
-_`mylab@test.com` account_
-
-------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-### 3\. **Add Wazuh App – Run Command**
-
--   Add Wazuh App
-
-![Screenshot 2025-06-16 115551](https://github.com/user-attachments/assets/d47f9962-94ab-4127-966e-5646120ca702)
-_Drag Wazuh App_
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--  Brach connecting Python App and VirusTotal App
+**Figure 202: Condition 100004**
 
 ![image](https://github.com/user-attachments/assets/70f6b187-31a9-4a04-bd9d-deccb53d0b04)
 
 We need to let Rule ID `100004` pass through.
 
+**Figure 203: Condition 100004**
+
 ![image](https://github.com/user-attachments/assets/27d8c4f6-096a-4186-a755-721509c41a38)
 
-- Set up VirusTotal App
+
+### Setup VirusTotal App
 
 We first give the app a name, then pass the arguments.
 
 Find Actions: `Get an IP address report`
 IP: `$exec.all_fields.data.srcip`, this is the source IP we want to block.
 
+**Figure 204: VT App**
+
 ![image](https://github.com/user-attachments/assets/20503af2-ec9f-434e-a96f-a53953a10cc9)
 
-
-- Set up TheHive App
+### Setup TheHive App
 
 We first give the app a name, then pass the arguments.
 
@@ -2451,6 +2405,8 @@ Body:
 Title: `$exec.title`
 Tags: `T1110`
 
+**Figure 205: TheHive Arguments**
+
 ![image](https://github.com/user-attachments/assets/aad4f583-69cf-4f6e-92d0-0a145e372534)
 
 Summary:
@@ -2459,10 +2415,17 @@ $exec.title were detected on Host: $exec.all_fields.predecoder.hostname from sou
 ```
 Severity: `2`
 
+**Figure 206: TheHive Arguments**
+
 ![image](https://github.com/user-attachments/assets/c23b92ac-a463-4dfa-b23c-62889bd42270)
 
+### Setup User Input for Approval
 
--   Set up User Input
+-   Add "User Input" app between VirusTotal and Wazuh
+-   Configure:
+    -   Email: Your email address
+    -   Question: "Would you like to block this source IP: \[source\_ip\]?"
+    -   Include source IP from execution arguments
 
 We first give the app a name, then pass the arguments.
 
@@ -2489,22 +2452,46 @@ Information: With the help of ChatGPT I got this template.
 
 <strong>Block source IP $exec.all_fields.data.srcip?</strong>
 ```
+**Figure 207: User Input Arguments**
 
 ![image](https://github.com/user-attachments/assets/a4f9ddd4-d3ec-442e-95a2-9375bd625722)
+
+**Figure 208: User Input Arguments**
 
 ![image](https://github.com/user-attachments/assets/8be04994-5452-40b4-94d8-045cc3a6bc92)
 
 
--   Set up Wazuh App
+### Add Wazuh App
+
+**Figure 209: User Wazuh App**
+
+![Screenshot 2025-06-16 115551](https://github.com/user-attachments/assets/d47f9962-94ab-4127-966e-5646120ca702)
+
+
+### Setup Wazuh Response Action
+
+-   Add "Wazuh" app to workflow
+-   Connect Get API → VirusTotal → User Input → Wazuh
+-   Configure Wazuh app:
+    -   API Key: Select "Get API" output
+    -   URL: `https://YOUR_WAZUH_IP:55000`
+    -   Action: "Run command"
+    -   Command: "firewall-drop0"
+    -   Agent list: Get from execution arguments (agent.id)
+    -   Alert: Paste entire alert JSON from execution arguments
 
 We first give the app a name, then pass the arguments.
 
 Find Actions: `Run Command`
-Apikey: you need to get this one from the Get API App
+API Key: You need to get this one from the Get API App
+
+**Figure 210: API**
 
 ![image](https://github.com/user-attachments/assets/b672c8cf-910d-483f-9880-5966bc43b9d5)
 
 Url: `https://<Wazuh Server IP>:55000`
+
+**Figure 211: URI**
 
 ![image](https://github.com/user-attachments/assets/53250be1-ed29-4999-95f4-98cea1c991dd)
 
@@ -2514,48 +2501,107 @@ Alert: make it dynamic
 {"data":{"srcip":"$exec.all_fields.data.srcip"}}
 ```
 
+**Figure 212: Command**
+
 ![image](https://github.com/user-attachments/assets/a1db85df-83be-415f-ab6f-dcf61b2a36b5)
 
 Agent list: `$exec.all_fields.agent.id`, make it dynamic
 
+**Figure 213: Agent List**
+
 ![image](https://github.com/user-attachments/assets/291ee4e8-e535-45a8-9299-bd9eaaade6b5)
 
-Now that we have all the node connected and the set up, it is time to run or rerun the flow to test is working.
+Now that we have all the nodes connected and the setup, it is time to run or rerun the flow to test if it is working.
 
-## **Testing the Workflow**
+### Test End-to-End Response
+
+-   Generate SSH brute force on Ubuntu machine
+-   Verify alert flows through Shuffle
+-   Receive email asking for approval
+-   Click "Yes" to approve
+-   Verify IP is blocked in iptables on Ubuntu machine
 
 Check the Ubuntu client IP table is empty `iptables --list`, if it doesn't use `iptables --flush`.
 
-![Screenshot 2025-06-17 132533](https://github.com/user-attachments/assets/f39cb48b-1543-4160-bef9-d5c6abd51844)
+**Figure 214: IP Tables**
 
+![Screenshot 2025-06-17 132533](https://github.com/user-attachments/assets/f39cb48b-1543-4160-bef9-d5c6abd51844)
 
 I will rerun on of the flows cotaining Rule ID 100003 or 100004, if you don't have any you need to generate it trying to SSH the Unbuntu client with a VPN to get a IP to block with a non-existen account or try to login with the root with the wrong password more than three times to generate the alert. 
 
+**Figure 215: Wazuh Dashboard**
+
 ![Screenshot 2025-06-17 132931](https://github.com/user-attachments/assets/76231f84-3b48-4531-8737-f827589ece10)
-_Wazuh dashboard_
+
+**Figure 216: Shuffle Alerts**
 
 ![Screenshot 2025-06-17 133028](https://github.com/user-attachments/assets/06652bb9-0ef2-445b-a96f-d24e411a8aa0)
-_Shuffle alerts, remember Shuffle getting alerts from level 5 and above_
+
+Shuffle alerts: Remember, Shuffle receives alerts from level 5 and above.
+
+**Figure 217: Rule ID 100003 on the list**
 
 ![Screenshot 2025-06-17 133047](https://github.com/user-attachments/assets/efe8e547-0b34-4df2-aaa4-bc0892e6ceb4)
-_Rule ID 100003 on the list_
 
 -   Check TheHive for alerts
 
+**Figure 218: TheHive Alert**
+
 ![Screenshot 2025-06-17 133215](https://github.com/user-attachments/assets/4d14a32a-0112-4743-a313-5393b250d264)
-_Alert for multiple attempts using non-existent accounts_
+
+**Figure 219: TheHive Arguments**
 
 ![Screenshot 2025-06-17 133248](https://github.com/user-attachments/assets/f89053bf-de34-4f38-805c-e1de67007558)
-_TheHive arguments have been passed successfully_
+
+**Figure 220: Email Alert**
 
 ![image](https://github.com/user-attachments/assets/05e2dca5-2a96-4dc6-9d7b-23eb5b0601bf)
-_Email alert received, arguments passed correctly_
+
+Email alert received, arguments passed correctly.
+
+**Figure 221: Response Link**
 
 ![Screenshot 2025-06-17 134002](https://github.com/user-attachments/assets/46cea115-da7b-4f8b-a176-64d7482fd424)
-_Copy and paste the response on a blank web tab to activate the response_
+
+Please copy and paste the response into a blank web tab to activate it.
+
+**Figure 222: IP Block**
 
 ![Screenshot 2025-06-17 133944](https://github.com/user-attachments/assets/77855fa7-bf5d-4bdd-99ec-a1b3a9f07d4f)
-_Ubuntu client IP tables dropping connection for the malicious IP_
+
+The Ubuntu client's IP tables are dropping the connection for the malicious IP.
+
+
+
+
+-----------------------------------------------------
+
+- Log in to the `mylab@test.com` account
+
+![Screenshot 2025-06-15 211936](https://github.com/user-attachments/assets/dccb6c3f-cbcd-4861-9e53-dab51f004caa)<br>
+_`mylab@test.com` account_
+
+------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## **Testing the Workflow**
+
 
 
 ## **Expanding the Project**
