@@ -3696,6 +3696,9 @@ This concludes the expanded SOC automation project. You now have a comprehensive
 
 This expanded project demonstrates advanced SOAR capabilities while maintaining security best practices and providing a realistic simulation of enterprise security operations.
 
+## Final Shuffle Workflow
+
+![image](https://github.com/user-attachments/assets/cf14f006-b066-430a-a49f-f20f576674d5)
 
 
 
