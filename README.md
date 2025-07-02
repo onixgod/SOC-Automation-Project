@@ -2035,7 +2035,7 @@ You should follow similar instructions to the Windows agent, but this time you c
 
 **Figure 169: Ubuntu Agent**
 
-![Screenshot 2025-06-16 105827](https://github.com/user-attachments/assets/7b80f617-2b3e-445d-8076-7bb01b23f99e)
+![Screenshot 2025-06-16 105827](https://github.com/user-attachments/assets/7b80f617-2b3e-445d-8076-7bb01b23f99e)<br>
 
 Copy the generated install command to install the Wazuh agent on the Ubuntu client.
 
@@ -2107,7 +2107,7 @@ Open DigitalOcean firewall port `55000` for inbound traffic.
 
 **Figure 180: Port 55000 Accepting Traffic**
 
-![image](https://github.com/user-attachments/assets/bab20adb-1b80-4345-b3d1-0511d51326ce)
+![image](https://github.com/user-attachments/assets/bab20adb-1b80-4345-b3d1-0511d51326ce)<br>
 _Port 55000 accepting all incoming traffic_
 
 ### Add API Authentication to Shuffle
@@ -2117,7 +2117,7 @@ _Port 55000 accepting all incoming traffic_
 
 **Figure 181: Drag HTTP App**
 
-![Screenshot 2025-06-16 114607](https://github.com/user-attachments/assets/8bb203f5-2466-454e-8262-87d5fab67011)
+![Screenshot 2025-06-16 114607](https://github.com/user-attachments/assets/8bb203f5-2466-454e-8262-87d5fab67011)<br>
 
 -   Action: "Curl"
 -   Configure curl command:
@@ -2128,7 +2128,7 @@ curl -u wazuh-wui:WAZUH_API_PASSWORD -k -X GET "https://WAZUH_IP:55000/security/
 
 **Figure 182: HTTP Request to Get Wazuh Token**
 
-![Screenshot 2025-06-16 115247](https://github.com/user-attachments/assets/e4bab1af-dd42-49fe-972f-c5b4b78673c4)
+![Screenshot 2025-06-16 115247](https://github.com/user-attachments/assets/e4bab1af-dd42-49fe-972f-c5b4b78673c4)<br>
 
 ## Configure Active Response in Wazuh
 
@@ -2140,7 +2140,7 @@ nano /var/ossec/etc/ossec.conf
 
 **Figure 183: Command**
 
-![image](https://github.com/user-attachments/assets/5c3981b2-8b1e-42e5-b103-ad2a93d726eb)
+![image](https://github.com/user-attachments/assets/5c3981b2-8b1e-42e5-b103-ad2a93d726eb)<br>
 
 -   Scroll to the bottom, find the active response section
 -   Add after existing commands:
@@ -2158,17 +2158,17 @@ xml
 
 **Figure 184: Command**
 
-![image](https://github.com/user-attachments/assets/d2ef9e78-7612-4eb7-a274-08c6562f7d72)
+![image](https://github.com/user-attachments/assets/d2ef9e78-7612-4eb7-a274-08c6562f7d72)<br>
 
 **Figure 185: Active Response**
 
-![image](https://github.com/user-attachments/assets/d288fc7f-0585-49e5-8fe1-90594e378e63)
+![image](https://github.com/user-attachments/assets/d288fc7f-0585-49e5-8fe1-90594e378e63)<br>
 
 Change Webhook to accept alerts by Level and not by Rule ID. We will set the level to 5, so all rules five and above will be passed to Shuffle.
 
 **Figure 186: Changing Shuffle Integration**
 
-![image](https://github.com/user-attachments/assets/45586ed9-df9b-4de4-b234-ba7314e61ef4)
+![image](https://github.com/user-attachments/assets/45586ed9-df9b-4de4-b234-ba7314e61ef4)<br>
 
 ### Test Active Response Manually 
 
@@ -2182,13 +2182,13 @@ We are interested in the `agent_control`, let's run it and see what available op
 
 **Figure 187: Agent Control**
 
-![Screenshot 2025-06-16 131502](https://github.com/user-attachments/assets/7cc0ef34-f363-43b1-a6e9-b4e167948ea6)
+![Screenshot 2025-06-16 131502](https://github.com/user-attachments/assets/7cc0ef34-f363-43b1-a6e9-b4e167948ea6)<br>
 
 Use `-L` to list what available responses are activated. 
 
 **Figure 188: firewall-drop**
 
-![image](https://github.com/user-attachments/assets/7294ef06-d1a7-4e09-9498-f12eb749c223)
+![image](https://github.com/user-attachments/assets/7294ef06-d1a7-4e09-9498-f12eb749c223)<br>
 
 We can confirm `firewall-drop0` is activated. The `0` is the TimeOut and is appended to the command.
 
@@ -2201,7 +2201,7 @@ Let's test by blocking a known public IP `8.8.8.8` on our Ubuntu client.
 
 **Figure 189: Ping**
 
-![Screenshot 2025-06-16 132537](https://github.com/user-attachments/assets/b523a861-78d2-4b13-aa53-5c13f1bc2273)
+![Screenshot 2025-06-16 132537](https://github.com/user-attachments/assets/b523a861-78d2-4b13-aa53-5c13f1bc2273)<br>
 
 Now run the `./agent_control` command on the Wazuh server to block IP `8.8.8.8` on the Ubuntu client.
 
@@ -2220,19 +2220,19 @@ iptables -L   # Should show drop rule
 
 **Figure 189: Client ID**
 
-![image](https://github.com/user-attachments/assets/f7366735-3db4-4044-80d5-fbe00cfa8beb)
+![image](https://github.com/user-attachments/assets/f7366735-3db4-4044-80d5-fbe00cfa8beb)<br>
 
 **Figure 189: Command Running**
 
-![image](https://github.com/user-attachments/assets/338a23b5-2ada-4a11-bca9-2630a9be2206)
+![image](https://github.com/user-attachments/assets/338a23b5-2ada-4a11-bca9-2630a9be2206)<br>
 
 Verify that the IP address was successfully blocked. On the Ubuntu client, `iptables -- list`.
 
 **Figure 190: IPTables - IP 8.8.8.8 Blocked**
 
-![image](https://github.com/user-attachments/assets/3ae116af-9e52-4435-bdc5-84919b9837cb)
+![image](https://github.com/user-attachments/assets/3ae116af-9e52-4435-bdc5-84919b9837cb)<br>
 
-Take a look at the Active Response logs to see if the active response was successful.
+Review the Active Response logs to determine if the active response was successful.
 
 ```bash
 cd /var/ossec/logs/
@@ -2247,7 +2247,7 @@ cat active-responses. log
 
 **Figure 191: Active Response Logs**
 
-![Screenshot 2025-06-16 133440](https://github.com/user-attachments/assets/67c75b3b-f39a-4ffb-b868-f1ec1c249070)
+![Screenshot 2025-06-16 133440](https://github.com/user-attachments/assets/67c75b3b-f39a-4ffb-b868-f1ec1c249070)<br>
 
 ## Project Modifications
 
@@ -2255,7 +2255,7 @@ Before we proceed with the project proposed by @MyDFIR, I decided to take it a s
 
 **Figure 192: Modified Project Workflow**
 
-![Screenshot 2025-06-17 131746](https://github.com/user-attachments/assets/5d7ce409-4328-44b0-b3b0-82193311367a)
+![Screenshot 2025-06-17 131746](https://github.com/user-attachments/assets/5d7ce409-4328-44b0-b3b0-82193311367a)<br>
 
 Now that we have identified the parameters to be passed to the Wazuh App, let's add a VirusTotal App to enrich the data collected and determine whether the source IP of the attack is blacklisted on the portal.
 
@@ -2263,19 +2263,19 @@ Now that we have identified the parameters to be passed to the Wazuh App, let's 
 
 **Figure 192: VirusTotal App**
 
-![image](https://github.com/user-attachments/assets/2fb80e57-81b0-4a1d-96aa-a9d71db86b6b)
+![image](https://github.com/user-attachments/assets/2fb80e57-81b0-4a1d-96aa-a9d71db86b6b)<br>
 
 ### Add TheHive App for Notifications
 
 **Figure 193: TheHive App**
 
-![image](https://github.com/user-attachments/assets/516f3295-f705-41c2-9be9-a2e3c209046d)
+![image](https://github.com/user-attachments/assets/516f3295-f705-41c2-9be9-a2e3c209046d)<br>
 
 ### Add User Input App for Manual Responses
 
 **Figure 193: User Input App**
 
-![image](https://github.com/user-attachments/assets/f2b645d9-8711-4ed1-9c2c-dcbcc4781d45)
+![image](https://github.com/user-attachments/assets/f2b645d9-8711-4ed1-9c2c-dcbcc4781d45)<br>
 
 ### Add Wazuh Tools
 
@@ -2283,25 +2283,25 @@ Add a Shuffle Tool App; we will use this to access branches for specific conditi
 
 **Figure 194: Wazuh Tools**
 
-![image](https://github.com/user-attachments/assets/dd54e239-1947-412f-8dee-eed5eb62fd1f)
+![image](https://github.com/user-attachments/assets/dd54e239-1947-412f-8dee-eed5eb62fd1f)<br>
 
 ### Add Wazuh App
 
 **Figure 195: Wazuh App**
 
-![Screenshot 2025-06-16 115551](https://github.com/user-attachments/assets/d47f9962-94ab-4127-966e-5646120ca702)
+![Screenshot 2025-06-16 115551](https://github.com/user-attachments/assets/d47f9962-94ab-4127-966e-5646120ca702)<br>
 
 ### Connect All Apps
 
 **Figure 196: Wazuh App**
 
-![Screenshot 2025-06-17 131746](https://github.com/user-attachments/assets/6e4b087f-514b-43a3-a191-af77e47f5bda)
+![Screenshot 2025-06-17 131746](https://github.com/user-attachments/assets/6e4b087f-514b-43a3-a191-af77e47f5bda)<br>
 
 ### Wazuh Custom Rules.
 
 We create two rules: one to capture non-existent account attempts (ID 100003, targeting 5710 events) and the other for existing accounts (ID 100004, targeting 5760 events). We do this to reduce the number of API calls.
 
-The rule will only be triggered if the attempt fails three times within 60 seconds. You can use the XML below and make any necessary changes as needed.
+The rule will only be triggered if the attempt fails three times within a 60-second period. You can use the XML below and make any necessary changes as needed.
 
 ```xml
   <rule id="100003" level="5" frequency="3" timeframe="60">
@@ -2325,7 +2325,7 @@ The rule will only be triggered if the attempt fails three times within 60 secon
 
 **Figure 197: Wazuh Custom Rule**
 
-![image](https://github.com/user-attachments/assets/4e836125-b661-4a00-876a-923cd0e2d98e)
+![image](https://github.com/user-attachments/assets/4e836125-b661-4a00-876a-923cd0e2d98e)<br>
 
 ## Conditions 
 
@@ -2333,19 +2333,19 @@ The rule will only be triggered if the attempt fails three times within 60 secon
 
 **Figure 198: Conditions**
 
-![image](https://github.com/user-attachments/assets/5feea2ad-8a7a-4933-8b42-1078aa5b17c1)
+![image](https://github.com/user-attachments/assets/5feea2ad-8a7a-4933-8b42-1078aa5b17c1)<br>
 
 ### Branch Condition Rule 100003
 
 **Figure 199: Condition 100003**
 
-![image](https://github.com/user-attachments/assets/ddf76564-aae3-4790-94ee-547246fd6518)
+![image](https://github.com/user-attachments/assets/ddf76564-aae3-4790-94ee-547246fd6518)<br>
 
 We need to let Rule ID `100003` pass through.
 
 **Figure 200: Condition 100003**
 
-![image](https://github.com/user-attachments/assets/802071ad-23d4-4d86-8004-bda01ca91cb2)
+![image](https://github.com/user-attachments/assets/802071ad-23d4-4d86-8004-bda01ca91cb2)<br>
 
 ### Python App Setup
 
@@ -2353,19 +2353,19 @@ I will use this App as a bridge to allow me to get an extra branch for the other
 
 **Figure 201: Phyton App**
 
-![image](https://github.com/user-attachments/assets/83669112-fea9-4186-ac83-6efecd129ff7)
+![image](https://github.com/user-attachments/assets/83669112-fea9-4186-ac83-6efecd129ff7)<br>
 
 ### Branch Condition Rule 100004
 
 **Figure 202: Condition 100004**
 
-![image](https://github.com/user-attachments/assets/70f6b187-31a9-4a04-bd9d-deccb53d0b04)
+![image](https://github.com/user-attachments/assets/70f6b187-31a9-4a04-bd9d-deccb53d0b04)<br>
 
 We need to let Rule ID `100004` pass through.
 
 **Figure 203: Condition 100004**
 
-![image](https://github.com/user-attachments/assets/27d8c4f6-096a-4186-a755-721509c41a38)
+![image](https://github.com/user-attachments/assets/27d8c4f6-096a-4186-a755-721509c41a38)<br>
 
 
 ### Setup VirusTotal App
@@ -2377,7 +2377,7 @@ IP: `$exec.all_fields.data.srcip`, this is the source IP we want to block.
 
 **Figure 204: VT App**
 
-![image](https://github.com/user-attachments/assets/20503af2-ec9f-434e-a96f-a53953a10cc9)
+![image](https://github.com/user-attachments/assets/20503af2-ec9f-434e-a96f-a53953a10cc9)<br>
 
 ### Setup TheHive App
 
@@ -2407,17 +2407,17 @@ Tags: `T1110`
 
 **Figure 205: TheHive Arguments**
 
-![image](https://github.com/user-attachments/assets/aad4f583-69cf-4f6e-92d0-0a145e372534)
+![image](https://github.com/user-attachments/assets/aad4f583-69cf-4f6e-92d0-0a145e372534)<br>
 
 Summary:
 ```bash
-$exec.title were detected on Host: $exec.all_fields.predecoder.hostname from source IP: $exec.all_fields.data.srcip on $utc_time.message, the IP was idetified coming from $virustotal_ip_block.body.data.attributes.country with $virustotal_ip_block.body.data.attributes.last_analysis_stats.malicious highlighting as malicius. Check emails to block the IP if needed.
+$exec.title were detected on Host: $exec.all_fields.predecoder.hostname from source IP: $exec.all_fields.data.srcip on $utc_time.message, the IP was idetified coming from $virustotal_ip_block.body.data.attributes.country with $virustotal_ip_block.body.data.attributes.last_analysis_stats.malicious highlighting as malicious. Check emails to block the IP if needed.
 ```
 Severity: `2`
 
 **Figure 206: TheHive Arguments**
 
-![image](https://github.com/user-attachments/assets/c23b92ac-a463-4dfa-b23c-62889bd42270)
+![image](https://github.com/user-attachments/assets/c23b92ac-a463-4dfa-b23c-62889bd42270)<br>
 
 ### Setup User Input for Approval
 
@@ -2429,9 +2429,9 @@ Severity: `2`
 
 We first give the app a name, then pass the arguments.
 
-Email: `disposable email`, Email delivery to analyst
+Email: `disposable email`, Email delivery to the analyst
 Input options: `Email`
-Information: With the help of ChatGPT I got this template.
+Information: With the help of ChatGPT, I got this template.
 ```markdown
 <h3>🚨 Suspicious IP Activity Detected</h3>
 
@@ -2454,18 +2454,18 @@ Information: With the help of ChatGPT I got this template.
 ```
 **Figure 207: User Input Arguments**
 
-![image](https://github.com/user-attachments/assets/a4f9ddd4-d3ec-442e-95a2-9375bd625722)
+![image](https://github.com/user-attachments/assets/a4f9ddd4-d3ec-442e-95a2-9375bd625722)<br>
 
 **Figure 208: User Input Arguments**
 
-![image](https://github.com/user-attachments/assets/8be04994-5452-40b4-94d8-045cc3a6bc92)
+![image](https://github.com/user-attachments/assets/8be04994-5452-40b4-94d8-045cc3a6bc92)<br>
 
 
 ### Add Wazuh App
 
 **Figure 209: User Wazuh App**
 
-![Screenshot 2025-06-16 115551](https://github.com/user-attachments/assets/d47f9962-94ab-4127-966e-5646120ca702)
+![Screenshot 2025-06-16 115551](https://github.com/user-attachments/assets/d47f9962-94ab-4127-966e-5646120ca702)<br>
 
 
 ### Setup Wazuh Response Action
@@ -2478,7 +2478,7 @@ Information: With the help of ChatGPT I got this template.
     -   Action: "Run command"
     -   Command: "firewall-drop0"
     -   Agent list: Get from execution arguments (agent.id)
-    -   Alert: Paste entire alert JSON from execution arguments
+    -   Alert: Paste the entire alert JSON from execution arguments
 
 We first give the app a name, then pass the arguments.
 
@@ -2487,13 +2487,13 @@ API Key: You need to get this one from the Get API App
 
 **Figure 210: API**
 
-![image](https://github.com/user-attachments/assets/b672c8cf-910d-483f-9880-5966bc43b9d5)
+![image](https://github.com/user-attachments/assets/b672c8cf-910d-483f-9880-5966bc43b9d5)<br>
 
 Url: `https://<Wazuh Server IP>:55000`
 
 **Figure 211: URI**
 
-![image](https://github.com/user-attachments/assets/53250be1-ed29-4999-95f4-98cea1c991dd)
+![image](https://github.com/user-attachments/assets/53250be1-ed29-4999-95f4-98cea1c991dd)<br>
 
 Command: `firewall-drop0`, the Active Response command
 Alert: make it dynamic
@@ -2503,7 +2503,7 @@ Alert: make it dynamic
 
 **Figure 212: Command**
 
-![image](https://github.com/user-attachments/assets/a1db85df-83be-415f-ab6f-dcf61b2a36b5)
+![image](https://github.com/user-attachments/assets/a1db85df-83be-415f-ab6f-dcf61b2a36b5)<br>
 
 Agent list: `$exec.all_fields.agent.id`, make it dynamic
 
@@ -2511,13 +2511,13 @@ Agent list: `$exec.all_fields.agent.id`, make it dynamic
 
 ![image](https://github.com/user-attachments/assets/291ee4e8-e535-45a8-9299-bd9eaaade6b5)
 
-Now that we have all the nodes connected and the setup, it is time to run or rerun the flow to test if it is working.
+Now that we have all the nodes connected and the setup complete, it's time to run or rerun the flow to test if it's working.
 
 ### Test End-to-End Response
 
--   Generate SSH brute force on Ubuntu machine
+-   Generate SSH brute force on the Ubuntu machine
 -   Verify alert flows through Shuffle
--   Receive email asking for approval
+-   Receive an email asking for approval
 -   Click "Yes" to approve
 -   Verify IP is blocked in iptables on Ubuntu machine
 
@@ -2525,51 +2525,63 @@ Check the Ubuntu client IP table is empty `iptables --list`, if it doesn't use `
 
 **Figure 214: IP Tables**
 
-![Screenshot 2025-06-17 132533](https://github.com/user-attachments/assets/f39cb48b-1543-4160-bef9-d5c6abd51844)
+![Screenshot 2025-06-17 132533](https://github.com/user-attachments/assets/f39cb48b-1543-4160-bef9-d5c6abd51844)<br>
 
 I will rerun on of the flows cotaining Rule ID 100003 or 100004, if you don't have any you need to generate it trying to SSH the Unbuntu client with a VPN to get a IP to block with a non-existen account or try to login with the root with the wrong password more than three times to generate the alert. 
 
 **Figure 215: Wazuh Dashboard**
 
-![Screenshot 2025-06-17 132931](https://github.com/user-attachments/assets/76231f84-3b48-4531-8737-f827589ece10)
+![Screenshot 2025-06-17 132931](https://github.com/user-attachments/assets/76231f84-3b48-4531-8737-f827589ece10)<br>
 
 **Figure 216: Shuffle Alerts**
 
-![Screenshot 2025-06-17 133028](https://github.com/user-attachments/assets/06652bb9-0ef2-445b-a96f-d24e411a8aa0)
+![Screenshot 2025-06-17 133028](https://github.com/user-attachments/assets/06652bb9-0ef2-445b-a96f-d24e411a8aa0)<br>
 
 Shuffle alerts: Remember, Shuffle receives alerts from level 5 and above.
 
 **Figure 217: Rule ID 100003 on the list**
 
-![Screenshot 2025-06-17 133047](https://github.com/user-attachments/assets/efe8e547-0b34-4df2-aaa4-bc0892e6ceb4)
+![Screenshot 2025-06-17 133047](https://github.com/user-attachments/assets/efe8e547-0b34-4df2-aaa4-bc0892e6ceb4)<br>
 
 -   Check TheHive for alerts
 
 **Figure 218: TheHive Alert**
 
-![Screenshot 2025-06-17 133215](https://github.com/user-attachments/assets/4d14a32a-0112-4743-a313-5393b250d264)
+![Screenshot 2025-06-17 133215](https://github.com/user-attachments/assets/4d14a32a-0112-4743-a313-5393b250d264)<br>
 
 **Figure 219: TheHive Arguments**
 
-![Screenshot 2025-06-17 133248](https://github.com/user-attachments/assets/f89053bf-de34-4f38-805c-e1de67007558)
+![Screenshot 2025-06-17 133248](https://github.com/user-attachments/assets/f89053bf-de34-4f38-805c-e1de67007558)<br>
 
 **Figure 220: Email Alert**
 
-![image](https://github.com/user-attachments/assets/05e2dca5-2a96-4dc6-9d7b-23eb5b0601bf)
+![image](https://github.com/user-attachments/assets/05e2dca5-2a96-4dc6-9d7b-23eb5b0601bf)<br>
 
 Email alert received, arguments passed correctly.
 
 **Figure 221: Response Link**
 
-![Screenshot 2025-06-17 134002](https://github.com/user-attachments/assets/46cea115-da7b-4f8b-a176-64d7482fd424)
+![Screenshot 2025-06-17 134002](https://github.com/user-attachments/assets/46cea115-da7b-4f8b-a176-64d7482fd424)<br>
 
 Please copy and paste the response into a blank web tab to activate it.
 
 **Figure 222: IP Block**
 
-![Screenshot 2025-06-17 133944](https://github.com/user-attachments/assets/77855fa7-bf5d-4bdd-99ec-a1b3a9f07d4f)
+![Screenshot 2025-06-17 133944](https://github.com/user-attachments/assets/77855fa7-bf5d-4bdd-99ec-a1b3a9f07d4f)<br>
 
 The Ubuntu client's IP tables are dropping the connection for the malicious IP.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2587,43 +2599,59 @@ _`mylab@test.com` account_
 
 
 
+# SOC Automation Lab Project - Expanded Advanced Guide
+
+## Project Overview
+
+This comprehensive guide builds upon the basic SOC automation lab by adding two advanced automated response workflows:
+
+1.  **Mimikatz Detection with Automatic File Deletion**
+2.  **External SSH Login Detection with IP Blocking & Account Disabling**
+
+The final workflow creates a production-ready automated response system that demonstrates advanced SOAR capabilities.
 
 
+**Figure 223: Final Workflow Architecture**
 
+![image](https://github.com/user-attachments/assets/de239cbf-19e0-456f-b243-08688c58c2f5)<br>
 
+## Prerequisites
 
+Before starting this expansion, ensure you have completed:
 
+-   Basic SOC automation lab setup (Parts 1-5)
+-   Wazuh, The Hive, and Shuffle properly configured
+-   Mimikatz detection rule (100002) working
+-   Basic webhook integration functional
 
+## Part 1: Mimikatz Detection and Automatic File Deletion
 
+This workflow automatically deletes the Mimikatz binary when detected, providing immediate threat containment.
 
+### Step 1: Add Required Apps to Shuffle
 
+**Figure 224: Adding Apps to delete Mimikatz when detected**
 
+![image](https://github.com/user-attachments/assets/f742779c-7c2b-4623-b88e-00730bc24654)<br>
 
+Navigate to your Shuffle workflow and add the following apps:
 
-## **Testing the Workflow**
+-   Python App
+-   User Input App
+-   Wazuh App
+-   Email App
 
+### Step 2: Configure Python App for Date Formatting
 
+The Python App converts VirusTotal's Unix timestamp into a human-readable format for email notifications.
 
-## **Expanding the Project**
+**Configuration:**
 
-Let's take this project a step further by adding a flow to block IPs originating outside the office IP range and disabling the user account. Also, for the Mimikatz flow, please delete the binary when found and send an email notification when the response is executed.
+-   **Name**: `date_format`
+-   **Find Actions**: `Execute Python`
+-   **Input**: Use the Last Analysis Date from VirusTotal App
+**Code (generated using ChatGPT):**
 
-![image](https://github.com/user-attachments/assets/de239cbf-19e0-456f-b243-08688c58c2f5)
-_Final workflow_
-
-Let's address the flow for deleting when Mimikatz is detected first. Drag all the Apps needed to complete this task.
-
-![image](https://github.com/user-attachments/assets/f742779c-7c2b-4623-b88e-00730bc24654)
-_Adding Apps to deleted Mimikatz when detected_
-
--   Adding Python App
-
-The Python App will be used to convert the VirusTotal timespan and give a friendly format.
-
-We first give the app a name, then pass the arguments.
-
-Find Actions: `Execute Python`, we used the Last Analysis Date generated by the VirusTotal App for our alert.
-Code: Using ChatGPT, we can quickly crack a script to achieve this.
 ```python
 from datetime import datetime, timezone
 
@@ -2637,16 +2665,18 @@ dt_utc = datetime.fromtimestamp(ts, tz=timezone.utc)
 print(dt_utc.strftime("%Y-%m-%d %H:%M:%S UTC"))
 ```
 
-![image](https://github.com/user-attachments/assets/157ee359-b167-44b2-a2e9-76cd42f2a226)
-_Python App setup_
+**Figure 225: Python App setup**
 
--   User Input App
+![image](https://github.com/user-attachments/assets/157ee359-b167-44b2-a2e9-76cd42f2a226)<br>
 
-We first give the app a name, then pass the arguments.
+### Step 3: Configure User Input App for Analyst Approval
 
-Input options: `Email`
-Email: `disposable email`, Email delivery to the analyst.
-Information:
+**Configuration:**
+
+-   **Name**: `mimikatz_delete_approval`
+-   **Input Options**: `Email`
+-   **Email**: Use your disposable email address
+Information (Rich HTML Email):
 ```markdown
 <h3>🚨 Mimikatz Activity Detected</h3>
 
@@ -2668,163 +2698,23 @@ Mimikatz detected on host: <strong>$exec.text.win.system.computer</strong> with 
 <strong>Would you like to delete the binary?</strong>
 ```
 
-![image](https://github.com/user-attachments/assets/b39c7dd8-42a4-436d-bb9d-a69d81c3a87c)
+**Figure 226: User Input**
 
-![image](https://github.com/user-attachments/assets/87b8867f-754c-4b8d-85c6-dc6043bb77e1)
+![image](https://github.com/user-attachments/assets/b39c7dd8-42a4-436d-bb9d-a69d81c3a87c)<br>
 
-Before setting up the Wazuh App, we need to find out what Active Response we need to use to remove the malicious file `Mimikatz`, I found the following Proof of Concept on Wazuh documentation ([Detecting and removing malware using VirusTotal integration](https://documentation.wazuh.com/current/proof-of-concept-guide/detect-remove-malware-virustotal.html#detecting-and-removing-malware-using-virustotal-integration)).
+**Figure 227: User Input setup**
 
-The proof of concept leverages the VirusTotal integration. With some rules integrated on Wazuh XML rules and using a Python script, they manage to delete the file on a Linux system, then translate the script into a binary (EXE) to be used on a Windows machine they aslo manage to delete the file on the Windows machine; the only issue that this method work using the VirusTotal integration. After several days trailing and failing I cracked it.
+![image](https://github.com/user-attachments/assets/87b8867f-754c-4b8d-85c6-dc6043bb77e1)<br>
 
-The following is the Python script used for the VirusTotal Integration `remove-threat.sh` to remove the file on the Windows client.
+### Step 4: Create Custom Active Response Script
 
-```python
-#!/usr/bin/python3
-# Copyright (C) 2015-2022, Wazuh Inc.
-# All rights reserved.
+The critical component that enables automatic file deletion. This script addresses the challenge of working with Shuffle webhooks instead of native VirusTotal integration.
 
-import os
-import sys
-import json
-import datetime
+#### Understanding the Challenge
 
-if os.name == 'nt':
-    LOG_FILE = "C:\\Program Files (x86)\\ossec-agent\\active-response\\active-responses.log"
-else:
-    LOG_FILE = "/var/ossec/logs/active-responses.log"
+The original Wazuh documentation uses a script designed for [VirusTotal integration]([https://documentation.wazuh.com/current/proof-of-concept-guide/detect-remove-malware-virustotal.html#detecting-and-removing-malware-using-virustotal-integration](https://documentation.wazuh.com/current/proof-of-concept-guide/detect-remove-malware-virustotal.html#configuration-for-the-windows-endpoint)) with this JSON structure:
 
-ADD_COMMAND = 0
-DELETE_COMMAND = 1
-CONTINUE_COMMAND = 2
-ABORT_COMMAND = 3
-
-OS_SUCCESS = 0
-OS_INVALID = -1
-
-class message:
-    def __init__(self):
-        self.alert = ""
-        self.command = 0
-
-def write_debug_file(ar_name, msg):
-    with open(LOG_FILE, mode="a") as log_file:
-        log_file.write(str(datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')) + " " + ar_name + ": " + msg +"\n")
-
-def setup_and_check_message(argv):
-
-    # get alert from stdin
-    input_str = ""
-    for line in sys.stdin:
-        input_str = line
-        break
-
-
-    try:
-        data = json.loads(input_str)
-    except ValueError:
-        write_debug_file(argv[0], 'Decoding JSON has failed, invalid input format')
-        message.command = OS_INVALID
-        return message
-
-    message.alert = data
-
-    command = data.get("command")
-
-    if command == "add":
-        message.command = ADD_COMMAND
-    elif command == "delete":
-        message.command = DELETE_COMMAND
-    else:
-        message.command = OS_INVALID
-        write_debug_file(argv[0], 'Not valid command: ' + command)
-
-    return message
-
-
-def send_keys_and_check_message(argv, keys):
-
-    # build and send message with keys
-    keys_msg = json.dumps({"version": 1,"origin":{"name": argv[0],"module":"active-response"},"command":"check_keys","parameters":{"keys":keys}})
-
-    write_debug_file(argv[0], keys_msg)
-
-    print(keys_msg)
-    sys.stdout.flush()
-
-    # read the response of previous message
-    input_str = ""
-    while True:
-        line = sys.stdin.readline()
-        if line:
-            input_str = line
-            break
-
-    # write_debug_file(argv[0], input_str)
-
-    try:
-        data = json.loads(input_str)
-    except ValueError:
-        write_debug_file(argv[0], 'Decoding JSON has failed, invalid input format')
-        return message
-
-    action = data.get("command")
-
-    if "continue" == action:
-        ret = CONTINUE_COMMAND
-    elif "abort" == action:
-        ret = ABORT_COMMAND
-    else:
-        ret = OS_INVALID
-        write_debug_file(argv[0], "Invalid value of 'command'")
-
-    return ret
-
-def main(argv):
-
-    write_debug_file(argv[0], "Started")
-
-    # validate json and get command
-    msg = setup_and_check_message(argv)
-
-    if msg.command < 0:
-        sys.exit(OS_INVALID)
-
-    if msg.command == ADD_COMMAND:
-        alert = msg.alert["parameters"]["alert"]
-        keys = [alert["rule"]["id"]]
-        action = send_keys_and_check_message(argv, keys)
-
-        # if necessary, abort execution
-        if action != CONTINUE_COMMAND:
-
-            if action == ABORT_COMMAND:
-                write_debug_file(argv[0], "Aborted")
-                sys.exit(OS_SUCCESS)
-            else:
-                write_debug_file(argv[0], "Invalid command")
-                sys.exit(OS_INVALID)
-
-        try:
-            file_path = msg.alert["parameters"]["alert"]["data"]["virustotal"]["source"]["file"]
-            if os.path.exists(file_path):
-                os.remove(file_path)
-            write_debug_file(argv[0], json.dumps(msg.alert) + " Successfully removed threat")
-        except OSError as error:
-            write_debug_file(argv[0], json.dumps(msg.alert) + "Error removing threat")
-
-
-    else:
-        write_debug_file(argv[0], "Invalid command")
-
-    write_debug_file(argv[0], "Ended")
-
-    sys.exit(OS_SUCCESS)
-
-if __name__ == "__main__":
-    main(sys.argv)
-```
-
-The script requires the information (payload) to be passed in the following JSON format.
+json
 
 ```json
 payload = {
@@ -2843,26 +2733,9 @@ payload = {
 }
 ```
 
-This makes sense, as the information passed in the proof of concept comes from the VirusTotal App. However, in our case, the information comes from the Webhook, so we need to modify the script to suit our JSON structure.
+However, our Shuffle webhook provides data in this format:
 
-## **Windows Active Response Script**
-
-Knowing the JSON structure from the Webhook, and after some modifications to the original script, we have the following.
-
-
-We need to replace these arguments from the JSON above.
-
-```json
-"data": {
-    "virustotal": {
-        "source": {
-            "file": file_path
-        }
-    }
-}
-```
-
-New JSON structure, designed to use Webhook data.
+json
 
 ```json
 payload = {
@@ -2881,13 +2754,9 @@ payload = {
 }
 ```
 
-Also, we need to make sure the script is able to remove the file, even if the application is running; for that, we need to check if the process is running and then kill the process, then remove the file afterwards. We require Python's psutil module to find and kill the process. You must ensure psutil is installed on the agent, so let's install the modue on our Windows client.
+#### Modified Active Response Script
 
-```powershell
-pip install psutil
-```
-
-Modifying the line `file_path = alert["data"]["win"]["eventdata"]["image"]`, the final script is as follows.
+Create `remove-threat-shuffle.py` with the following code:
 
 ```python
 #!/usr/bin/python3
@@ -3040,95 +2909,138 @@ if __name__ == "__main__":
     main(sys.argv)
 ```
 
-This script does
+**Key Features of This Script:**
 
--   Identifies and kills processes matching the exact file path.
--   Then deletes the file (if it exists).
--   Logs every step and failure point.
+-   **Process Termination**: Uses `psutil` to find and kill running processes
+-   **File Deletion**: Removes the malicious file from disk
+-   **Enhanced Logging**: Comprehensive audit trail
+-   **Error Handling**: Graceful failure with detailed logging
 
-## Configuration for the Windows endpoint (Steps copied from Wazuh Documentation)
+### Step 5: Configure Windows Endpoint
 
-### Windows endpoint
+#### 5.1 Enable File Integrity Monitoring (FIM)
 
-1.  Perform the following steps to configure Wazuh to monitor near real-time changes in the `/Downloads` directory. These steps also install the necessary packages and create the active response script to remove malicious files. Open the `ossec.conf` file on the Windows client.
+Edit the `ossec.conf` file on the Windows client:
 
-2.  Search for the `<syscheck>` block in the Wazuh agent `C:\Program Files (x86)\ossec-agent\ossec.conf` file. Make sure that `<disabled>` is set to `no`. This enables the Wazuh FIM module to monitor for directory changes.
+1.  Navigate to `C:\Program Files (x86)\ossec-agent\ossec.conf`
+2.  Find the `<syscheck>` block
+3.  Ensure `<disabled>` is set to `no`
+4.  Add directory monitoring:
 
-3.  Add an entry within the `<syscheck>` block to configure a directory to be monitored in near real-time. In this use case, you configure Wazuh to monitor the `C:\Users\<USER_NAME>\Downloads` directory. Replace the `<USER_NAME>` variable with the appropriate user name:
+```xml
+<directories realtime="yes">C:\\Users\\<USER_NAME>\\Downloads</directories>
+```
 
-    `<directories realtime="yes"\>C:\\Users\\<USER\_NAME>\\Downloads</directories>`
-    
-![Screenshot 2025-06-17 184452](https://github.com/user-attachments/assets/c65ee645-3e5e-4772-827c-69776052f00f)
+Replace `<USER_NAME>` with the actual username.
 
-![Screenshot 2025-06-17 184557](https://github.com/user-attachments/assets/7dfb0d0b-7ab6-4842-ad37-8b09c7c3093d)
+**Figure 228: Modifying ossec.conf**
 
-4.  Download the Python executable installer from the [official Python website](https://www.python.org/downloads/windows/).
-5.  Run the Python installer once downloaded. Make sure to check the following boxes:
-    -   `Install launcher for all users`
-    -   `Add Python 3.X to PATH` (This places the interpreter in the execution path)
+![Screenshot 2025-06-17 184452](https://github.com/user-attachments/assets/c65ee645-3e5e-4772-827c-69776052f00f)<br>
 
-![Screenshot 2025-06-17 184949](https://github.com/user-attachments/assets/837b2d79-b544-45fb-959c-1bb74dc90100)
+**Figure 229: Modifying ossec.conf**
 
-![Screenshot 2025-06-17 185005](https://github.com/user-attachments/assets/60aeafc0-39da-42e6-b472-04e0529b23a1)
+![Screenshot 2025-06-17 184557](https://github.com/user-attachments/assets/7dfb0d0b-7ab6-4842-ad37-8b09c7c3093d)<br>
+
+#### 5.2 Install Python and Dependencies
+
+**Download and Install Python:**
+
+1.  Download from [python.org](https://www.python.org/downloads/windows/)<br>
+2.  **Important**: Check these boxes during installation:
+    -   `Install launcher for all users`
+    -   `Add Python 3.X to PATH`
+
+**Figure 229: Python Installation Process**
+
+![Screenshot 2025-06-17 184949](https://github.com/user-attachments/assets/837b2d79-b544-45fb-959c-1bb74dc90100)<br>
+
+![Screenshot 2025-06-17 185005](https://github.com/user-attachments/assets/60aeafc0-39da-42e6-b472-04e0529b23a1)<br>
   
-![image](https://github.com/user-attachments/assets/be9056e3-bcd2-42c3-9eef-557a6376fe51)
+![image](https://github.com/user-attachments/assets/be9056e3-bcd2-42c3-9eef-557a6376fe51)<br>
 
-![Screenshot 2025-06-17 185142](https://github.com/user-attachments/assets/614b0954-e4e4-4187-b675-4213f219a39e)
+![Screenshot 2025-06-17 185142](https://github.com/user-attachments/assets/614b0954-e4e4-4187-b675-4213f219a39e)<br>
 
-![image](https://github.com/user-attachments/assets/4c6331b9-483d-41c4-94a3-c43f4c56ec10)
+![image](https://github.com/user-attachments/assets/4c6331b9-483d-41c4-94a3-c43f4c56ec10)<br>
 
-6.  Once Python completes the installation process, open an administrator PowerShell terminal and use `pip` to install PyInstaller:
+**Install Required Packages:**
 
-    ```powershell
-    pip install pyinstaller
-    ```
-    ![Screenshot 2025-06-17 185610](https://github.com/user-attachments/assets/ecedd883-df1c-423f-83f5-57a6a0fb2916)
+```powershell
+# Open PowerShell as Administrator
+pip install pyinstaller
+pip install psutil
+```
 
-    ```powershell
-    pyinstaller \-\-version
-    ```
-    ![Screenshot 2025-06-17 185700](https://github.com/user-attachments/assets/991592b3-2286-4f82-a11c-02d61a3967aa)
+**Figure 230: Pyinstaller & Psutil Installation**
 
-    You use Pyinstaller here to convert the active response Python script into an executable application that can run on a Windows endpoint.
+![Screenshot 2025-06-17 185610](https://github.com/user-attachments/assets/ecedd883-df1c-423f-83f5-57a6a0fb2916)
 
-7.  Create an active response script `remove-threat-shuffle.py` to remove a file from the Windows endpoint. Copy and paste from the modified script above:
+**Verify Installation:**
+
+```powershell
+pyinstaller-- version
+```
+
+**Figure 231: Pyinstaller Version**
+
+![Screenshot 2025-06-17 185700](https://github.com/user-attachments/assets/991592b3-2286-4f82-a11c-02d61a3967aa)
+
+#### 5.3 Create and Deploy Active Response Script
+
+**Create the Script:**
+
+1.  Create `remove-threat-shuffle.py` with the code from Step 4
+2.  Save it in an accessible location
+
+**Figure 232: Python Script**
 
 ![image](https://github.com/user-attachments/assets/e4bc3d74-08dc-42a3-ad68-f2f34dacdc4a)
 
-8.  Convert the active response Python script `remove-threat.py` to a Windows executable application. Run the following PowerShell command as an administrator to create the executable:
+**Convert to Executable:**
 
-    ```powershell
-    pyinstaller \-F \\path\_to\_remove-threat-shuffle.py
-    ```
-    
-    ![Screenshot 2025-06-17 190308](https://github.com/user-attachments/assets/7a2984a8-d0ff-4ed3-bbc5-b4c0ec960370)
+```powershell
+pyinstaller -F \path_to_remove-threat-shuffle.py
+```
 
-    Take note of the path where `pyinstaller` created `remove-threat-shuffle.exe`.
+**Figure 233: Python to Binary**
 
-    ![Screenshot 2025-06-17 190416](https://github.com/user-attachments/assets/e67fb15c-cf8a-48a9-aa79-dc2f2caf8d17)
+![Screenshot 2025-06-17 190308](https://github.com/user-attachments/assets/7a2984a8-d0ff-4ed3-bbc5-b4c0ec960370)
 
-    ![image](https://github.com/user-attachments/assets/97cd8dbf-6284-409b-9eb4-dd1013430ea6)
+**Note the Output Path:**
 
-10.  Move the executable file `remove-threat.exe` to the `C:\Program Files (x86)\ossec-agent\active-response\bin` directory.
+**Figure 234: Binary Location**
+
+![Screenshot 2025-06-17 190416](https://github.com/user-attachments/assets/e67fb15c-cf8a-48a9-aa79-dc2f2caf8d17)
+
+**Figure 235: Binary Folder**
+
+![image](https://github.com/user-attachments/assets/97cd8dbf-6284-409b-9eb4-dd1013430ea6)
+
+**Deploy the Executable:** Move `remove-threat-shuffle.exe` to:
+
+```
+C:\Program Files (x86)\ossec-agent\active-response\bin\
+```
+
+**Figure 236: Binary Moved**
 
 ![image](https://github.com/user-attachments/assets/67207f0b-cb57-4297-bd45-a15f7ea0dde3)
 
-11.  Restart the Wazuh agent to apply the changes. Run the following PowerShell command as an administrator:
+**Restart Wazuh Agent:**
 
-     ```powershell
-     Restart-Service \-Name wazuh
-     ```
-     
-     ![Screenshot 2025-06-17 210236](https://github.com/user-attachments/assets/e78dcbb4-5975-4226-9051-b2b8a8c7529f)
+```powershell
+Restart-Service -Name wazuh
+```
 
-   
-## Wazuh server
+**Figure 237: Service Restarted**
 
-Perform the following steps on the Wazuh server to configure the Active Response. These steps also enable and trigger the active response script whenever a suspicious file is detected.
+![Screenshot 2025-06-17 210236](https://github.com/user-attachments/assets/e78dcbb4-5975-4226-9051-b2b8a8c7529f)
 
-12.  Append the following blocks to the Wazuh server `/var/ossec/etc/ossec.conf` file. This enables Active Response and triggers the `remove-threat-shuffle.exe` executable when the VirusTotal query returns positive matches for threats:
+### Step 6: Configure Wazuh Server
 
-Paste within `<ossec_config>   </ossec_config>`.
+Edit `/var/ossec/etc/ossec.conf` on the Wazuh server and add within `<ossec_config></ossec_config>`:
+
+**Command Definition:**
+
 ```xml
 <command>
   <name>remove-threat-shuffle</name>
@@ -3137,7 +3049,11 @@ Paste within `<ossec_config>   </ossec_config>`.
 </command>
 ```
 
+**Figure 238: Command**
+
 ![image](https://github.com/user-attachments/assets/1519a604-6977-4ad0-a14b-f602a0b156d5)
+
+**Active Response Configuration:**
 
 ```xml
 <active-response>
@@ -3147,47 +3063,63 @@ Paste within `<ossec_config>   </ossec_config>`.
   <rules_id>100010</rules_id>
 </active-response>
 ```
+
+**Figure 239: Active Response**
+
 ![image](https://github.com/user-attachments/assets/98d5a733-566b-4e68-bec9-6d4eacc10e02)
 
-13.   Check that we still have the initial Rule ID 100002 on the Wazuh server `/var/ossec/etc/rules/local_rules.xml` file to alert about the Active Response results.
+**Verify Original Rule:** Check that Rule ID 100002 still exists in `/var/ossec/etc/rules/local_rules.xml`:
+
+**Figure 240: Rule 100002**
 
 ![image](https://github.com/user-attachments/assets/48ad0f1e-cdf8-4b35-999d-9dc2379d3885)
 
-14.  Restart the Wazuh manager to apply the configuration changes:
+**Restart Wazuh Manager:**
 
-     ```bash
-     sudo systemctl restart wazuh-manager
-     ```
+bash
 
+```bash
+sudo systemctl restart wazuh-manager
+```
 
-## Wazuh App to Delete File Set Up
+### Step 7: Configure Wazuh App in Shuffle
 
-We first give the app a name, then pass the arguments.
+**Configuration:**
 
-Apikey: `<Get_API>`, you need to get it from the Get API App
-Url: Url: `https://<Wazuh Server IP>:55000`
+-   **Name**: `delete_mimikatz_file`
+-   **API Key**: Select output from `Get_API` app
+-   **URL**: `https://<Wazuh Server IP>:55000`
+-   **Command**: `remove-threat-shuffle0`
+-   **Agent List**: `$exec.all_fields.agent.id`
+-   **Alert**:
+
+**Configuration:**
+
+-   **Name**: `delete_mimikatz_file`
+-   **API Key**: Select output from `Get_API` app
+-   **URL**: `https://<Wazuh Server IP>:55000`
+-   **Command**: `remove-threat-shuffle0`
+-   **Agent List**: `$exec.all_fields.agent.id`
+-   **Alert**:
+
+**Figure 241: Wazuh App**
 
 ![image](https://github.com/user-attachments/assets/709cb17c-836f-40c2-819f-94565ad2a517)
 
-Command: `remove-threat-shuffle0`, we call the binary we create.
-Agent list: `$exec.all_fields.agent.id`, we get the agent ID dynamically
-Alert: The script is expecting the Rule ID and the location of the file.
-
-```json
-{"rule":{"id":"$exec.all_fields.rule.id"},"data":{"win":{"eventdata":{"image":"$exec.text.win.eventdata.image"}}}}
-```
+**Figure 242: Wazuh App Setup**
 
 ![image](https://github.com/user-attachments/assets/7b3c5784-2e81-49a4-98b4-bebdea0d34d7)
 
+### Step 8: Configure Email Notification for File Deletion
 
--   Send email notification after removal
+**Configuration:**
 
-We first give the app a name, then pass the arguments.
+-   **Name**: `file_deletion_notification`
+-   **Find Actions**: `Send email shuffle`
+-   **Recipients**: Your disposable email
+-   **Subject**: `$exec.text.win.eventdata.originalFileName file has been deleted`
+**Body (HTML Template):**
 
-Find Actions: `Send email shuffle`
-Recipients: `Disposable email`
-Subject: `$exec.text.win.eventdata.originalFileName file has been deleted`, I used the file name dynamically here.
-Body: With the help of AI.
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -3196,7 +3128,6 @@ Body: With the help of AI.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Security Notification: Malicious File Deleted</title>
     <style>
-        /* Basic CSS for email compatibility */
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
@@ -3219,7 +3150,7 @@ Body: With the help of AI.
             border-bottom: 1px solid #eeeeee;
         }
         .header h1 {
-            color: #d9534f; /* Red for security alert */
+            color: #d9534f;
             margin: 0;
             font-size: 24px;
         }
@@ -3239,7 +3170,7 @@ Body: With the help of AI.
         .button {
             display: inline-block;
             background-color: #007bff;
-            color: #ffffff !important; /* Important for email client override */
+            color: #ffffff !important;
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
@@ -3262,8 +3193,8 @@ Body: With the help of AI.
         <div class="content">
             <p>Dear User,</p>
             <p>This is an automated notification from the Shuffle email app to inform you about a recent security action taken on your account.</p>
-            <p>A <span class="highlight">malicious file</span> identified as <span class="highlight">"[$exec.text.win.eventdata.originalFileName]"</span> (or similar description) was detected and has been <span class="highlight">successfully deleted</span> from $exec.text.win.system.computer device.</p>
-            <p>No further action is required from your side regarding this specific file. We recommend regularly scanning your devices with up-to-date antivirus software and being cautious about opening unexpected attachments.</p>
+            <p>A <span class="highlight">malicious file</span> identified as <span class="highlight">"[$exec.text.win.eventdata.originalFileName]"</span> was detected and has been <span class="highlight">successfully deleted</span> from $exec.text.win.system.computer device.</p>
+            <p>No further action is required from your side regarding this specific file. We recommend regularly scanning your devices with up-to-date antivirus software and exercising caution when opening unexpected attachments.</p>
             <p>If you have any questions or concerns, please do not hesitate to contact our support team.</p>
             <p>
                 <a href="mailto:support@shufflemail.com" class="button">Contact Support</a>
@@ -3271,159 +3202,203 @@ Body: With the help of AI.
         </div>
         <div class="footer">
             <p>Thank you for using Shuffle Email App.</p>
-            <p>&copy; 2025 Shuffle Email App. All rights reserved.</p>
+            <p>© 2025 Shuffle Email App. All rights reserved.</p>
         </div>
     </div>
 </body>
 </html>
 ```
 
-## Let's test Mimikatz detection and removal all together
+### Step 9: Test Mimikatz Detection and Removal
 
--   Run Mimikatz on the Windows client machine
+**Execute Test:**
+
+1.  Run Mimikatz on the Windows client machine
+
+**Figure 243: Mimikatz Running**
 
 ![image](https://github.com/user-attachments/assets/94229f05-e787-493d-970a-98a913593a03)
-_Mimikatz running_
 
--   Check if the log is being sent to Wazuh under Rule ID 100002
+2.  **Verify Wazuh Detection:** Check for Rule ID 100002 in Wazuh dashboard
+
+**Figure 244: Wazuh Rule ID 100002**
 
 ![image](https://github.com/user-attachments/assets/e06e59e9-539d-422d-8ba6-8d02e5c7ce58)
-_Wazuh log Rule ID 100002_
 
- ![image](https://github.com/user-attachments/assets/ba2914c7-75d7-4a74-b7bf-f24b5b1a51ab)
- _File original name_
+**Figure 245: Original Filename Detection**
 
--   Check that the Shuffle Webhook is receiving the alert
+![image](https://github.com/user-attachments/assets/ba2914c7-75d7-4a74-b7bf-f24b5b1a51ab)
+
+3.  **Verify Shuffle Webhook Reception:**
+
+**Figure 246: Webhook Alert Received**
 
 ![image](https://github.com/user-attachments/assets/0fbf8479-5e44-42f1-b861-07bf23a3c35c) 
 
 ![image](https://github.com/user-attachments/assets/de012939-9475-4d10-9fe8-d9c93ffe2081)
-_Webhook alert_
 
--   Confirm the alert is being sent to TheHive (Note: if the alert already exists, you will not see the alert; make sure to delete any old Mimikatz alert to see it working)
+4.  **Verify TheHive Alert Creation:**
+
+**Figure 247: TheHive Alert Created**
 
 ![image](https://github.com/user-attachments/assets/de6b3de8-dc96-4506-bda9-9963caab525a)
-_TheHive alert_
 
-- Check email notifications (Note: for this workflow, you should get two initial emails, one from the email app and the second from the trigger)
+5.  **Check Email Notifications:**
+
+**Figure 248: Email Notifications Received**
 
 ![image](https://github.com/user-attachments/assets/c6a64255-ae71-4a0d-866e-3a9dab00625f) 
-_Email notifications_
+
+**Figure 249: Email App Notification**
 
 ![image](https://github.com/user-attachments/assets/d1d3e700-c341-4aa4-b4f7-ac76acebf750)
-_Email app notification_
+
+**Figure 250: Trigger Notification**
 
 ![image](https://github.com/user-attachments/assets/11a6aa8f-1e45-4934-911b-2cfb7c933b3c)
-_Trigger notification_
 
--   Executing the response (True)
+6.  **Execute Response (Click True):**
+
+**Figure 251: Web Trigger Execution**
 
 ![image](https://github.com/user-attachments/assets/e20cf352-9bc2-4652-ada5-dce8d77a2062) 
-_Web trigger_
 
--   Confirming the file process is stopped and the file has been deleted
+7.  **Confirm File Process Termination and Deletion:**
+
+**Figure 252: Mimikatz Process Killed & File Deleted**
 
 ![image](https://github.com/user-attachments/assets/085a7eff-a48a-427e-a98a-56786a7868a1) 
-_Mimikatz process killed and fie deleted_
 
--   Check email confirming removal
+8.  **Check Deletion Confirmation Email:**
+
+**Figure 253: Email File Deletion Notification**
 
 ![image](https://github.com/user-attachments/assets/c694c0e5-e6f6-4e12-a778-6672b7202975) 
-_Email file deletion notification_
+
+**Figure 254: File Deletion Notification Body**
 
 ![image](https://github.com/user-attachments/assets/a27f5e1f-df48-4e1a-8c0e-4798cef126bd)
-_Email file deletion notification_
 
--   Wazah logs for file deteletion
+9.  **Verify Wazuh Logs for File Deletion:**
+
+**Figure 255: Wazuh File Delete Log**
 
 ![image](https://github.com/user-attachments/assets/e30afcd9-8453-447b-818e-e61f1c852e34) 
-_Wazuh file delete log_
 
+## Part 2: External SSH Login Detection and Response
 
-## Workflow Logon from IP range outside of the office IP range, BLock IP and disbale user
+This workflow detects SSH logins from IP addresses outside your office range and automatically blocks the IP address while disabling the compromised user account.
 
-The first step on this flow is to create a custom rule to capture events accessing the Ubuntu client through SSH externally. Go to the Wazuh web interface and in custom rules add the following.
+### Step 1: Create Custom Detection Rule
+
+Add the following rule to Wazuh custom rules (`/var/ossec/etc/rules/local_rules.xml`):
 
 ```xml
-  <rule id="100006" level="5">
-    <if_sid>5715</if_sid>
-    <srcip negate="yes"><add your public IP>/24</srcip>
-    <description>Successful SSH logins originating outside of the office</description>    
-    <mitre>
-      <id>T1078</id>
-      <id>T1021.004</id>      
-    </mitre>
-  </rule>
+<rule id="100006" level="5">
+  <if_sid>5715</if_sid>
+  <srcip negate="yes">YOUR_PUBLIC_IP/24</srcip>
+  <description>Successful SSH logins originating outside of the office</description>
+  <mitre>
+    <id>T1078</id>
+    <id>T1021.004</id>
+  </mitre>
+</rule>
 ```
-With the piece of code above, we are telling it to record any successful SSH connection with event code 5717, and it is outside our public IP range, you can find out your public IP using available websetes onlone, e.g if your public IP is 205.198.5.6 you will put 205.198.5.0/24 to cover the range. The negate=yes is to evaluate that the IP is not in the range.
+
+**Important**: Replace `YOUR_PUBLIC_IP` with your actual office public IP address. For example, if your IP is `205.198.5.6`, use `205.198.5.0/24`.
+
+**Figure 256: Custom 100006 Rule**
 
 ![image](https://github.com/user-attachments/assets/4e6f7799-7fe7-41f6-a7d0-45d292307327)
 
+### Step 2: Configure Active Response for Account Disabling
 
--  Editing ossec.conf
-
-Now we need to edit our ossec.conf and enable the Block IP and Disable account Active responses. As we have already enabled the blocking IP part, just copy the following code for disabling accounts on Linux.
+Add to `/var/ossec/etc/ossec.conf`:
 
 ```xml
-  <active-response>
-    <disabled>no</disabled>
-    <command>disable-account</command>
-    <location>local</location>
-    <rules_id>100007</rules_id>
-    <timeout>no</timeout>
-  </active-response>
+<active-response>
+  <disabled>no</disabled>
+  <command>disable-account</command>
+  <location>local</location>
+  <rules_id>100007</rules_id>
+  <timeout>no</timeout>
+</active-response>
 ```
+
+**Figure 257: Active Response**
 
 ![image](https://github.com/user-attachments/assets/4d5135a6-40de-4d58-90e3-2451f3dacaba)
 
-For this part of the workflow we are going to filter aletr with Rule ID 100006 where we are tracking successful SSH logins originating outside of the office. if the rule is triggered we will enrich the IP with VirusTotal App, we will get an alert on TheHive and an email notification asking us if we want to block the IP and disable the user account.
+### Step 3: Configure Shuffle Workflow for External SSH Detection
+
+The workflow will filter alerts with Rule ID 100006 and perform the following actions:
+
+1.  IP enrichment via VirusTotal
+2.  Alert creation in TheHive
+3.  Email notification to analyst
+4.  Conditional response (IP blocking + account disabling)
+
+**Figure 258: Workflow**
 
 ![image](https://github.com/user-attachments/assets/0e0352b5-3fd2-4e87-ac33-6b7046049389)
 
-Let's drag all the components need it for this and connect the nodes as desscibe on the figure above.
+### Step 4: Setup Condition App
 
--   Setup condition
+Configure the condition app to filter for Rule ID 100006:
+
+**Figure 259: Condition 100006**
 
 ![image](https://github.com/user-attachments/assets/04ac70a6-e20f-468b-921e-ce6c3ae382bb)
 
+### Step 5: Configure VirusTotal IP Enrichment
 
--   Enrich IP address with VirusTotal App
+**Configuration:**
+
+-   **Name**: `virustotal_ip_check`
+-   **Action**: `IP address report`
+-   **IP**: `$exec.all_fields.data.srcip`
+
+**Figure 260: VirusTotal Enrichment**
 
 ![image](https://github.com/user-attachments/assets/5c001bfe-c253-4634-a96f-5267f9ffb847)
 
--   Setup TheHive App
+### Step 6: Configure TheHive App for External Login
 
-Name: `TheHive_Out_Office_Logon`
-Find Actions: `Create alert`
-Title: `$exec.title (IP: $exec.all_fields.data.srcip)`
-Tags: `T1078, T1021.004`
-Severity: `2`
-Type: `External`
-Tip: `2`
-Status: `New`
-Sourceref: `\"Rule: 100006-$exec.all_fields.data.srcip\"`
-Source: `Wazuh`
-Pap: `2`
-Flag: `false`
-Description:
-```json
-false
-```
-Summary:
+**Configuration:**
+
+-   **Name**: `TheHive_Out_Office_Logon`
+-   **Find Actions**: `Create alert`
+-   **Title**: `$exec.title (IP: $exec.all_fields.data.srcip)`
+-   **Tags**: `["T1078", "T1021.004"]`
+-   **Severity**: `2`
+-   **Type**: `External`
+-   **TLP**: `2`
+-   **Status**: `New`
+-   **Source Reference**: `"Rule: 100006-$exec.all_fields.data.srcip"`
+-   **Source**: `Wazuh`
+-   **PAP**: `2`
+-   **Flag**: `false`
+-   Summary:
 ```json
 Successful external VPN access was detected on host $exec.all_fields.predecoder.hostname from source IP $exec.all_fields.data.srcip on $exec.all_fields.timestamp . The IP address was identified as originating from $virustotal_ip_check.body.data.attributes.country, and its VirusTotal score indicates $virustotal_ip_check.body.data.attributes.last_analysis_stats.malicious malicious detections. Please check email alerts immediately to block the source IP address and disable the associated user account if necessary.
 ```
 
+**Figure 261: TheHive Arguments**
+
 ![image](https://github.com/user-attachments/assets/2c6ea78c-a9da-4f2d-af26-b753aea12873)
+
+**Figure 262: TheHive Arguments**
 
 ![image](https://github.com/user-attachments/assets/736f0328-5bca-4a11-98bc-029a564c4647)
 
--   Trigger App
+### Step 7: Configure User Input for IP Blocking Approval
 
-Name: `Block_Acc_n_IP`
-Input options: `Email`
-Email: `Disposable email`
-Information: 
+**Configuration:**
+
+-   **Name**: `Block_Acc_n_IP`
+-   **Input Options**: `Email`
+-   **Email**: Your disposable email
+**Information (HTML):**
 ```html
 <h2 style="color:#d9534f;">🚨 	Successful SSH login originating outside of the office</h2>
 
@@ -3457,50 +3432,69 @@ Would you like to <strong>block the source IP</strong> <code>$exec.all_fields.da
 Please review and respond to take manual action.
 ```
 
+**Figure 263: User Input Setup**
+
 ![image](https://github.com/user-attachments/assets/7d3c7486-fc0e-42cf-9612-9bee70f9bc49)
 
--   Wazuh responds to disable the user
+### Step 8: Configure Wazuh Response for Account Disabling
 
+**Configuration:**
 
-Name: `Wazuh_Response_Acc`
-Find actions: `Run command`
-Apikey: `From Get_API App`
-Url: `https://<Wazuh Public IP>:55000`
-Command: `disable-account0`
-Alert: `{"data":{"dstuser":"$exec.all_fields.data.dstuser"}}`
-Agent list: `$exec.all_fields.agent.id`
+-   **Name**: `Wazuh_Response_Acc`
+-   **Find Actions**: `Run command`
+-   **API Key**: Select output from `Get_API` app
+-   **URL**: `https://<Wazuh Public IP>:55000`
+-   **Command**: `disable-account0`
+-   **Alert**: `{"data":{"dstuser":"$exec.all_fields.data.dstuser"}}`
+-   **Agent List**: `$exec.all_fields.agent.id`
+
+**Figure 264: Wazuh Response**
 
 ![image](https://github.com/user-attachments/assets/3e35978e-4420-4eb5-b838-7462ddbaee21)
+
+**Figure 265: Wazuh Response**
 
 ![image](https://github.com/user-attachments/assets/6c60c29f-e860-41bd-b82a-60d2c5f4dfd4)
 
 
--   Wazuh responds to Block IP
 
-Name: `Wazuh_Response_IP`
-Find actions: `Run command`
-Apikey: `From Get_API App`
-Url: `https://<Wazuh Public IP>:55000`
-Command: `firewall-drop0`
-Alert: `{"data":{"srcip":"$exec.all_fields.data.srcip"}}`
-Agent list: `$exec.all_fields.agent.id`
+
+
+
+### Step 9: Configure Wazuh Response for IP Blocking
+
+**Configuration:**
+
+-   **Name**: `Wazuh_Response_IP`
+-   **Find Actions**: `Run command`
+-   **API Key**: Select output from `Get_API` app
+-   **URL**: `https://<Wazuh Public IP>:55000`
+-   **Command**: `firewall-drop0`
+-   **Alert**: `{"data":{"srcip":"$exec.all_fields.data.srcip"}}`
+-   **Agent List**: `$exec.all_fields.agent.id`
+
+**Figure 266: Wazuh Response**
 
 ![image](https://github.com/user-attachments/assets/42f017d5-dd1a-4865-a51d-96b70fe11ce6)
 
+**Figure 267: Wazuh Response**
+
 ![image](https://github.com/user-attachments/assets/5374d331-9ac4-430d-b874-5509d9e99ab7)
 
-- Email notification
+### Step 10: Configure Email Notification for Actions Taken
 
--   Name: `email_ip_and_user_blocked`
--   Recipients: `email@dispoableemail.com`   
--   Subject: `IP Blocked & Account Disabled ($exec.all_fields.data.srcip, $exec.all_fields.data.dstuser)`
--   Body: (You can use my template to create yours)
+**Configuration:**
+
+-   **Name**: `email_ip_and_user_blocked`
+-   **Recipients**: Your disposable email
+-   **Subject**: `IP Blocked & Account Disabled ($exec.all_fields.data.srcip, $exec.all_fields.data.dstuser)`
+**Body (HTML Template):**
+
 ```html
 <!DOCTYPE html>
 <html>
 <head>
 <style>
-  /* Basic styling for email client compatibility */
   body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -3516,7 +3510,7 @@ Agent list: `$exec.all_fields.agent.id`
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   .header {
-    background-color: #dc3545; /* Red for alert, indicating urgency */
+    background-color: #dc3545;
     color: #ffffff;
     padding: 10px 20px;
     border-top-left-radius: 8px;
@@ -3538,7 +3532,7 @@ Agent list: `$exec.all_fields.agent.id`
   }
   .highlight {
     font-weight: bold;
-    color: #dc3545; /* Red for emphasis on critical information */
+    color: #dc3545;
   }
 </style>
 </head>
@@ -3573,81 +3567,143 @@ Agent list: `$exec.all_fields.agent.id`
 </html>
 ```
 
+**Figure 267: Email App Septup**
+
 ![image](https://github.com/user-attachments/assets/0525efcd-1023-468a-b04b-2eed0ac26a18)
+
+**Figure 267: Email Body**
 
 ![image](https://github.com/user-attachments/assets/d8121c43-6614-4f58-aec2-43994c63ead6)
 
+### Step 11: Test External SSH Login Detection and Response
 
--  Let's see the workflow in action.
+#### 11.1 Prepare Test Environment
 
-Using a VPN or any way to obtain a public IP differentfrom  the one set up on 100006 rule, let's SSH on te Ubuntu client, make sure you are using a account different ot the root acoount as we will aim to disble the account.
-
-Follow these steps if you have not set up one.
+**Create Test User Account on Ubuntu Client:**
 
 ```bash
 useradd mylab
-```
-```bash
 passwd mylab
 ```
 
--   Checking the IP and user are not disbaled or blacklisted
+**Check Current Status (IP and User):**
 
-To check IP table, run the following command
 ```bash
+# Check iptables
 iptables --list
-```
-If the IP from your computer is trying to connect is blocked, run the following to clear the table
-```bash
+
+# Clear iptables if needed
 iptables --flush
-```
-Run the following to check the user
-```bash
+
+# Check user status
 passwd -S mylab
-```
-If the result is an L on instead of P, that means the user is locked. To unlock it, run the following command
-```bash
+
+# Unlock user if needed
 passwd -u mylab
 ```
 
+**Figure 267: IP Tables & User Checking**
+
 ![image](https://github.com/user-attachments/assets/da4db960-39b4-4945-9079-d33ffded615b)
 
+#### 11.2 Execute Test
 
--   SSH to the Ubuntu client using the user you created
+**SSH from External IP:** Use a VPN or different network to obtain a public IP different from the one configured in Rule 100006:
 
 ```bash
-SSH mylab@<Ubuntu client Public IP>
+ssh mylab@<Ubuntu_Client_Public_IP>
 ```
 
-- Wazuh logs of successful login outside IP range
+#### 11.3 Verify Detection and Response
+
+**1\. Check Wazuh Logs:** Verify Rule 100006 triggered for external SSH login:
+
+**Figure 287: Logs**
 
 ![image](https://github.com/user-attachments/assets/4b1fa794-ebf6-4f70-adce-55f13bea46fa)
 
+**Figure 269: Log Expanded**
+
 ![image](https://github.com/user-attachments/assets/be2a1ad3-b93c-4612-9297-10efae99f434)
 
--    TheHive alert
+**2\. Check TheHive Alert:**
+
+**Figure 270: TheHive Alert**
 
 ![image](https://github.com/user-attachments/assets/45d4c44d-a2a4-44c2-8b30-eab17577c8a3)
 
+**Figure 271: TheHive Alert Details**
+
 ![image](https://github.com/user-attachments/assets/696ca23f-5cd9-448b-94b7-74b1996e1901)
 
+**3\. Check Email Notification:**
 
--   Email notification trigger
+**Figure 272: Email Notification**
 
 ![image](https://github.com/user-attachments/assets/bc4ace94-ddcf-4b07-aef0-b99d327f554d)
 
-- Triger the response (True)
+**4\. Trigger Response (Click True):**
+
+**Figure 273: Triggering Action**
 
 ![image](https://github.com/user-attachments/assets/5ac997c2-7a45-4a80-a53d-1ff746f89290)
-_Triggering action_
+
+**5\. Verify IP Blocking:**
+
+**Figure 274: IP Has Been Blocked**
 
 ![image](https://github.com/user-attachments/assets/1805d45f-d532-460e-89c2-ffb782a0a825)
-_IP has been blocked_
+
+**6\. Verify User Account Disabling:**
+
+**Figure 275: User Disabled**
 
 ![image](https://github.com/user-attachments/assets/0e2eb6a0-415d-4ae0-acda-7ee231abbb96)
-_User disable_
 
-This concludes our project.
+## Project Completion
+
+This concludes the expanded SOC automation project. You now have a comprehensive security automation platform that:
+
+### Mimikatz Detection Workflow:
+
+1.  **Detects** Mimikatz execution in real-time
+2.  **Enriches** file hash with VirusTotal
+3.  **Creates** alert in TheHive for case management
+4.  **Notifies** analyst with detailed HTML email
+5.  **Waits** for analyst approval
+6.  **Automatically kills** the process and deletes the file
+7.  **Confirms** action with notification email
+
+### External SSH Login Workflow:
+
+1.  **Detects** SSH logins from outside office IP range
+2.  **Enriches** source IP with VirusTotal geolocation and reputation
+3.  **Creates** an alert in TheHive for investigation
+4.  **Notifies** analyst with comprehensive details
+5.  **Waits** for analyst approval
+6.  **Simultaneously blocks** the source IP and disables the user account
+7.  **Confirms** actions with detailed notification
+
+### Key Achievements:
+
+-   **Real-time threat detection** and response
+-   **Intelligent enrichment** with external threat intelligence
+-   **Human oversight** for critical decisions
+-   **Comprehensive logging** for audit and compliance
+-   **Professional email notifications** with rich formatting
+-   **Multi-layered response** capabilities
+-   **Case management** integration for SOC workflows
+
+This expanded project demonstrates advanced SOAR capabilities while maintaining security best practices and providing a realistic simulation of enterprise security operations.
+
+
+
+
+
+
+
+
+
 
 
 
