@@ -508,25 +508,6 @@ Select TheHive droplet and add it to the rule.
 
 ![Screenshot 2025-06-14 145001](https://github.com/user-attachments/assets/2fb0c9f2-6493-4cf4-be89-5a936f025471)<br>
 
-
-
-
-
-
-
-### Important Firewall Notes
-
-**Security Warning**: Some rules allow "All IPv4, All IPv6" for testing purposes only
--   Production Environment: Always restrict sources to specific IP ranges
--   Temporary Rules: The transcript mentions creating temporary rules for testing that should be removed after lab completion
--   Port 55000: Opened temporarily for Wazuh API access during Shuffle integration
--   Port 9000: Opened temporarily for The Hive access during testing
-
-
-
-
-
-
 # Installing and Configuring Wazuh & TheHive Servers
 
 ## Installion
@@ -860,7 +841,7 @@ _Change `hostname` and `application.baseUrl` to TheHive public IP, give a name t
 
 ![Screenshot 2025-06-14 231441](https://github.com/user-attachments/assets/04802257-9b15-46af-9389-864f9e255e7c)<br>
 
-Start, enable and check the status of the TheHive service
+Start, enable and check the status of the TheHive service.
 
 ```bash
 systemctl start thehive.service
@@ -899,7 +880,7 @@ systemctl status thehive.service
 
 ![Screenshot 2025-06-14 232242](https://github.com/user-attachments/assets/a229bd64-fcd0-4593-af51-f5314fcef669)<br>
 
-Navigate to `/etc/elasticsearch/jvm. options.d/` and create the file jvm.options.
+Navigate to `/etc/elasticsearch/jvm.options.d/` and create the file jvm.options.
 
 ```bash
 nano /etc/elasticsearch/jvm.options.d/jvm.options
@@ -927,7 +908,7 @@ systemctl stop elasticsearch.service
 systemctl start elasticsearch.service
 ```
 
-Try to access The Hive again.
+Try to reaccess TheHive.
 
 -   Navigate to `http://YOUR_HIVE_IP:9000`
 -   Login: `admin@thehive.local`
@@ -1082,13 +1063,13 @@ _Sysmon parameter, for this project, we will just be using the Sysmon events, bu
 </localfile>
 ```
 
-To find out the channel name go to.
+To find out the channel name, go to.
 
 **Figure 79: Channel Name**
 
 ![image](https://github.com/user-attachments/assets/5d55dfec-21b1-4088-b65d-7db0045b5072)<br>
 
--   Optional: Remove other logs like Application, Security and System for focused testing.
+-   Optional: Remove other logs, such as Application, Security, and System, for focused testing.
 
 ```xml
 <localfile>
@@ -1142,9 +1123,9 @@ sudo cp /var/ossec/etc/ossec.conf ~/ossec-backup.conf
 nano /var/ossec/etc/ossec.conf
 ```
 
-Enable Full Logging by change the following:
+Enable Full Logging by changing the following:
 
--   Scroll to bottom and find `<alerts>` section
+-   Scroll to the bottom and find `<alerts>` section
 -   Change `<log_all>no</log_all>` to `<log_all>yes</log_all>`
 -   Change `<log_all_json>no</log_all_json>` to `<log_all_json>yes</log_all_json>`
 
@@ -1192,7 +1173,7 @@ systemctl restart filebeat
 
 ### Create Archives Index in Wazuh
 
--   Go to Wazuh dashboard
+-   Go to the Wazuh dashboard
 -   Click hamburger menu (≡) → Stack Management
 -   Click "Index Patterns"
 
@@ -1240,11 +1221,11 @@ systemctl restart filebeat
 
 ### Disable Windows Defender
 
--   Type "Windows Security" in search
+-   Type "Windows Security" in the search
 -   Open Windows Security
 -   Go to "Virus & threat protection"
 -   Click "Manage settings" under "Virus & threat protection settings"
--   Click on disbale
+-   Click on disable
 
 **Figure 92: Access Windows Defender**
 
@@ -1298,8 +1279,8 @@ Disable browsing protection for downloading Mimikatz; otherwise, the browser wil
 
 -   Go to official [Mimikatz GitHub repository](github.com/gentilkiwi/mimikatz/releases)
 -   Download the latest release
--   Extract to Downloads folder
--   Browser may warn about malicious file - proceed anyway
+-   Extract to the Downloads folder
+-   Browser may warn about a malicious file - proceed anyway
 
 **Figure 99: Mimikatz ZIP**
 
@@ -1329,7 +1310,7 @@ cd Downloads\mimikatz_trunk\x64
 
 ### Verify Events in Wazuh
 
-Go to Wazuh dashboard → Discover
+Go to the Wazuh dashboard → Discover
 Select wazuh-archives-* index
 Search for: mimikatz
 Look for Sysmon Event ID 1 (Process Creation)
@@ -1343,7 +1324,7 @@ Expand an event and find: data.win.eventdata.originalFileName
 
 ![Screenshot 2025-06-15 011952](https://github.com/user-attachments/assets/d6559200-f702-4f29-a2fe-1321bc640425)<br>
 
-Wazuh Mimikatz logs on the web interface, we will use the original filename to build our rule as it will always be the same even if someone changes the name of the file.
+Wazuh Mimikatz logs on the web interface, we will use the original filename to build our rule, as it will always be the same even if someone changes the name of the file.
 
 #### Verify in Event Viewer
 
@@ -1380,7 +1361,7 @@ _Wazuh Mimikatz logs_
 -   Go to Management → Rules
 -   Click "Manage rule files"
 -   Search for "sysmon" to see existing rules
--   Click info icon on "0800-sysmon\_id\_1.xml" to see examples
+-   Click the info icon on "0800-sysmon\_id\_1.xml" to see examples
 
 **Figure 106: Accessing Rules**
 
@@ -1390,7 +1371,7 @@ _Wazuh Mimikatz logs_
 
 ![Screenshot 2025-06-15 012322](https://github.com/user-attachments/assets/ae2c5d77-e608-4a27-af42-fded4e8d3735)<br>
 
-As we are interested in Sysmon event ID 1, we will have a look at the XML file.
+As we are interested in Sysmon event ID 1, we will examine the XML file.
 
 **Figure 108: Sysmon ID 1 XML Rule**
 ![Screenshot 2025-06-15 012409](https://github.com/user-attachments/assets/22c2ab4f-6abc-460c-b9c2-80b2ac05592f)<br>
@@ -1443,7 +1424,7 @@ Note: custom rules start from `100000`.
 ### Save and Restart Manager
 
 -   Click "Save"
--   Click "Confirm" to restart manager
+-   Click "Confirm" to restart the manager
 
 **Figure 113: Restart From Dashboard**
 
@@ -1476,10 +1457,10 @@ sudo systemctl restart wazuh-manager
 .\ztakimim.exe`
 ```
 
--   Go to Security Events in Wazuh dashboard
+-   Go to Security Events in the Wazuh dashboard
 -   Search for "mimikatz"
 -   Should see alert with description "Mimikatz usage detected"
--   Note: Detection works despite renamed file because it uses `originalFileName`
+-   Note: Detection works despite the renamed file because it uses `originalFileName`
 
 **Figure 115: Mimikatz Alert Triggered**
 
@@ -1526,7 +1507,7 @@ Create Account
 
 ### Set up Webhook Trigger in Shuffle
 
--   Click "Triggers" tab in workflow
+-   Click the "Triggers" tab in the workflow
 -   Drag "Webhook" app onto canvas
 -   Click on webhook
 -   Name: "wazuh-alerts"
@@ -1614,7 +1595,7 @@ powershell
 exit
 ```
 
--   Click "Executions" tab at the bottom
+-   Click the "Executions" tab at the bottom
 -   Should see execution with Wazuh alert data
 
 **Figure 125: Wazuh Webhook Capturing Traffic**
@@ -1635,7 +1616,7 @@ exit
 
 ### Hash Extraction with Regex
 
--   Click "Change me" icon
+-   Click the "Change me" icon
 -   Change from "Repeat back to me" to "Regex capture group"
 
 **Figure 128: Regex Capture Group**
@@ -1645,9 +1626,9 @@ exit
 -   Rename to "SHA256 Regex"
 -   Input data: Click "+" → Execution argument → Find hash field
 -   **Get Regex from ChatGPT:**
-    -   Prompt: "create a regex to parse the sha256 value of the hash"
+    -   Prompt: "Create a regex to parse the SHA256 value of the hash"
     -   Copy the regex pattern provided
--   Paste regex in Shuffle
+-   Paste the regex in Shuffle
 -   Save workflow and test
 
 Input data: 
@@ -1673,7 +1654,7 @@ Regex:
 
 -   Click "Apps" tab → Search "VirusTotal"
 -   Click VirusTotal to activate
--   Drag VirusTotal app to canvas
+-   Drag the VirusTotal app to the canvas
 -   Label the App and change Action: `Get hash report`
 
 **Figure 130: Drag VirusTotal App**
@@ -1695,7 +1676,7 @@ Regex:
 ![image](https://github.com/user-attachments/assets/8ddb381a-9809-4482-9ba1-69390fb07f57)<br>
 
 -   Configure VirusTotal app:
-    -   Click "Authenticate" button
+    -   Click the "Authenticate" button
     -   Paste API key → Submit
     -   Action: "Get a hash report"
     -   ID field: Select SHA256 regex output (list)
@@ -1758,7 +1739,7 @@ Regex:
 >-   Name: `SOAR`
 >-   Profile: `Analyst`
 
--   Set password for the analyst account
+-   Set the password for the analyst account
 
 **Figure 139: Preview Normal-Analyst Account**
 
@@ -1916,7 +1897,7 @@ Status 200!!, the alert has been sent to TheHive.
 
 The alert has been created on TheHive Dashboard.
 
-**Figure 156: TheHive Ddashboard**
+**Figure 156: TheHive Dashboard**
 
 ![Screenshot 2025-06-16 094949](https://github.com/user-attachments/assets/c3512820-f815-4bb2-8bae-68156bbf477b)<br>
 
@@ -1927,9 +1908,6 @@ We have now completed our flow for executing Mimikatz on the Windows client's Do
 **Figure 157: Shuffle Workflow Overview**
 
 ![Screenshot 2025-06-16 095202](https://github.com/user-attachments/assets/a5a56ece-6731-4730-90d9-7515a5edf1c7)<br>
-
-
-
 
 ### Email Notification
 
@@ -1970,10 +1948,10 @@ Spawned From: $exec.text.win.eventdata.parentImage
 ### Test Complete Workflow
 
 -   Save workflow
--   Run mimikatz on Windows client
+-   Run Mimikatz on the Windows client
 -   Verify execution in Shuffle
--   Check The Hive for new alert
--   Check email for notification
+-   Check The Hive for new alerts
+-   Check your email for the notification
 
 **Figure 161: Email Sent Successfully**
 
@@ -1982,11 +1960,6 @@ Spawned From: $exec.text.win.eventdata.parentImage
 **Figure 162: Email Output**
 
 ![Screenshot 2025-06-16 101419](https://github.com/user-attachments/assets/58098a94-61b0-4a43-9704-ccb5a281e613)<br>
-
-
-
-
-
 
 # Advanced: Response Actions (Ubuntu Machine)
 
@@ -2108,7 +2081,6 @@ Open DigitalOcean firewall port `55000` for inbound traffic.
 **Figure 180: Port 55000 Accepting Traffic**
 
 ![image](https://github.com/user-attachments/assets/bab20adb-1b80-4345-b3d1-0511d51326ce)<br>
-_Port 55000 accepting all incoming traffic_
 
 ### Add API Authentication to Shuffle
 
@@ -2232,7 +2204,7 @@ Verify that the IP address was successfully blocked. On the Ubuntu client, `ipta
 
 ![image](https://github.com/user-attachments/assets/3ae116af-9e52-4435-bdc5-84919b9837cb)<br>
 
-Review the Active Response logs to determine if the active response was successful.
+Please look over the Active Response logs to see if the active response was successful.
 
 ```bash
 cd /var/ossec/logs/
@@ -2571,34 +2543,6 @@ Please copy and paste the response into a blank web tab to activate it.
 
 The Ubuntu client's IP tables are dropping the connection for the malicious IP.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
------------------------------------------------------
-
-- Log in to the `mylab@test.com` account
-
-![Screenshot 2025-06-15 211936](https://github.com/user-attachments/assets/dccb6c3f-cbcd-4861-9e53-dab51f004caa)<br>
-_`mylab@test.com` account_
-
-------------------------------------------------------
-
-
-
-
-
 # SOC Automation Lab Project - Expanded Advanced Guide
 
 ## Project Overview
@@ -2620,7 +2564,7 @@ The final workflow creates a production-ready automated response system that dem
 Before starting this expansion, ensure you have completed:
 
 -   Basic SOC automation lab setup (Parts 1-5)
--   Wazuh, The Hive, and Shuffle properly configured
+-   Wazuh, The Hive, and Shuffle are properly configured
 -   Mimikatz detection rule (100002) working
 -   Basic webhook integration functional
 
@@ -2912,7 +2856,7 @@ if __name__ == "__main__":
 **Key Features of This Script:**
 
 -   **Process Termination**: Uses `psutil` to find and kill running processes
--   **File Deletion**: Removes the malicious file from disk
+-   **File Deletion**: Removes the malicious file from the disk
 -   **Enhanced Logging**: Comprehensive audit trail
 -   **Error Handling**: Graceful failure with detailed logging
 
@@ -2972,7 +2916,7 @@ pip install psutil
 
 **Figure 230: Pyinstaller & Psutil Installation**
 
-![Screenshot 2025-06-17 185610](https://github.com/user-attachments/assets/ecedd883-df1c-423f-83f5-57a6a0fb2916)
+![Screenshot 2025-06-17 185610](https://github.com/user-attachments/assets/ecedd883-df1c-423f-83f5-57a6a0fb2916)<br>
 
 **Verify Installation:**
 
@@ -2982,7 +2926,7 @@ pyinstaller-- version
 
 **Figure 231: Pyinstaller Version**
 
-![Screenshot 2025-06-17 185700](https://github.com/user-attachments/assets/991592b3-2286-4f82-a11c-02d61a3967aa)
+![Screenshot 2025-06-17 185700](https://github.com/user-attachments/assets/991592b3-2286-4f82-a11c-02d61a3967aa)<br>
 
 #### 5.3 Create and Deploy Active Response Script
 
@@ -2993,7 +2937,7 @@ pyinstaller-- version
 
 **Figure 232: Python Script**
 
-![image](https://github.com/user-attachments/assets/e4bc3d74-08dc-42a3-ad68-f2f34dacdc4a)
+![image](https://github.com/user-attachments/assets/e4bc3d74-08dc-42a3-ad68-f2f34dacdc4a)<br>
 
 **Convert to Executable:**
 
@@ -3003,17 +2947,17 @@ pyinstaller -F \path_to_remove-threat-shuffle.py
 
 **Figure 233: Python to Binary**
 
-![Screenshot 2025-06-17 190308](https://github.com/user-attachments/assets/7a2984a8-d0ff-4ed3-bbc5-b4c0ec960370)
+![Screenshot 2025-06-17 190308](https://github.com/user-attachments/assets/7a2984a8-d0ff-4ed3-bbc5-b4c0ec960370)<br>
 
 **Note the Output Path:**
 
 **Figure 234: Binary Location**
 
-![Screenshot 2025-06-17 190416](https://github.com/user-attachments/assets/e67fb15c-cf8a-48a9-aa79-dc2f2caf8d17)
+![Screenshot 2025-06-17 190416](https://github.com/user-attachments/assets/e67fb15c-cf8a-48a9-aa79-dc2f2caf8d17)<br>
 
 **Figure 235: Binary Folder**
 
-![image](https://github.com/user-attachments/assets/97cd8dbf-6284-409b-9eb4-dd1013430ea6)
+![image](https://github.com/user-attachments/assets/97cd8dbf-6284-409b-9eb4-dd1013430ea6)<br>
 
 **Deploy the Executable:** Move `remove-threat-shuffle.exe` to:
 
@@ -3023,7 +2967,7 @@ C:\Program Files (x86)\ossec-agent\active-response\bin\
 
 **Figure 236: Binary Moved**
 
-![image](https://github.com/user-attachments/assets/67207f0b-cb57-4297-bd45-a15f7ea0dde3)
+![image](https://github.com/user-attachments/assets/67207f0b-cb57-4297-bd45-a15f7ea0dde3)<br>
 
 **Restart Wazuh Agent:**
 
@@ -3033,7 +2977,7 @@ Restart-Service -Name wazuh
 
 **Figure 237: Service Restarted**
 
-![Screenshot 2025-06-17 210236](https://github.com/user-attachments/assets/e78dcbb4-5975-4226-9051-b2b8a8c7529f)
+![Screenshot 2025-06-17 210236](https://github.com/user-attachments/assets/e78dcbb4-5975-4226-9051-b2b8a8c7529f)<br>
 
 ### Step 6: Configure Wazuh Server
 
@@ -3051,7 +2995,7 @@ Edit `/var/ossec/etc/ossec.conf` on the Wazuh server and add within `<ossec_conf
 
 **Figure 238: Command**
 
-![image](https://github.com/user-attachments/assets/1519a604-6977-4ad0-a14b-f602a0b156d5)
+![image](https://github.com/user-attachments/assets/1519a604-6977-4ad0-a14b-f602a0b156d5)<br>
 
 **Active Response Configuration:**
 
@@ -3066,13 +3010,13 @@ Edit `/var/ossec/etc/ossec.conf` on the Wazuh server and add within `<ossec_conf
 
 **Figure 239: Active Response**
 
-![image](https://github.com/user-attachments/assets/98d5a733-566b-4e68-bec9-6d4eacc10e02)
+![image](https://github.com/user-attachments/assets/98d5a733-566b-4e68-bec9-6d4eacc10e02)<br>
 
 **Verify Original Rule:** Check that Rule ID 100002 still exists in `/var/ossec/etc/rules/local_rules.xml`:
 
 **Figure 240: Rule 100002**
 
-![image](https://github.com/user-attachments/assets/48ad0f1e-cdf8-4b35-999d-9dc2379d3885)
+![image](https://github.com/user-attachments/assets/48ad0f1e-cdf8-4b35-999d-9dc2379d3885)<br>
 
 **Restart Wazuh Manager:**
 
@@ -3104,11 +3048,11 @@ sudo systemctl restart wazuh-manager
 
 **Figure 241: Wazuh App**
 
-![image](https://github.com/user-attachments/assets/709cb17c-836f-40c2-819f-94565ad2a517)
+![image](https://github.com/user-attachments/assets/709cb17c-836f-40c2-819f-94565ad2a517)<br>
 
 **Figure 242: Wazuh App Setup**
 
-![image](https://github.com/user-attachments/assets/7b3c5784-2e81-49a4-98b4-bebdea0d34d7)
+![image](https://github.com/user-attachments/assets/7b3c5784-2e81-49a4-98b4-bebdea0d34d7)<br>
 
 ### Step 8: Configure Email Notification for File Deletion
 
@@ -3217,73 +3161,73 @@ sudo systemctl restart wazuh-manager
 
 **Figure 243: Mimikatz Running**
 
-![image](https://github.com/user-attachments/assets/94229f05-e787-493d-970a-98a913593a03)
+![image](https://github.com/user-attachments/assets/94229f05-e787-493d-970a-98a913593a03)<br>
 
-2.  **Verify Wazuh Detection:** Check for Rule ID 100002 in Wazuh dashboard
+2.  **Verify Wazuh Detection:** Check for Rule ID 100002 in the Wazuh dashboard
 
 **Figure 244: Wazuh Rule ID 100002**
 
-![image](https://github.com/user-attachments/assets/e06e59e9-539d-422d-8ba6-8d02e5c7ce58)
+![image](https://github.com/user-attachments/assets/e06e59e9-539d-422d-8ba6-8d02e5c7ce58)<br>
 
 **Figure 245: Original Filename Detection**
 
-![image](https://github.com/user-attachments/assets/ba2914c7-75d7-4a74-b7bf-f24b5b1a51ab)
+![image](https://github.com/user-attachments/assets/ba2914c7-75d7-4a74-b7bf-f24b5b1a51ab)<br>
 
 3.  **Verify Shuffle Webhook Reception:**
 
 **Figure 246: Webhook Alert Received**
 
-![image](https://github.com/user-attachments/assets/0fbf8479-5e44-42f1-b861-07bf23a3c35c) 
+![image](https://github.com/user-attachments/assets/0fbf8479-5e44-42f1-b861-07bf23a3c35c)<br>
 
-![image](https://github.com/user-attachments/assets/de012939-9475-4d10-9fe8-d9c93ffe2081)
+![image](https://github.com/user-attachments/assets/de012939-9475-4d10-9fe8-d9c93ffe2081)<br>
 
 4.  **Verify TheHive Alert Creation:**
 
 **Figure 247: TheHive Alert Created**
 
-![image](https://github.com/user-attachments/assets/de6b3de8-dc96-4506-bda9-9963caab525a)
+![image](https://github.com/user-attachments/assets/de6b3de8-dc96-4506-bda9-9963caab525a)<br>
 
 5.  **Check Email Notifications:**
 
 **Figure 248: Email Notifications Received**
 
-![image](https://github.com/user-attachments/assets/c6a64255-ae71-4a0d-866e-3a9dab00625f) 
+![image](https://github.com/user-attachments/assets/c6a64255-ae71-4a0d-866e-3a9dab00625f)<br> 
 
 **Figure 249: Email App Notification**
 
-![image](https://github.com/user-attachments/assets/d1d3e700-c341-4aa4-b4f7-ac76acebf750)
+![image](https://github.com/user-attachments/assets/d1d3e700-c341-4aa4-b4f7-ac76acebf750)<br>
 
 **Figure 250: Trigger Notification**
 
-![image](https://github.com/user-attachments/assets/11a6aa8f-1e45-4934-911b-2cfb7c933b3c)
+![image](https://github.com/user-attachments/assets/11a6aa8f-1e45-4934-911b-2cfb7c933b3c)<br>
 
 6.  **Execute Response (Click True):**
 
 **Figure 251: Web Trigger Execution**
 
-![image](https://github.com/user-attachments/assets/e20cf352-9bc2-4652-ada5-dce8d77a2062) 
+![image](https://github.com/user-attachments/assets/e20cf352-9bc2-4652-ada5-dce8d77a2062)<br> 
 
 7.  **Confirm File Process Termination and Deletion:**
 
 **Figure 252: Mimikatz Process Killed & File Deleted**
 
-![image](https://github.com/user-attachments/assets/085a7eff-a48a-427e-a98a-56786a7868a1) 
+![image](https://github.com/user-attachments/assets/085a7eff-a48a-427e-a98a-56786a7868a1)<br>
 
 8.  **Check Deletion Confirmation Email:**
 
 **Figure 253: Email File Deletion Notification**
 
-![image](https://github.com/user-attachments/assets/c694c0e5-e6f6-4e12-a778-6672b7202975) 
+![image](https://github.com/user-attachments/assets/c694c0e5-e6f6-4e12-a778-6672b7202975)<br> 
 
 **Figure 254: File Deletion Notification Body**
 
-![image](https://github.com/user-attachments/assets/a27f5e1f-df48-4e1a-8c0e-4798cef126bd)
+![image](https://github.com/user-attachments/assets/a27f5e1f-df48-4e1a-8c0e-4798cef126bd)<br>
 
 9.  **Verify Wazuh Logs for File Deletion:**
 
 **Figure 255: Wazuh File Delete Log**
 
-![image](https://github.com/user-attachments/assets/e30afcd9-8453-447b-818e-e61f1c852e34) 
+![image](https://github.com/user-attachments/assets/e30afcd9-8453-447b-818e-e61f1c852e34)<br>
 
 ## Part 2: External SSH Login Detection and Response
 
@@ -3309,7 +3253,7 @@ Add the following rule to Wazuh custom rules (`/var/ossec/etc/rules/local_rules.
 
 **Figure 256: Custom 100006 Rule**
 
-![image](https://github.com/user-attachments/assets/4e6f7799-7fe7-41f6-a7d0-45d292307327)
+![image](https://github.com/user-attachments/assets/4e6f7799-7fe7-41f6-a7d0-45d292307327)<br>
 
 ### Step 2: Configure Active Response for Account Disabling
 
@@ -3327,7 +3271,7 @@ Add to `/var/ossec/etc/ossec.conf`:
 
 **Figure 257: Active Response**
 
-![image](https://github.com/user-attachments/assets/4d5135a6-40de-4d58-90e3-2451f3dacaba)
+![image](https://github.com/user-attachments/assets/4d5135a6-40de-4d58-90e3-2451f3dacaba)<br>
 
 ### Step 3: Configure Shuffle Workflow for External SSH Detection
 
@@ -3335,20 +3279,20 @@ The workflow will filter alerts with Rule ID 100006 and perform the following ac
 
 1.  IP enrichment via VirusTotal
 2.  Alert creation in TheHive
-3.  Email notification to analyst
+3.  Email notification to the analyst
 4.  Conditional response (IP blocking + account disabling)
 
 **Figure 258: Workflow**
 
-![image](https://github.com/user-attachments/assets/0e0352b5-3fd2-4e87-ac33-6b7046049389)
+![image](https://github.com/user-attachments/assets/0e0352b5-3fd2-4e87-ac33-6b7046049389)<br>
 
-### Step 4: Setup Condition App
+### Step 4: Set up Condition App
 
 Configure the condition app to filter for Rule ID 100006:
 
 **Figure 259: Condition 100006**
 
-![image](https://github.com/user-attachments/assets/04ac70a6-e20f-468b-921e-ce6c3ae382bb)
+![image](https://github.com/user-attachments/assets/04ac70a6-e20f-468b-921e-ce6c3ae382bb)<br>
 
 ### Step 5: Configure VirusTotal IP Enrichment
 
@@ -3360,7 +3304,7 @@ Configure the condition app to filter for Rule ID 100006:
 
 **Figure 260: VirusTotal Enrichment**
 
-![image](https://github.com/user-attachments/assets/5c001bfe-c253-4634-a96f-5267f9ffb847)
+![image](https://github.com/user-attachments/assets/5c001bfe-c253-4634-a96f-5267f9ffb847)<br>
 
 ### Step 6: Configure TheHive App for External Login
 
@@ -3385,11 +3329,11 @@ Successful external VPN access was detected on host $exec.all_fields.predecoder.
 
 **Figure 261: TheHive Arguments**
 
-![image](https://github.com/user-attachments/assets/2c6ea78c-a9da-4f2d-af26-b753aea12873)
+![image](https://github.com/user-attachments/assets/2c6ea78c-a9da-4f2d-af26-b753aea12873)<br>
 
 **Figure 262: TheHive Arguments**
 
-![image](https://github.com/user-attachments/assets/736f0328-5bca-4a11-98bc-029a564c4647)
+![image](https://github.com/user-attachments/assets/736f0328-5bca-4a11-98bc-029a564c4647)<br>
 
 ### Step 7: Configure User Input for IP Blocking Approval
 
@@ -3434,7 +3378,7 @@ Please review and respond to take manual action.
 
 **Figure 263: User Input Setup**
 
-![image](https://github.com/user-attachments/assets/7d3c7486-fc0e-42cf-9612-9bee70f9bc49)
+![image](https://github.com/user-attachments/assets/7d3c7486-fc0e-42cf-9612-9bee70f9bc49)<br>
 
 ### Step 8: Configure Wazuh Response for Account Disabling
 
@@ -3450,16 +3394,19 @@ Please review and respond to take manual action.
 
 **Figure 264: Wazuh Response**
 
-![image](https://github.com/user-attachments/assets/3e35978e-4420-4eb5-b838-7462ddbaee21)
+![image](https://github.com/user-attachments/assets/3e35978e-4420-4eb5-b838-7462ddbaee21)<br>
 
 **Figure 265: Wazuh Response**
 
-![image](https://github.com/user-attachments/assets/6c60c29f-e860-41bd-b82a-60d2c5f4dfd4)
+![image](https://github.com/user-attachments/assets/6c60c29f-e860-41bd-b82a-60d2c5f4dfd4)<br>
 
+### Important Firewall Notes
 
-
-
-
+**Security Warning**: Some rules allow "All IPv4, All IPv6" for testing purposes only
+-   Production Environment: Always restrict sources to specific IP ranges
+-   Temporary Rules: The transcript mentions creating temporary rules for testing that should be removed after lab completion
+-   Port 55000: Opened temporarily for Wazuh API access during Shuffle integration
+-   Port 9000: Opened temporarily for The Hive access during testing
 
 ### Step 9: Configure Wazuh Response for IP Blocking
 
@@ -3475,11 +3422,11 @@ Please review and respond to take manual action.
 
 **Figure 266: Wazuh Response**
 
-![image](https://github.com/user-attachments/assets/42f017d5-dd1a-4865-a51d-96b70fe11ce6)
+![image](https://github.com/user-attachments/assets/42f017d5-dd1a-4865-a51d-96b70fe11ce6)<br>
 
 **Figure 267: Wazuh Response**
 
-![image](https://github.com/user-attachments/assets/5374d331-9ac4-430d-b874-5509d9e99ab7)
+![image](https://github.com/user-attachments/assets/5374d331-9ac4-430d-b874-5509d9e99ab7)<br>
 
 ### Step 10: Configure Email Notification for Actions Taken
 
@@ -3569,11 +3516,11 @@ Please review and respond to take manual action.
 
 **Figure 267: Email App Septup**
 
-![image](https://github.com/user-attachments/assets/0525efcd-1023-468a-b04b-2eed0ac26a18)
+![image](https://github.com/user-attachments/assets/0525efcd-1023-468a-b04b-2eed0ac26a18)<br>
 
 **Figure 267: Email Body**
 
-![image](https://github.com/user-attachments/assets/d8121c43-6614-4f58-aec2-43994c63ead6)
+![image](https://github.com/user-attachments/assets/d8121c43-6614-4f58-aec2-43994c63ead6)<br>
 
 ### Step 11: Test External SSH Login Detection and Response
 
@@ -3604,7 +3551,7 @@ passwd -u mylab
 
 **Figure 267: IP Tables & User Checking**
 
-![image](https://github.com/user-attachments/assets/da4db960-39b4-4945-9079-d33ffded615b)
+![image](https://github.com/user-attachments/assets/da4db960-39b4-4945-9079-d33ffded615b)<br>
 
 #### 11.2 Execute Test
 
@@ -3620,45 +3567,45 @@ ssh mylab@<Ubuntu_Client_Public_IP>
 
 **Figure 287: Logs**
 
-![image](https://github.com/user-attachments/assets/4b1fa794-ebf6-4f70-adce-55f13bea46fa)
+![image](https://github.com/user-attachments/assets/4b1fa794-ebf6-4f70-adce-55f13bea46fa)<br>
 
 **Figure 269: Log Expanded**
 
-![image](https://github.com/user-attachments/assets/be2a1ad3-b93c-4612-9297-10efae99f434)
+![image](https://github.com/user-attachments/assets/be2a1ad3-b93c-4612-9297-10efae99f434)<br>
 
 **2\. Check TheHive Alert:**
 
 **Figure 270: TheHive Alert**
 
-![image](https://github.com/user-attachments/assets/45d4c44d-a2a4-44c2-8b30-eab17577c8a3)
+![image](https://github.com/user-attachments/assets/45d4c44d-a2a4-44c2-8b30-eab17577c8a3)<br>
 
 **Figure 271: TheHive Alert Details**
 
-![image](https://github.com/user-attachments/assets/696ca23f-5cd9-448b-94b7-74b1996e1901)
+![image](https://github.com/user-attachments/assets/696ca23f-5cd9-448b-94b7-74b1996e1901)<br>
 
 **3\. Check Email Notification:**
 
 **Figure 272: Email Notification**
 
-![image](https://github.com/user-attachments/assets/bc4ace94-ddcf-4b07-aef0-b99d327f554d)
+![image](https://github.com/user-attachments/assets/bc4ace94-ddcf-4b07-aef0-b99d327f554d)<br>
 
 **4\. Trigger Response (Click True):**
 
 **Figure 273: Triggering Action**
 
-![image](https://github.com/user-attachments/assets/5ac997c2-7a45-4a80-a53d-1ff746f89290)
+![image](https://github.com/user-attachments/assets/5ac997c2-7a45-4a80-a53d-1ff746f89290)<br>
 
 **5\. Verify IP Blocking:**
 
 **Figure 274: IP Has Been Blocked**
 
-![image](https://github.com/user-attachments/assets/1805d45f-d532-460e-89c2-ffb782a0a825)
+![image](https://github.com/user-attachments/assets/1805d45f-d532-460e-89c2-ffb782a0a825)<br>
 
 **6\. Verify User Account Disabling:**
 
 **Figure 275: User Disabled**
 
-![image](https://github.com/user-attachments/assets/0e2eb6a0-415d-4ae0-acda-7ee231abbb96)
+![image](https://github.com/user-attachments/assets/0e2eb6a0-415d-4ae0-acda-7ee231abbb96)<br>
 
 ## Project Completion
 
@@ -3668,7 +3615,7 @@ This concludes the expanded SOC automation project. You now have a comprehensive
 
 1.  **Detects** Mimikatz execution in real-time
 2.  **Enriches** file hash with VirusTotal
-3.  **Creates** alert in TheHive for case management
+3.  **Creates** an alert in TheHive for case management
 4.  **Notifies** analyst with detailed HTML email
 5.  **Waits** for analyst approval
 6.  **Automatically kills** the process and deletes the file
@@ -3698,10 +3645,133 @@ This expanded project demonstrates advanced SOAR capabilities while maintaining 
 
 ## Final Shuffle Workflow
 
-![image](https://github.com/user-attachments/assets/cf14f006-b066-430a-a49f-f20f576674d5)
+![image](https://github.com/user-attachments/assets/cf14f006-b066-430a-a49f-f20f576674d5)<br>
 
+##  Project Conclusion
 
+The **SOC Automation Project** successfully demonstrates how to build a functional, automated, and scalable **Security Operations Centre (SOC)** using open-source tools. It integrates:
 
+-   **Wazuh** as the SIEM for log ingestion and detection,
+-   **TheHive** for case management and analyst collaboration,
+-   **Shuffle** as the SOAR platform to orchestrate response actions.
+
+Through modular deployment, integration, and real-time detection of threats like **Mimikatz**, the project achieves its goal of replicating Tier 1 SOC workflows, empowering cybersecurity professionals to:
+
+-   Deploy and configure open-source security platforms in both cloud and local environments.
+-   Automate triage, enrichment, and response based on rule-based detection logic.
+-   Gain experience with API integrations, Sysmon telemetry, log forwarding, and custom detection rules.
+-   Troubleshoot and adapt real-world issues involving Elasticsearch memory, Wazuh telemetry visibility, and Shuffle workflows.
+
+> **Key Success**: The project proves that with limited resources and free tools, it is possible to simulate an effective SOC environment suitable for training and learning incident detection and response.
+
+## Troubleshooting Guide
+
+Below are **common issues and how to resolve them** during deployment and operation:
+
+* * *
+
+### TheHive Dashboard Doesn't Load or Login Fails
+
+-   **Symptom**: Cannot log in at `http://your_hive_ip:9000`
+-   **Fix**:
+    -   Ensure **Elasticsearch** is configured with correct heap memory (`jvm.options`).
+    -   Restart Elasticsearch:
+
+        bash
+
+        CopyEdit
+
+        `systemctl restart elasticsearch`
+
+    -   Check TheHive logs:
+
+        bash
+
+        CopyEdit
+
+        `journalctl -u thehive.service`
+
+* * *
+
+### Wazuh Agent Not Showing as Active
+
+-   **Symptom**: Agent remains "Disconnected" or never registers
+-   **Fix**:
+    -   Re-run the agent install script with the correct **Wazuh Manager IP**
+    -   Open required ports (1514/1515 for agent communication)
+    -   Check logs on the Windows client:
+
+        bash
+
+        CopyEdit
+
+        `C:\Program Files (x86)\ossec-agent\ossec.log`
+
+    -   Restart agent:
+
+        bash
+
+        CopyEdit
+
+        `net stop wazuhsvc && net start wazuhsvc`
+
+* * *
+
+### Shuffle Not Receiving Alerts
+
+-   **Symptom**: Shuffle workflow never triggers
+-   **Fix**:
+    -   Double-check the **Webhook URL** in Wazuh `/var/ossec/etc/ossec.conf` matches the Shuffle trigger
+    -   Confirm port 55000 is temporarily open (for Wazuh API use)
+    -   Check Shuffle logs or try manually sending a test alert using `curl` to the webhook URL
+* * *
+
+### Mimikatz Not Detected
+
+-   **Symptom**: Alert doesn't show even after running `mimikatz.exe`
+-   **Fix**:
+    -   Confirm `Sysmon` is logging correctly in Event Viewer under **Sysmon Operational**
+    -   Ensure `originalFileName` is used in the detection rule
+    -   Restart Wazuh manager after modifying the custom rule
+
+        bash
+
+        CopyEdit
+
+        `systemctl restart wazuh-manager`
+
+    -   Check alert archive:
+
+        bash
+
+        CopyEdit
+
+        `cat /var/ossec/logs/archives/archives.json | grep -i mimikatz`
+
+* * *
+
+### Elasticsearch Memory or Performance Issues
+
+-   **Symptom**: TheHive or Wazuh UI is slow or crashing
+-   **Fix**:
+    -   Tune JVM heap memory in `/etc/elasticsearch/jvm.options.d/jvm.options`:
+
+        bash
+
+        CopyEdit
+
+        `-Xms2g -Xmx2g`
+
+    -   Restart Elasticsearch after changes
+* * *
+
+### Can't Access Dashboards via Web
+
+-   **Symptom**: Timeout or connection refused at ports 55000 (Wazuh), 9000 (TheHive)
+-   **Fix**:
+    -   Verify **DigitalOcean firewall** rules allow inbound traffic on necessary ports from your IP
+    -   Use `ufw status` to check local firewall settings on each VM
+    -   Use `curl` or `telnet` to test port connectivity
 
 
 
